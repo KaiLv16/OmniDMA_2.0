@@ -22,20 +22,20 @@ MAX_RAND_RANGE = 1000000000
 config_template = """TOPOLOGY_FILE config/{topo}.txt
 FLOW_FILE config/{flow}.txt
 
-OMNIDMA_EVENT_OUTPUT_FILE mix/output/{id}/{id}_omniDMA_event_output.txt
-SWITCH_DROP_OUTPUT_FILE mix/output/{id}/{id}_switch_drop_output.txt
-FLOW_INPUT_FILE mix/output/{id}/{id}_in.txt
-CNP_OUTPUT_FILE mix/output/{id}/{id}_out_cnp.txt
-FCT_OUTPUT_FILE mix/output/{id}/{id}_out_fct.txt
-PFC_OUTPUT_FILE mix/output/{id}/{id}_out_pfc.txt
-QLEN_MON_FILE mix/output/{id}/{id}_out_qlen.txt
-VOQ_MON_FILE mix/output/{id}/{id}_out_voq.txt
-VOQ_MON_DETAIL_FILE mix/output/{id}/{id}_out_voq_per_dst.txt
-UPLINK_MON_FILE mix/output/{id}/{id}_out_uplink.txt
-CONN_MON_FILE mix/output/{id}/{id}_out_conn.txt
-EST_ERROR_MON_FILE mix/output/{id}/{id}_out_est_error.txt
+OMNIDMA_EVENT_OUTPUT_FILE mix/output/{id}/omniDMA_event_output.txt
+SWITCH_DROP_OUTPUT_FILE mix/output/{id}/switch_drop_output.txt
+FLOW_INPUT_FILE mix/output/{id}/in.txt
+CNP_OUTPUT_FILE mix/output/{id}/out_cnp.txt
+FCT_OUTPUT_FILE mix/output/{id}/out_fct.txt
+PFC_OUTPUT_FILE mix/output/{id}/out_pfc.txt
+QLEN_MON_FILE mix/output/{id}/out_qlen.txt
+VOQ_MON_FILE mix/output/{id}/out_voq.txt
+VOQ_MON_DETAIL_FILE mix/output/{id}/out_voq_per_dst.txt
+UPLINK_MON_FILE mix/output/{id}/out_uplink.txt
+CONN_MON_FILE mix/output/{id}/out_conn.txt
+EST_ERROR_MON_FILE mix/output/{id}/out_est_error.txt
 
-SND_RCV_OUTPUT_FILE mix/output/{id}/{id}_snd_rcv_record_file.txt
+SND_RCV_OUTPUT_FILE mix/output/{id}/snd_rcv_record_file.txt
 
 QLEN_MON_START {qlen_mon_start}
 QLEN_MON_END {qlen_mon_end}
@@ -194,10 +194,8 @@ def main():
 
     args = parser.parse_args()
 
-    # make running ID of this config
-    # need to check directory exists or not
-    isExist = True
-    config_ID = "noirn"
+    # make running ID of this config (base part keeps previous behavior)
+    base_config_id = "GBN"
 
 
     # input parameters
@@ -230,10 +228,10 @@ def main():
     assert (hostload > 0)
 
     if enabled_irn == 1:
-        config_ID = "irn"
+        base_config_id = "irn"
     
     if enabled_omnidma == 1:
-        config_ID = "omnidma"
+        base_config_id = "omnidma"
 
     # Sanity checks
     if (args.cc == "timely" or args.cc == "hpcc") and args.lb == "conweave":
@@ -258,6 +256,11 @@ def main():
 
     # assert (hostload >= 0 and hostload < 100)
     flow = "omniDMA_flow"
+
+    topo_tag = topo.replace("/", "-")
+    flow_tag = flow.replace("/", "-")
+    drop_rate_tag = str(my_switch_total_drop_rate)
+    config_ID = f"{base_config_id}_{topo_tag}_{flow_tag}_drop{drop_rate_tag}_pfc{enabled_pfc}_irn{enabled_irn}"
 
     # check the file exists
     if (exists(os.getcwd() + "/config/" + flow + ".txt")):
@@ -471,4 +474,4 @@ if __name__ == "__main__":
 
     print(f"config_ID: {config_ID}")
     # 调用函数
-    save_first_xxx_lines(100, f'mix/output/{config_ID}/{config_ID}_snd_rcv_record_file')
+    save_first_xxx_lines(100, f'mix/output/{config_ID}/snd_rcv_record_file')
