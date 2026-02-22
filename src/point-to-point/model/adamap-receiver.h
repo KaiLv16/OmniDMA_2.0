@@ -70,6 +70,7 @@ public:
   // int LookuptableRtoOmniNACK(Ptr<RdmaRxQueuePair> rxQp, CustomHeader &ch);
 
   bool assertTableFinish() const;
+  bool IsFinishConditionSatisfied() const;
   bool assertFinish();
 
   bool assertLLNodeFinish(const Adamap &adamap) const;  // 单个节点的结束
@@ -103,6 +104,11 @@ public:
   void DeleteHeadBitmap();
 
   int AccessLookupTableLru(int32_t tableIndex);
+
+  uint64_t GetLinkedListAccessCount() const { return m_linkedListAccessCount; }
+  uint64_t GetLinkedListCacheHitCount() const { return m_linkedListCacheHitCount; }
+  uint64_t GetLookupTableAccessCount() const { return m_lookupTableAccessCount; }
+  uint64_t GetLookupTableCacheHitCount() const { return m_lookupTableCacheHitCount; }
 
   int m_currTableIndex;
   std::list<Adamap_with_index> m_lookupTable; // reprLength 没有用，只用具体bitmap和startSeq。
@@ -138,6 +144,12 @@ public:
   int m_bitmapSize;
 
   bool isFinished;
+
+  // RNIC cache hit statistics for Adamap metadata accesses.
+  uint64_t m_linkedListAccessCount;
+  uint64_t m_linkedListCacheHitCount;
+  uint64_t m_lookupTableAccessCount;
+  uint64_t m_lookupTableCacheHitCount;
 
   // 当前活动的bitmap及其相关变量
   std::vector<bool> m_bitmap; ///< 当前bitmap，初始化为全0

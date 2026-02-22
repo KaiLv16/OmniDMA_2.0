@@ -222,7 +222,16 @@ def main():
 
     netload = args.netload
     print(topo)
-    oversub = int(topo.replace("\n", "").split("OS")[-1].replace(".txt", ""))
+    topo_suffix = topo.replace("\n", "").split("OS")[-1].replace(".txt", "")
+    oversub_str = ""
+    for ch in topo_suffix:
+        if ch.isdigit():
+            oversub_str += ch
+        else:
+            break
+    if not oversub_str:
+        raise ValueError(f"Cannot parse oversubscription ratio from topology name: {topo}")
+    oversub = int(oversub_str)
     assert (int(args.netload) % oversub == 0)
     hostload = int(args.netload) / oversub
     assert (hostload > 0)
@@ -346,10 +355,17 @@ def main():
         ))
 
     # 1 BDP calculation
-    if topo2bdp.get(topo) == None:
+    topo_bdp_key = topo
+    if topo_bdp_key not in topo2bdp:
+        # Support topology variants such as topo_simple_dumbbell_OS2_1us
+        for base_key in topo2bdp:
+            if topo.startswith(base_key + "_"):
+                topo_bdp_key = base_key
+                break
+    if topo_bdp_key not in topo2bdp:
         print("ERROR - topology is not registered in run.py!!", flush=True)
         return
-    bdp = int(topo2bdp[topo])
+    bdp = int(topo2bdp[topo_bdp_key])
     print("1BDP = {}".format(bdp))
 
     # DCQCN parameters (NOTE: HPCC's 400KB/1600KB is too large, although used in Microsoft)
@@ -474,4 +490,6 @@ if __name__ == "__main__":
 
     print(f"config_ID: {config_ID}")
     # 调用函数
-    save_first_xxx_lines(100, f'mix/output/{config_ID}/snd_rcv_record_file')
+    if config_ID is not None:
+        # save_first_xxx_lines(100, f'mix/output/{config_ID}/snd_rcv_record_file')
+        pass

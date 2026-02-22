@@ -96,6 +96,7 @@ uint64_t irn_monitor_bucket = 100000;  // ns
 
 FILE *pfc_file = NULL;
 FILE *fct_output = NULL;
+FILE *hit_rate_output = NULL;
 FILE *flow_input_stream = NULL;
 FILE *cnp_output = NULL;
 FILE *est_error_output = NULL;
@@ -103,6 +104,7 @@ FILE *voq_output = NULL;
 FILE *voq_detail_output = NULL;
 FILE *uplink_output = NULL;
 FILE *conn_output = NULL;
+FILE *memory_usage_output = NULL;
 
 FILE *routing_table_output = NULL;
 FILE *snd_rcv_output = NULL;
@@ -112,6 +114,7 @@ FILE *omniDMA_event_output = NULL;
 std::string data_rate, link_delay, topology_file, flow_file;
 std::string flow_input_file = "flow.txt";
 std::string fct_output_file = "fct.txt";
+std::string hit_rate_output_file = "out_hit_rate.txt";
 std::string pfc_output_file = "pfc.txt";
 std::string cnp_output_file = "cnp.txt";
 std::string qlen_mon_file = "qlen.txt";
@@ -119,6 +122,7 @@ std::string voq_mon_file = "voq.txt";
 std::string voq_mon_detail_file = "voq_detail.txt";
 std::string uplink_mon_file = "uplink.txt";
 std::string conn_mon_file = "conn.txt";
+std::string memory_usage_mon_file = "out_memory_usage.txt";
 std::string est_error_output_file = "est_error.txt";
 
 std::string routing_table_output_file = "routing_table.txt";
@@ -398,6 +402,36 @@ void periodic_monitoring(FILE *fout_voq, FILE *fout_voq_detail, FILE *fout_uplin
 }
 
 /**
+ * @brief Per-host RX-QP OmniDMA metadata usage monitoring
+ * output format: <time(ns)>,<hostId>,<sum_finished_bitmap_list_entries>,<sum_lookup_table_entries>
+ */
+void memory_usage_monitoring(FILE *fout_memory_usage) {
+    uint64_t now = Simulator::Now().GetNanoSeconds();
+    for (uint32_t i = 0; i < Settings::node_num; i++) {
+        if (n.Get(i)->GetNodeType() != 0) continue;  // only hosts
+
+        Ptr<Node> server = n.Get(i);
+        Ptr<RdmaDriver> rdmaDriver = server->GetObject<RdmaDriver>();
+        Ptr<RdmaHw> rdmaHw = rdmaDriver->m_rdma;
+
+        uint64_t total_linked_list_entries = 0;
+        uint64_t total_lookup_table_entries = 0;
+        for (const auto &rx_qp_it : rdmaHw->m_rxQpMap) {
+            const auto &receiver = rx_qp_it.second->adamap_receiver;
+            total_linked_list_entries += receiver.m_finishedBitmaps.size();
+            total_lookup_table_entries += receiver.m_lookupTable.size();
+        }
+        fprintf(fout_memory_usage, "%lu,%u,%lu,%lu\n", now, i, total_linked_list_entries,
+                total_lookup_table_entries);
+    }
+
+    if (Simulator::Now() < Seconds(flowgen_stop_time + 0.05)) {
+        Simulator::Schedule(NanoSeconds(switch_mon_interval), &memory_usage_monitoring,
+                            fout_memory_usage);  // every 10us
+    }
+}
+
+/**
  * @brief Conga timeout number recording
  */
 void conga_history_print() {
@@ -496,6 +530,24 @@ void qp_finish(FILE *fout, Ptr<RdmaQueuePair> q) {
     // XXX: remove rxQP from the receiver
     Ptr<Node> dstNode = n.Get(did);
     Ptr<RdmaDriver> rdma = dstNode->GetObject<RdmaDriver>();
+
+    if (hit_rate_output != NULL) {
+        // Receiver-side Adamap cache statistics live in RxQP (RNIC state).
+        Ptr<RdmaRxQueuePair> rxQp = rdma->m_rdma->GetRxQp(q->dip.Get(), q->sip.Get(), q->dport,
+                                                          q->sport, q->m_pg, false);
+        uint64_t ll_access = 0, ll_hit = 0, table_access = 0, table_hit = 0;
+        if (rxQp != NULL) {
+            ll_access = rxQp->adamap_receiver.GetLinkedListAccessCount();
+            ll_hit = rxQp->adamap_receiver.GetLinkedListCacheHitCount();
+            table_access = rxQp->adamap_receiver.GetLookupTableAccessCount();
+            table_hit = rxQp->adamap_receiver.GetLookupTableCacheHitCount();
+        }
+        // sender_id receiver_id flowid list_access list_hit table_access table_hit
+        fprintf(hit_rate_output, "%u %u %d %lu %lu %lu %lu\n", sid, did, q->m_flow_id, ll_access,
+                ll_hit, table_access, table_hit);
+        fflush(hit_rate_output);
+    }
+
     rdma->m_rdma->DeleteRxQp(q->sip.Get(), q->sport, q->dport, q->m_pg);
 
     // fprintf(fout, "%lu QP complete\n", Simulator::Now().GetTimeStep());
@@ -579,6 +631,8 @@ inline const char* getPriorityString(int pkt_type) {
  */
 void snd_rcv_record(FILE *fout, Ptr<QbbNetDevice> dev, 
                 uint32_t rcv_snd_type, uint32_t pkt_type, uint32_t omni_type, uint32_t pkt_size, int flowid=-1, int seq=-1) {
+    
+    // return;
     // time, nodeID, nodeType, Interface's Idx, 0:resume, 1:pause
     if (dev->GetNode()->GetNodeType() == 0) {
         fprintf(fout, "%lu: %s %u NIC %u %s a %s pkt. omniType=%d size=%u flowid=%d seq=%d\n", 
@@ -1189,6 +1243,9 @@ int main(int argc, char *argv[]) {
             } else if (key.compare("CONN_MON_FILE") == 0) {
                 conf >> conn_mon_file;
                 std::cerr << "CONN_MON_FILE\t\t\t\t" << conn_mon_file << '\n';
+            } else if (key.compare("MEMORY_USAGE_MON_FILE") == 0) {
+                conf >> memory_usage_mon_file;
+                std::cerr << "MEMORY_USAGE_MON_FILE\t\t\t" << memory_usage_mon_file << '\n';
             } else if (key.compare("QLEN_MON_START") == 0) {
                 conf >> qlen_mon_start;
                 std::cerr << "QLEN_MON_START\t\t\t\t" << qlen_mon_start << '\n';
@@ -1504,7 +1561,19 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    {
+        std::string::size_type pos = fct_output_file.find_last_of("/\\");
+        if (pos != std::string::npos) {
+            hit_rate_output_file = fct_output_file.substr(0, pos + 1) + "out_hit_rate.txt";
+            if (memory_usage_mon_file == "out_memory_usage.txt") {
+                memory_usage_mon_file =
+                    fct_output_file.substr(0, pos + 1) + "out_memory_usage.txt";
+            }
+        }
+    }
+
     fct_output = fopen(fct_output_file.c_str(), "w");
+    hit_rate_output = fopen(hit_rate_output_file.c_str(), "w");
     flow_input_stream = fopen(flow_input_file.c_str(), "w");
     if (cc_mode == 1) {
         cnp_output = fopen(cnp_output_file.c_str(), "w");
@@ -1941,6 +2010,7 @@ int main(int argc, char *argv[]) {
 
     uplink_output = fopen(uplink_mon_file.c_str(), "w");  // common
     conn_output = fopen(conn_mon_file.c_str(), "w");      // common
+    memory_usage_output = fopen(memory_usage_mon_file.c_str(), "w");  // common
 
     // update torId2UplinkIf, torId2DownlinkIf
     for (size_t ToRId = 0; ToRId < Settings::node_num; ToRId++) {
@@ -1969,6 +2039,7 @@ int main(int argc, char *argv[]) {
     }
     Simulator::Schedule(Seconds(flowgen_start_time), &periodic_monitoring, voq_output,
                         voq_detail_output, uplink_output, conn_output, &lb_mode);
+    Simulator::Schedule(Seconds(flowgen_start_time), &memory_usage_monitoring, memory_usage_output);
 
     //
     // Now, do the actual simulation.

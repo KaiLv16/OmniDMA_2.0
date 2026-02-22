@@ -207,6 +207,8 @@ RdmaRxQueuePair::RdmaRxQueuePair() {
     basertt = MilliSeconds(30);   // 30ms的basertt
     m_milestone_rx = 0;
     m_lastNACK = 0;
+    omni_last_packet = false;
+    omni_cumulative_ack_seq = 0;
     adamap_receiver.m_RxQp = this;
 }
 

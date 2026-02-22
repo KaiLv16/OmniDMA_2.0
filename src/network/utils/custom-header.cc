@@ -203,6 +203,7 @@
 		   i.WriteU32(ack.omniDMAAdamapStartSeq);
 		   i.WriteU32(ack.omniDMAAdamapReprLength);
 		   i.WriteU32(ack.omniDMATableIndex);
+		   i.WriteU32(ack.omniDMACumAckSeq);
 		   udp.ih.Serialize(i);
 	   }else if (l3Prot == 0xFE){ // PFC
 		   i.WriteU32 (pfc.time);
@@ -373,6 +374,7 @@
 			ack.omniDMAAdamapStartSeq = i.ReadU32();
 			ack.omniDMAAdamapReprLength = i.ReadU32();
 			ack.omniDMATableIndex = i.ReadU32();
+			ack.omniDMACumAckSeq = i.ReadU32();
 			if (getInt)
 			   ack.ih.Deserialize(i);
 			   
@@ -396,8 +398,9 @@
  uint32_t CustomHeader::GetAckSerializedSize(void){
 	 return sizeof(ack.sport) + sizeof(ack.dport) + sizeof(ack.flags) + sizeof(ack.pg) + sizeof(ack.flow_id) + sizeof(ack.omni_type) + sizeof(ack.seq) + IntHeader::GetStaticSize()
 	 + sizeof(ack.irnNack) + sizeof(ack.irnNackSize) + sizeof(ack.omniDMAAdamapId) + sizeof(ack.omniDMAAdamapBitmap) 
-	 + sizeof(ack.omniDMAAdamapStartSeq) + sizeof(ack.omniDMAAdamapReprLength) + sizeof(ack.omniDMATableIndex);
- }
+	 + sizeof(ack.omniDMAAdamapStartSeq) + sizeof(ack.omniDMAAdamapReprLength) + sizeof(ack.omniDMATableIndex)
+	 + sizeof(ack.omniDMACumAckSeq);
+}
  
  uint32_t CustomHeader::GetUdpHeaderSize(void){
 	 return 8 + sizeof(udp.pg) + sizeof(udp.seq) + sizeof(udp.omni_type) + sizeof(udp.flow_id) 

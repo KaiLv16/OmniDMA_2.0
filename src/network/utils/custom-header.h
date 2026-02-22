@@ -149,6 +149,7 @@ public:
       uint32_t omniDMAAdamapStartSeq;
       uint32_t omniDMAAdamapReprLength;
       uint32_t omniDMATableIndex;
+      uint32_t omniDMACumAckSeq;
 	  } ack;
 	  // PauseHeader
 	  struct {
@@ -181,4 +182,3 @@ public:
 
 
 #endif /* CUSTOM_HEADER_H */
-

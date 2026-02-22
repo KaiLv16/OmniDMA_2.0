@@ -52,6 +52,7 @@ public:
   void SetOmniDMAAdamapStartSeq(uint32_t startSeq);
   void SetOmniDMAAdamapReprLength(uint32_t reprLength);
   void SetOmniDMATableIndex(uint32_t Index);
+  void SetOmniDMACumAckSeq(uint32_t seq);
 
 //Getters
   /**
@@ -74,6 +75,7 @@ public:
   uint32_t GetOmniDMAAdamapStartSeq() const;
   uint32_t GetOmniDMAAdamapReprLength() const;
   uint32_t GetOmniDMATableIndex() const;
+  uint32_t GetOmniDMACumAckSeq() const;
 
   static TypeId GetTypeId (void);
   virtual TypeId GetInstanceTypeId (void) const;
@@ -100,6 +102,7 @@ private:
   uint32_t omniDMAAdamapStartSeq;
   uint32_t omniDMAAdamapReprLength;
   uint32_t omniDMATableIndex;
+  uint32_t omniDMACumAckSeq;
 };
 
 }; // namespace ns3

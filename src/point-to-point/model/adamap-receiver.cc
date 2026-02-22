@@ -61,6 +61,10 @@ ReceiverAdamap::ReceiverAdamap(uint32_t bitmapSize)
   // 状态变量
   get_last_packet = false;
   isFinished = false;
+  m_linkedListAccessCount = 0;
+  m_linkedListCacheHitCount = 0;
+  m_lookupTableAccessCount = 0;
+  m_lookupTableCacheHitCount = 0;
   printf("%lu: Create ReceiverAdamap with bitmap size %u\n", Simulator::Now().GetTimeStep(), bitmapSize);
 }
 
@@ -91,14 +95,15 @@ bool ReceiverAdamap::assertTableFinish() const {
   return true;
 }
 
+bool ReceiverAdamap::IsFinishConditionSatisfied() const {
+  return get_last_packet && m_finishedBitmaps.empty() && assertTableFinish();
+}
+
 bool ReceiverAdamap::assertFinish() {
-  if (get_last_packet == true) {
-    // printf("call valid assertFinish\n");
-    if (m_finishedBitmaps.empty () && assertTableFinish() ) {
-      printf("%lu: Flow %u get all packets. Finishes.\n", Simulator::Now().GetTimeStep(), m_RxQp->m_flow_id);
-      isFinished = true;
-      return true;
-    }
+  if (IsFinishConditionSatisfied()) {
+    printf("%lu: Flow %u get all packets. Finishes.\n", Simulator::Now().GetTimeStep(), m_RxQp->m_flow_id);
+    isFinished = true;
+    return true;
   }
   return false;
 }
@@ -435,6 +440,7 @@ int ReceiverAdamap::PutLinkedListHeadToTable(std::string str, bool do_erase, boo
 
 
 int ReceiverAdamap::AccessLookupTableLru(int32_t tableIndex) {
+  ++m_lookupTableAccessCount;
   // 在 vector 中查找该元素
   int ret=0;
   auto it = std::find(m_lookupTableLru.begin(), m_lookupTableLru.end(), tableIndex);
@@ -451,6 +457,9 @@ int ReceiverAdamap::AccessLookupTableLru(int32_t tableIndex) {
   }
   // 插入新元素到头部
   m_lookupTableLru.insert(m_lookupTableLru.begin(), tableIndex);
+  if (ret == 0) {
+    ++m_lookupTableCacheHitCount;
+  }
   return ret;
 }
 
@@ -517,6 +526,7 @@ ReceiverAdamap::splitAdamap(Adamap &node, Adamap &firstPart, bool neglectAllOneB
 int 
 ReceiverAdamap::FindSequenceInHeadBitmaps (uint32_t seq, uint16_t retrans_tier, int32_t& tableIndex)
 {
+  ++m_linkedListAccessCount;
   if (m_finishedBitmaps.empty ()){      // 链表为空，无法查找
     return -1; 
   }
@@ -533,6 +543,7 @@ ReceiverAdamap::FindSequenceInHeadBitmaps (uint32_t seq, uint16_t retrans_tier, 
     if (seq >= start && seq <= end) { // 如果 seq 在当前节点的范围内
       // m_finishedBitmaps.erase(m_finishedBitmaps.begin(), it);   // 找到目标序列号所在的节点，删除其之前的所有节点 (UPDATE: 不应该在这里删除！)
       if (i < first_n) {
+        ++m_linkedListCacheHitCount;
         return i; // 返回找到的节点索引, cache hit
       }
       else {
@@ -544,6 +555,7 @@ ReceiverAdamap::FindSequenceInHeadBitmaps (uint32_t seq, uint16_t retrans_tier, 
   }
   return -1; // 未找到
 }
+
 
 
 std::string

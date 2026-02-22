@@ -332,8 +332,11 @@ void RdmaHw::DeleteRxQp(uint32_t dip, uint16_t dport, uint16_t sport, uint16_t p
 
 int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
     int omniRes = 0;
-    int omni_last_packet = 0;
+    bool omni_last_packet_this_pkt = false;
     int new_high_tier_cnt = 0;
+    bool omni65002_ready_before = false;
+    bool omni65002_ready_after = false;
+    bool force_send_omni65002 = false;
 
     uint8_t ecnbits = ch.GetIpv4EcnBits();
     uint32_t payload_size = p->GetSize() - ch.GetSerializedSize();
@@ -350,6 +353,9 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
             printf("ERROR: UDP NIC cannot find the flow\n");
             exit(1);
         }
+    }
+    if (m_omnidma) {
+        omni65002_ready_before = rxQp->adamap_receiver.IsFinishConditionSatisfied();
     }
 
     if (ecnbits != 0) {
@@ -371,7 +377,8 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
         switch (fst.GetType()) {
             case FlowStatTag::FLOW_START_AND_END:
             case FlowStatTag::FLOW_END:
-                omni_last_packet = 1;
+                omni_last_packet_this_pkt = true;
+                rxQp->omni_last_packet = true;
                 rxQp->adamap_receiver.get_last_packet = true;
                 printf("%lu: flow %u ends at seq %u, last packet size=%u\n", Simulator::Now().GetTimeStep(), ch.udp.flow_id, ch.udp.seq, payload_size);
                 break;
@@ -389,6 +396,9 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
 #endif
     bool cnp_check = false;
     int x = ReceiverCheckSeq(ch.udp.seq, rxQp, payload_size, cnp_check);
+    if (m_omnidma) {
+        rxQp->omni_cumulative_ack_seq = rxQp->ReceiverNextExpectedSeq;
+    }
     assert(ch.udp.seq / m_mtu* m_mtu == ch.udp.seq && "Currently we only support m_mtu aligned seq number");
     
     Adamap_with_index adamap_for_NACK;
@@ -465,7 +475,7 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
             printf("lookuptable size = %lu\n", rxQp->adamap_receiver.m_lookupTable.size());
             for (auto it = rxQp->adamap_receiver.m_table_last_end; it != rxQp->adamap_receiver.m_lookupTable.end(); ++it) {
                 TransmitOmniNACK(0, rxQp, ch, *it, delay);
-                printf("newly generated table entry because of cache miss: last_call_time = %lu, table_id = %lu\n", it->lastCallTime.GetMicroSeconds(), it->tableIndex);
+                printf("newly generated table entry because of cache miss: last_call_time = %lu, table_id = %d\n", it->lastCallTime.GetMicroSeconds(), it->tableIndex);
                 PrintAdamap(&(it->adamap), "newly generated table entry: adamap");
                 new_high_tier_cnt--;
             }
@@ -473,13 +483,20 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
         }
         rxQp->adamap_receiver.assertFinish();
     }
+    if (m_omnidma) {
+        omni65002_ready_after = rxQp->adamap_receiver.IsFinishConditionSatisfied();
+        // Send 65002 if the condition is already true when this UDP packet arrives,
+        // or it becomes true by the end of handling this packet.
+        force_send_omni65002 = omni65002_ready_before ||
+                               (!omni65002_ready_before && omni65002_ready_after);
+    }
 
     /* 如果是IRN，只会返回0，2，4，6。其中2是SACK，6是NACK。但是SACK使用的是NACK的l3prot，二者仅依靠seq做区分
      * 1: 生成 ACK
      * 2: IRN 的 loss recovery，生成SACK
      * 6：NACK 但功能是 ACK
      */
-    if (x == 1 || x == 2 || x == 6 || omniRes == -6 || omni_last_packet == 1) {  // generate ACK or NACK
+    if (x == 1 || x == 2 || x == 6 || omniRes == -6 || omni_last_packet_this_pkt || force_send_omni65002) {  // generate ACK or NACK
         qbbHeader seqh;
         seqh.SetSeq(rxQp->ReceiverNextExpectedSeq);
         seqh.SetPG(ch.udp.pg);
@@ -501,6 +518,7 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
 
         if (m_omnidma) {
             assert(m_omnidma && "omnidma should be enabled");
+            seqh.SetOmniDMACumAckSeq(rxQp->omni_cumulative_ack_seq);
             if (omniRes == -6) {
                 printf("%lu: Receiver gets a normal packet (omniType=%u) and sends a omniNACK (omniType=1)\n", Simulator::Now().GetTimeStep(), ch.udp.omni_type);
                 seqh.SetOmniType(1);            // 首次重传的OmniType
@@ -511,8 +529,14 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
                 // 这里对于customHeader（ch）而言，对应的字段是 ch.udp.adamap_id.
                 seqh.SetOmniDMATableIndex(-1);          // 首次重传包，不涉及table index，设为-1
             }
-            if (omni_last_packet == 1) {
-                seqh.SetOmniType(65001);
+            if (rxQp->omni_last_packet) {
+                bool has_pending_omni_state =
+                    !rxQp->adamap_receiver.m_lookupTable.empty() ||
+                    !rxQp->adamap_receiver.m_finishedBitmaps.empty();
+                seqh.SetOmniType(has_pending_omni_state ? 65001 : 65002);
+            }
+            if (force_send_omni65002) {
+                seqh.SetOmniType(65002);
             }
             
         }
@@ -533,7 +557,11 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
         head.SetDestination(Ipv4Address(ch.sip));
         head.SetSource(Ipv4Address(ch.dip));
         // 这里只设置了ACK / NACK，根本不涉及CNP包
-        head.SetProtocol(omniRes == -6? 0xFA : (x == 1 ? 0xFC : 0xFD));  // ack=0xFC nack=0xFD omninack=0xFA
+        uint8_t ack_proto = (omniRes == -6 ? 0xFA : (x == 1 ? 0xFC : 0xFD));  // ack=0xFC nack=0xFD omninack=0xFA
+        if (m_omnidma && (seqh.GetOmniType() == 65001 || seqh.GetOmniType() == 65002)) {
+            ack_proto = 0xFA;
+        }
+        head.SetProtocol(ack_proto);
         head.SetTtl(64);
         head.SetPayloadSize(newp->GetSize());
         head.SetIdentification(rxQp->m_ipid++);
@@ -679,6 +707,7 @@ void RdmaHw::TransmitOmniNACK(int tx_type, Ptr<RdmaRxQueuePair> rxQp, CustomHead
     high_tier_nack.SetOmniDMAAdamapStartSeq(entry.adamap.startSeq);
     high_tier_nack.SetOmniDMAAdamapReprLength(entry.adamap.reprLength);
     high_tier_nack.SetOmniDMATableIndex(entry.tableIndex);
+    high_tier_nack.SetOmniDMACumAckSeq(rxQp->omni_cumulative_ack_seq);
 
     std::ostringstream oss;
     oss << "Transmit a OmniNACK packet. TableIndex: " << entry.tableIndex << ", isFinish: " << entry.isFinish << ", Omni_type: " << ch.udp.omni_type + 1;
@@ -823,10 +852,18 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch) {
     Ptr<QbbNetDevice> dev = m_nic[nic_idx].dev;
 
     if (m_ack_interval == 0)
-        std::cout << "ERROR: shouldn't receive ack\n";
+        std::cout << "[ReceiveAck] ERROR: shouldn't receive ack\n";
     else if (m_omnidma) {
         if (ch.l3Prot == 0xFA) {
-            printf("%lu : Sender gets a omniNACK (omniType=%u)\n", Simulator::Now().GetTimeStep(), ch.ack.omni_type);
+            // OmniDMA control packets carry a receiver-maintained cumulative ACK.
+            qp->Acknowledge(ch.ack.omniDMACumAckSeq);
+            if (qp->snd_nxt < qp->snd_una) {
+                qp->snd_nxt = qp->snd_una;
+            }
+        }
+        if (ch.l3Prot == 0xFA) {
+            printf("%lu : [ReceiveAck] Sender gets a omniNACK (omniType=%u, cumAckSeq=%u)\n",
+                   Simulator::Now().GetTimeStep(), ch.ack.omni_type, ch.ack.omniDMACumAckSeq);
             
             // 这里的发送方 可能觉得有用的字段：
             // ch.ack.omni_type         (1: first-time retrans packet, 2: high-tier retrans packet, 65000: SEND_LAST)
@@ -835,17 +872,49 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch) {
             // ch.ack.omniDMAAdamapStartSeq
             // ch.ack.omniDMAAdamapReprLength
             // ch.ack.omniDMATableIndex   （对于多次重传包）
-
-            Adamap adamap;
-            adamap.id = ch.ack.omniDMAAdamapId;
-            adamap.bitmap = Uint64ToBitmap(ch.ack.omniDMAAdamapBitmap);
-            adamap.startSeq = ch.ack.omniDMAAdamapStartSeq;
-            adamap.reprLength = ch.ack.omniDMAAdamapReprLength;
-            // 从adamap中找到对应的包，然后将其置1
-            PrintAdamap(&adamap, "Sender get omniNACK:");
-            m_trace_omnidma_event(qp->m_flow_id, ch.udp.seq, 2, ch.ack.omni_type, "sender get adamap", &adamap);
-            // 在ReceiveUdp()中，对首传包，有seqh.SetOmniDMATableIndex(-1);
-            qp->omniDMA.adamap_sender.Enqueue(adamap, ch.ack.omni_type, ch.ack.omniDMATableIndex);
+            // ch.ack.omniDMACumAckSeq    （接收端累计确认号）
+            if (ch.ack.omni_type == 65002) {
+                printf("%lu : [ReceiveAck] Sender gets final OmniDMA completion marker (65002), cumAck=%u\n",
+                       Simulator::Now().GetTimeStep(), ch.ack.omniDMACumAckSeq);
+                qp->Acknowledge(qp->m_size);
+            } else {
+                Adamap adamap;
+                adamap.id = ch.ack.omniDMAAdamapId;
+                adamap.bitmap = Uint64ToBitmap(ch.ack.omniDMAAdamapBitmap);
+                adamap.startSeq = ch.ack.omniDMAAdamapStartSeq;
+                adamap.reprLength = ch.ack.omniDMAAdamapReprLength;
+                // 从adamap中找到对应的包，然后将其置1
+                PrintAdamap(&adamap, "Sender get omniNACK:");
+                m_trace_omnidma_event(qp->m_flow_id, ch.udp.seq, 2, ch.ack.omni_type, "sender get adamap", &adamap);
+                // 65001 is a final-packet marker; the embedded Adamap (if any) is from receiver-side
+                // generation and should be treated as first-tier retransmission metadata.
+                if (ch.ack.omni_type == 65001) {
+                    if (ch.ack.omniDMAAdamapReprLength > 0) {
+                        qp->omniDMA.adamap_sender.Enqueue(adamap, 1, ch.ack.omniDMATableIndex);
+                    }
+                } else {
+                    // 在ReceiveUdp()中，对首传包，有seqh.SetOmniDMATableIndex(-1);
+                    qp->omniDMA.adamap_sender.Enqueue(adamap, ch.ack.omni_type, ch.ack.omniDMATableIndex);
+                }
+            }
+            if (qp->snd_nxt < qp->snd_una) {
+                qp->snd_nxt = qp->snd_una;
+            }
+        } else {
+            // OmniDMA still relies on cumulative ACK progress to retire the sender QP
+            // and trigger FCT logging via QpComplete().
+            if (!m_backto0) {
+                qp->Acknowledge(seq);
+            } else {
+                uint32_t goback_seq = seq / m_chunk * m_chunk;
+                qp->Acknowledge(goback_seq);
+            }
+            if (qp->snd_nxt < qp->snd_una) {
+                qp->snd_nxt = qp->snd_una;
+            }
+        }
+        if (qp->IsFinished()) {
+            QpComplete(qp);
         }
     } else {
         printf("When applying OmniDMA, should not gets here !!!!\n");

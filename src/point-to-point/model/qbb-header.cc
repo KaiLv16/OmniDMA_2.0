@@ -12,12 +12,18 @@ namespace ns3 {
 	NS_OBJECT_ENSURE_REGISTERED(qbbHeader);
 
 	qbbHeader::qbbHeader(uint16_t pg)
-		: m_pg(pg), sport(0), dport(0), flags(0), m_seq(0)
+		: sport(0), dport(0), flags(0), m_pg(pg), m_flow_id(0), m_omni_type(10000), m_seq(0),
+		  m_irn_nack(0), m_irn_nack_size(0), enable_irn(false),
+		  omniDMAAdamapId(0), omniDMAAdamapBitmap(0), omniDMAAdamapStartSeq(0),
+		  omniDMAAdamapReprLength(0), omniDMATableIndex(0), omniDMACumAckSeq(0)
 	{
 	}
 
 	qbbHeader::qbbHeader()
-		: m_pg(0), sport(0), dport(0), flags(0), m_seq(0)
+		: sport(0), dport(0), flags(0), m_pg(0), m_flow_id(0), m_omni_type(10000), m_seq(0),
+		  m_irn_nack(0), m_irn_nack_size(0), enable_irn(false),
+		  omniDMAAdamapId(0), omniDMAAdamapBitmap(0), omniDMAAdamapStartSeq(0),
+		  omniDMAAdamapReprLength(0), omniDMATableIndex(0), omniDMACumAckSeq(0)
 	{}
 
 	qbbHeader::~qbbHeader()
@@ -83,6 +89,9 @@ namespace ns3 {
 	void qbbHeader::SetOmniDMATableIndex(uint32_t Index){
 		omniDMATableIndex = Index;
 	}
+	void qbbHeader::SetOmniDMACumAckSeq(uint32_t seq){
+		omniDMACumAckSeq = seq;
+	}
 
 
 
@@ -143,6 +152,9 @@ namespace ns3 {
 	uint32_t qbbHeader::GetOmniDMATableIndex() const{
 		return omniDMATableIndex;
 	}
+	uint32_t qbbHeader::GetOmniDMACumAckSeq() const{
+		return omniDMACumAckSeq;
+	}
 
 	TypeId
 		qbbHeader::GetTypeId(void)
@@ -162,7 +174,8 @@ namespace ns3 {
 	{
 		os << "qbb:" << "pg=" << m_pg << "flow_id=" << m_flow_id <<",omniType=" << m_omni_type << ",seq=" << m_seq
 		<< "\n,AdamapId=" << omniDMAAdamapId << ",AdamapBitmap=" << omniDMAAdamapBitmap
-		<< "\n,StartSeq=" << omniDMAAdamapStartSeq << ",ReprLength=" << omniDMAAdamapReprLength << ",TableIndex=" << omniDMATableIndex;
+		<< "\n,StartSeq=" << omniDMAAdamapStartSeq << ",ReprLength=" << omniDMAAdamapReprLength
+		<< ",TableIndex=" << omniDMATableIndex << ",CumAckSeq=" << omniDMACumAckSeq;
 	}
 	uint32_t qbbHeader::GetSerializedSize(void)  const
 	{
@@ -172,7 +185,8 @@ namespace ns3 {
 		qbbHeader tmp;
 		return sizeof(tmp.sport) + sizeof(tmp.dport) + sizeof(tmp.flags) + sizeof(tmp.m_pg) 
 		+ sizeof(tmp.m_flow_id) + sizeof(tmp.m_omni_type) + sizeof(tmp.m_seq) + sizeof(tmp.m_irn_nack) + sizeof(tmp.m_irn_nack_size)
-		+sizeof(tmp.omniDMAAdamapId) + sizeof(tmp.omniDMAAdamapBitmap) + sizeof(tmp.omniDMAAdamapStartSeq) + sizeof(tmp.omniDMAAdamapReprLength) + sizeof(tmp.omniDMATableIndex);
+		+sizeof(tmp.omniDMAAdamapId) + sizeof(tmp.omniDMAAdamapBitmap) + sizeof(tmp.omniDMAAdamapStartSeq)
+		+ sizeof(tmp.omniDMAAdamapReprLength) + sizeof(tmp.omniDMATableIndex) + sizeof(tmp.omniDMACumAckSeq);
 	}
 	void qbbHeader::Serialize(Buffer::Iterator start)  const
 	{
@@ -191,6 +205,7 @@ namespace ns3 {
 		i.WriteU32(omniDMAAdamapStartSeq);
 		i.WriteU32(omniDMAAdamapReprLength);
 		i.WriteU32(omniDMATableIndex);
+		i.WriteU32(omniDMACumAckSeq);
 
 		// write IntHeader
 		ih.Serialize(i);
@@ -213,6 +228,7 @@ namespace ns3 {
 		omniDMAAdamapStartSeq = i.ReadU32();
 		omniDMAAdamapReprLength = i.ReadU32();
 		omniDMATableIndex = i.ReadU32();
+		omniDMACumAckSeq = i.ReadU32();
 
 		// read IntHeader
 		ih.Deserialize(i);

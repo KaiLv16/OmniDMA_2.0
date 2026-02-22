@@ -364,6 +364,8 @@ class RdmaRxQueuePair : public Object {  // Rx side queue pair
 
     bool m_omnidma_enabled;
     uint16_t m_omnidma_bitmap_size;
+    bool omni_last_packet;
+    uint32_t omni_cumulative_ack_seq;
     ReceiverAdamap adamap_receiver;
 
     static TypeId GetTypeId(void);
