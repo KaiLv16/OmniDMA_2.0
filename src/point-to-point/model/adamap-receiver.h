@@ -63,7 +63,7 @@ public:
   //                Adamap *adamap_for_print = NULL, int* new_high_tier_cnt = NULL, int32_t tableIndex = -1);
 
   void UpdateOmniRto(Adamap_with_index& desiredElement);
-  int PutLinkedListHeadToTable(std::string = "Put LinkedList Head To Table", bool do_erase=true, bool update_ts=false); 
+  int PutLinkedListHeadToTable(std::string = "Put LinkedList Head To Table", bool do_erase=true, bool update_ts=false, Time* delay=NULL); 
   bool splitAdamap(Adamap &node, Adamap &firstPart, bool neglectAllOneBitmap = false);
   
   // int LinkedlistRtoOmniNACK(Ptr<RdmaRxQueuePair> rxQp, CustomHeader &ch);
@@ -83,7 +83,7 @@ public:
    * \return 若找到，返回对应的节点索引；若 index 过小，返回 -2；
    *         若前 n 个节点中找不到，返回 -3。
    */
-  int FindSequenceInHeadBitmaps (uint32_t seq, uint16_t retrans_tier, int32_t& tableIndex);
+  int FindSequenceInHeadBitmaps (uint32_t seq, uint16_t retrans_tier, int32_t& tableIndex, Time* delay=NULL);
 
 
   uint32_t GetMapSize () const;
@@ -137,6 +137,8 @@ public:
 
   bool IsCurrentBitmapEmpty() const;
   void ResetCurrentBitmap(uint32_t newseq = 0);
+  uint32_t EstimateAdamapDmaBytes(const Adamap &adamap) const;
+  void AddRnicDmaDelay(Time* delay, uint16_t opType, uint32_t bytes, bool isWrite);
 
   // 状态变量
   bool get_last_packet;

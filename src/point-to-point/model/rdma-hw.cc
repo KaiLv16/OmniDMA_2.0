@@ -139,8 +139,19 @@ TypeId RdmaHw::GetTypeId(void) {
             .AddAttribute("OmniDMATimeout", "OmniDMA high level retrans Timeout",
                           TimeValue(MicroSeconds(4000)), MakeTimeAccessor(&RdmaHw::m_omnidmaTimeout),
                           MakeTimeChecker())
+            .AddAttribute("RnicDmaSchedEnable", "Enable RNIC DMA scheduler model for OmniDMA metadata",
+                          BooleanValue(false), MakeBooleanAccessor(&RdmaHw::m_rnicDmaSchedEnable),
+                          MakeBooleanChecker())
+            .AddAttribute("RnicDmaBw", "RNIC DMA bandwidth for OmniDMA metadata operations",
+                          DataRateValue(DataRate("64Gb/s")),
+                          MakeDataRateAccessor(&RdmaHw::m_rnicDmaBw), MakeDataRateChecker())
+            .AddAttribute("RnicDmaFixedLatency", "Per DMA operation fixed latency",
+                          TimeValue(NanoSeconds(200)),
+                          MakeTimeAccessor(&RdmaHw::m_rnicDmaFixedLatency), MakeTimeChecker())
             .AddTraceSource("OmniDMA_Event", "record a OmniDMA event.",
-                            MakeTraceSourceAccessor(&RdmaHw::m_trace_omnidma_event));
+                            MakeTraceSourceAccessor(&RdmaHw::m_trace_omnidma_event))
+            .AddTraceSource("RNIC_DMA_Event", "record a RNIC DMA scheduler event.",
+                            MakeTraceSourceAccessor(&RdmaHw::m_trace_rnic_dma_event));
             
     return tid;
 }
@@ -149,6 +160,79 @@ RdmaHw::RdmaHw() {
     cnp_total = 0;
     cnp_by_ecn = 0;
     cnp_by_ooo = 0;
+    m_rnicDmaSchedEnable = false;
+    m_rnicDmaBw = DataRate("64Gb/s");
+    m_rnicDmaFixedLatency = NanoSeconds(200);
+    m_rnicDmaNextAvailable = NanoSeconds(0);
+}
+
+void RdmaHw::RefreshRnicDmaSchedulerState() {
+    if (!m_rnicDmaSchedEnable) {
+        return;
+    }
+    Time now = Simulator::Now();
+    while (!m_rnicDmaCompletions.empty() && m_rnicDmaCompletions.front().done <= now) {
+        m_rnicDmaStats.completedOps++;
+        m_rnicDmaStats.completedBytes += m_rnicDmaCompletions.front().bytes;
+        m_rnicDmaCompletions.pop_front();
+    }
+}
+
+uint32_t RdmaHw::GetRnicDmaInflightOps() {
+    RefreshRnicDmaSchedulerState();
+    return static_cast<uint32_t>(m_rnicDmaCompletions.size());
+}
+
+uint64_t RdmaHw::GetRnicDmaBacklogDelayNs() {
+    RefreshRnicDmaSchedulerState();
+    Time now = Simulator::Now();
+    if (!m_rnicDmaSchedEnable || m_rnicDmaNextAvailable <= now) {
+        return 0;
+    }
+    return (m_rnicDmaNextAvailable - now).GetNanoSeconds();
+}
+
+Time RdmaHw::SubmitRnicDmaOp(uint16_t opType, uint32_t bytes, bool isWrite, int32_t flowId) {
+    if (!m_rnicDmaSchedEnable || bytes == 0) {
+        return NanoSeconds(0);
+    }
+
+    RefreshRnicDmaSchedulerState();
+
+    Time now = Simulator::Now();
+    uint32_t qDepthBefore = static_cast<uint32_t>(m_rnicDmaCompletions.size());
+    Time start = (m_rnicDmaNextAvailable > now) ? m_rnicDmaNextAvailable : now;
+    Time queueDelay = start - now;
+    Time serviceTime = m_rnicDmaFixedLatency + Seconds(m_rnicDmaBw.CalculateTxTime(bytes));
+    Time done = start + serviceTime;
+
+    m_rnicDmaNextAvailable = done;
+    m_rnicDmaCompletions.push_back(RnicDmaCompletionRecord(done, bytes));
+
+    m_rnicDmaStats.submittedOps++;
+    m_rnicDmaStats.submittedBytes += bytes;
+    if (isWrite) {
+        m_rnicDmaStats.submittedWriteOps++;
+        m_rnicDmaStats.submittedWriteBytes += bytes;
+    } else {
+        m_rnicDmaStats.submittedReadOps++;
+        m_rnicDmaStats.submittedReadBytes += bytes;
+    }
+    m_rnicDmaStats.totalQueueDelayNs += queueDelay.GetNanoSeconds();
+    m_rnicDmaStats.totalServiceTimeNs += serviceTime.GetNanoSeconds();
+    if (queueDelay.GetNanoSeconds() > m_rnicDmaStats.maxQueueDelayNs) {
+        m_rnicDmaStats.maxQueueDelayNs = queueDelay.GetNanoSeconds();
+    }
+    uint32_t qDepthAfter = qDepthBefore + 1;
+    if (qDepthAfter > m_rnicDmaStats.maxQueueDepth) {
+        m_rnicDmaStats.maxQueueDepth = qDepthAfter;
+    }
+
+    uint64_t backlogNs = (done > now) ? (done - now).GetNanoSeconds() : 0;
+    m_trace_rnic_dma_event(flowId, opType, bytes, queueDelay.GetNanoSeconds(),
+                           serviceTime.GetNanoSeconds(), backlogNs, qDepthAfter);
+
+    return queueDelay + serviceTime;
 }
 
 void RdmaHw::SetNode(Ptr<Node> node) { m_node = node; }
@@ -596,14 +680,16 @@ void RdmaHw::HandleOmniListTimeout(uint16_t omni_type, Ptr<RdmaRxQueuePair> rxQp
 
         if (it->lastCallTime + rxQp->adamap_receiver.omni_scale_rto < Simulator::Now()) {
             it->lastCallTime = Simulator::Now();
-            rxQp->adamap_receiver.PutLinkedListHeadToTable("Put timeout linked list head to table", false, true);
+            Time dmaDelay = NanoSeconds(0);
+            rxQp->adamap_receiver.PutLinkedListHeadToTable("Put timeout linked list head to table",
+                                                           false, true, &dmaDelay);
             printf("%lu: this item's tableIndex=%u, isFinish=%d, lastCallTime=%ld us, max_retrans_omni_type=%d\n",
                 it->lastCallTime.GetMicroSeconds(), it->tableIndex, it->isFinish, it->lastCallTime.GetMicroSeconds(), it->max_retrans_omni_type);
             it = rxQp->adamap_receiver.m_finishedBitmaps.erase(it);   // 使用 erase 删除当前元素，并获取下一个有效元素
             printf("to assert: LookupTable's last item: tableIndex=%u, isFinish=%d\n",
                 rxQp->adamap_receiver.m_lookupTable.back().tableIndex, rxQp->adamap_receiver.m_lookupTable.back().isFinish);
             PrintAdamap(&(rxQp->adamap_receiver.m_lookupTable.back().adamap), "Timeout linked list to table:");
-            TransmitOmniNACK(1, rxQp, ch, rxQp->adamap_receiver.m_lookupTable.back());
+            TransmitOmniNACK(1, rxQp, ch, rxQp->adamap_receiver.m_lookupTable.back(), dmaDelay);
             
         } else {
             break;   // 只在不删除元素时才 ++it

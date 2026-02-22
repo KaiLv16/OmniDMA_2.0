@@ -86,6 +86,23 @@ void ReceiverAdamap::ResetCurrentBitmap(uint32_t newseq)
   m_startSeq = newseq;
 }
 
+uint32_t ReceiverAdamap::EstimateAdamapDmaBytes(const Adamap &adamap) const {
+  uint32_t bitmapBytes = (adamap.bitmap.size() + 7) / 8;
+  // metadata fields + bitmap payload (coarse model)
+  return 32 + bitmapBytes;
+}
+
+void ReceiverAdamap::AddRnicDmaDelay(Time* delay, uint16_t opType, uint32_t bytes, bool isWrite) {
+  if (m_hw == NULL) {
+    return;
+  }
+  int32_t flowId = (m_RxQp == NULL) ? -1 : m_RxQp->m_flow_id;
+  Time opDelay = m_hw->SubmitRnicDmaOp(opType, bytes, isWrite, flowId);
+  if (delay != NULL) {
+    *delay += opDelay;
+  }
+}
+
 bool ReceiverAdamap::assertTableFinish() const {
   for (const auto& item : m_lookupTable) {
     if (!item.isFinish) {
@@ -183,6 +200,8 @@ if (retrans_tier > 0)
 
       // m_finishedBitmaps.emplace_back(Adamap{adamap_id, m_bitmap, m_startSeq, m_reprLength });
       m_finishedBitmaps.emplace_back(Adamap_with_index{Adamap{adamap_id, m_bitmap, m_startSeq, m_reprLength}, (int32_t)adamap_id, false, Simulator::Now(), 0});
+      AddRnicDmaDelay(delay, RdmaHw::RNIC_DMA_LL_APPEND_WRITE,
+                      EstimateAdamapDmaBytes(m_finishedBitmaps.back().adamap), true);
       
       adamap_for_NACK = m_finishedBitmaps.back(); // 顺手送回RdmaHw，这里送的是Adamap，但是为了方便，套壳Adamap_with_index
       adamap_for_print = Adamap{adamap_id, m_bitmap, m_startSeq, m_reprLength};      // 顺手送回RdmaHw
@@ -205,7 +224,7 @@ if (retrans_tier > 0)
     
     int res_offset = -10;
     int LinkedlistStartId;
-    int AdamapIdxInLL = FindSequenceInHeadBitmaps(seq, retrans_tier, LinkedlistStartId);
+    int AdamapIdxInLL = FindSequenceInHeadBitmaps(seq, retrans_tier, LinkedlistStartId, delay);
 
     if (AdamapIdxInLL == -1 || AdamapIdxInLL == -2) {      // 如果linked list head出现了超时重传，那么本次传输的包直接丢弃，这部分包交给table处理。
       printf("FindSequence() return %d (%s). Maybe a multi-retransmission packet of linked list ?\n", AdamapIdxInLL, AdamapIdxInLL == -1 ? "not found" : "seq <= startSeq");
@@ -214,14 +233,18 @@ if (retrans_tier > 0)
     else {  // cache hit or cache miss
       if (AdamapIdxInLL == -3) {      // cache miss
         printf("Cache miss: seq %u of retrans_tier %u not found in the first %d nodes. The node is actually at %dth.\n", seq, retrans_tier, first_n, LinkedlistStartId);
-        *delay = MicroSeconds(1);   // simulate cache miss delay
+        if (!m_finishedBitmaps.empty()) {
+          AddRnicDmaDelay(delay, RdmaHw::RNIC_DMA_LL_MISS_READ,
+                          EstimateAdamapDmaBytes(m_finishedBitmaps.front().adamap), false);
+        }
         AdamapIdxInLL = LinkedlistStartId;
       }
       // cache hit, or deal with cache miss as cache hit.
       printf("%lu: cache hit, Find target node %d. %s\n", Simulator::Now().GetTimeStep(), AdamapIdxInLL, AdamapIdxInLL > 0 ? "Deal with nodes before target node." : "");
       // step 1：处理链表中目标节点之前的节点
       for (int i = 0; i < AdamapIdxInLL; i++) {
-        new_high_tier_cnt += PutLinkedListHeadToTable("1st retrans: ReceiverAdamap at previous node", true, true);
+        new_high_tier_cnt += PutLinkedListHeadToTable("1st retrans: ReceiverAdamap at previous node",
+                                                      true, true, delay);
       }
       // step 2：处理目标节点
       Adamap_with_index& desiredElement = m_finishedBitmaps.front();
@@ -255,6 +278,8 @@ if (retrans_tier > 0)
             newAdamap.lastCallTime = Simulator::Now();
             newAdamap.max_retrans_omni_type = retrans_tier;
             m_lookupTable.push_back(newAdamap);
+            AddRnicDmaDelay(delay, RdmaHw::RNIC_DMA_LL_TO_TABLE_WRITE,
+                            EstimateAdamapDmaBytes(newAdamap.adamap), true);
             max_omni_type = std::max(max_omni_type, newAdamap.max_retrans_omni_type);
             printf("(a) Add new Adamap to Lookup table. Table ID: %d\n", newAdamap.tableIndex);
             PrintAdamap(&(newAdamap.adamap), "gen LookUp Table Adamap");
@@ -297,6 +322,8 @@ if (retrans_tier > 0)
           newAdamap.lastCallTime = Simulator::Now();
           newAdamap.max_retrans_omni_type = retrans_tier;
           m_lookupTable.push_back(newAdamap);
+          AddRnicDmaDelay(delay, RdmaHw::RNIC_DMA_LL_TO_TABLE_WRITE,
+                          EstimateAdamapDmaBytes(newAdamap.adamap), true);
           max_omni_type = std::max(max_omni_type, newAdamap.max_retrans_omni_type);
           printf("(b) Add new Adamap to Lookup table. Table ID: %d\n", newAdamap.tableIndex);
           PrintAdamap(&(newAdamap.adamap), "LookUp Table Adamap");
@@ -329,7 +356,8 @@ if (retrans_tier > 0)
     for (auto it = m_lookupTable.begin(); it != m_lookupTable.end(); ++it) {
       if (it->tableIndex == tableIndex) {
         if(AccessLookupTableLru(tableIndex) == 1) {
-          *delay = MicroSeconds(1);   // simulate cache miss delay
+          AddRnicDmaDelay(delay, RdmaHw::RNIC_DMA_TABLE_MISS_READ,
+                          EstimateAdamapDmaBytes(it->adamap), false);
         }
         int trigger_resend = 0;
         // 更新该流的平均 rtt
@@ -405,7 +433,7 @@ if (retrans_tier > 0)
 }
 
 
-int ReceiverAdamap::PutLinkedListHeadToTable(std::string str, bool do_erase, bool update_ts) {
+int ReceiverAdamap::PutLinkedListHeadToTable(std::string str, bool do_erase, bool update_ts, Time* delay) {
   int newTableNodeCnt = 0;
   Adamap_with_index& desiredElement = m_finishedBitmaps.front();
   // PrintAdamap(&(desiredElement.adamap), str.c_str());
@@ -427,6 +455,8 @@ int ReceiverAdamap::PutLinkedListHeadToTable(std::string str, bool do_erase, boo
       }
       newAdamap.max_retrans_omni_type = 1;
       m_lookupTable.push_back(newAdamap);
+      AddRnicDmaDelay(delay, RdmaHw::RNIC_DMA_LL_TO_TABLE_WRITE,
+                      EstimateAdamapDmaBytes(newAdamap.adamap), true);
       newTableNodeCnt ++;
       max_omni_type = std::max(max_omni_type, newAdamap.max_retrans_omni_type);
       printf("(c) Add new Adamap to Lookup table. Table ID: %d\n", newAdamap.tableIndex);
@@ -522,13 +552,25 @@ ReceiverAdamap::splitAdamap(Adamap &node, Adamap &firstPart, bool neglectAllOneB
     return false;
 }
 
-
-int 
-ReceiverAdamap::FindSequenceInHeadBitmaps (uint32_t seq, uint16_t retrans_tier, int32_t& tableIndex)
+int
+ReceiverAdamap::FindSequenceInHeadBitmaps (uint32_t seq, uint16_t retrans_tier, int32_t& tableIndex, Time* delay)
 {
   ++m_linkedListAccessCount;
   if (m_finishedBitmaps.empty ()){      // 链表为空，无法查找
     return -1; 
+  }
+
+  if (retrans_tier == 1) {
+    uint32_t prefetchNodes = 0;
+    uint32_t prefetchBytes = 0;
+    for (auto itPref = m_finishedBitmaps.begin();
+         itPref != m_finishedBitmaps.end() && prefetchNodes < static_cast<uint32_t>(first_n);
+         ++itPref, ++prefetchNodes) {
+      prefetchBytes += EstimateAdamapDmaBytes(itPref->adamap);
+    }
+    if (prefetchBytes > 0) {
+      AddRnicDmaDelay(delay, RdmaHw::RNIC_DMA_LL_PREFETCH_READ, prefetchBytes, false);
+    }
   }
 
   auto it = m_finishedBitmaps.begin ();

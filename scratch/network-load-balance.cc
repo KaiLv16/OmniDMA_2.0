@@ -105,6 +105,8 @@ FILE *voq_detail_output = NULL;
 FILE *uplink_output = NULL;
 FILE *conn_output = NULL;
 FILE *memory_usage_output = NULL;
+FILE *rnic_dma_stats_output = NULL;
+FILE *rnic_dma_ops_output = NULL;
 
 FILE *routing_table_output = NULL;
 FILE *snd_rcv_output = NULL;
@@ -123,6 +125,8 @@ std::string voq_mon_detail_file = "voq_detail.txt";
 std::string uplink_mon_file = "uplink.txt";
 std::string conn_mon_file = "conn.txt";
 std::string memory_usage_mon_file = "out_memory_usage.txt";
+std::string rnic_dma_stats_file = "out_rnic_dma_stats.txt";
+std::string rnic_dma_ops_file = "out_rnic_dma_ops.txt";
 std::string est_error_output_file = "est_error.txt";
 
 std::string routing_table_output_file = "routing_table.txt";
@@ -166,6 +170,8 @@ int enable_irn = 0;
 int enable_omnidma = 0;
 int random_seed = 1;  // change this randomly if you want random expt
 double my_switch_total_drop_rate = 0.0;
+std::string rnic_dma_bw = "64Gb/s";
+uint64_t rnic_dma_fixed_latency_ns = 200;
 
 
 uint64_t maxRtt, maxBdp;
@@ -432,6 +438,35 @@ void memory_usage_monitoring(FILE *fout_memory_usage) {
 }
 
 /**
+ * @brief Per-host RNIC DMA scheduler monitoring (for OmniDMA metadata ops)
+ * output format:
+ * time(ns),hostId,inflightOps,backlogNs,submittedOps,completedOps,submittedBytes,completedBytes,
+ * submittedReadOps,submittedWriteOps,avgQueueDelayNs,maxQueueDelayNs,maxQueueDepth
+ */
+void rnic_dma_monitoring(FILE *fout) {
+    uint64_t now = Simulator::Now().GetNanoSeconds();
+    for (uint32_t i = 0; i < Settings::node_num; i++) {
+        if (n.Get(i)->GetNodeType() != 0) continue;
+        Ptr<RdmaDriver> rdmaDriver = n.Get(i)->GetObject<RdmaDriver>();
+        Ptr<RdmaHw> rdmaHw = rdmaDriver->m_rdma;
+
+        uint32_t inflightOps = rdmaHw->GetRnicDmaInflightOps();
+        uint64_t backlogNs = rdmaHw->GetRnicDmaBacklogDelayNs();
+        const RdmaHw::RnicDmaStats &s = rdmaHw->GetRnicDmaStats();
+        uint64_t avgQueueDelayNs = (s.submittedOps == 0) ? 0 : (s.totalQueueDelayNs / s.submittedOps);
+
+        fprintf(fout, "%lu,%u,%u,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu\n", now, i,
+                inflightOps, backlogNs, s.submittedOps, s.completedOps, s.submittedBytes,
+                s.completedBytes, s.submittedReadOps, s.submittedWriteOps, avgQueueDelayNs,
+                s.maxQueueDelayNs, s.maxQueueDepth);
+    }
+
+    if (Simulator::Now() < Seconds(flowgen_stop_time + 0.05)) {
+        Simulator::Schedule(NanoSeconds(switch_mon_interval), &rnic_dma_monitoring, fout);
+    }
+}
+
+/**
  * @brief Conga timeout number recording
  */
 void conga_history_print() {
@@ -670,6 +705,32 @@ void record_omnidma_event(FILE *fout, Ptr<RdmaHw> rdmahw, int flowid=-1, int seq
     if (adamap != NULL) {
         PrintAdamap(adamap, s, fout);
     }
+}
+
+const char *GetRnicDmaOpName(uint16_t op_type) {
+    switch (op_type) {
+        case RdmaHw::RNIC_DMA_LL_APPEND_WRITE:
+            return "LL_APPEND_WRITE";
+        case RdmaHw::RNIC_DMA_LL_TO_TABLE_WRITE:
+            return "LL_TO_TABLE_WRITE";
+        case RdmaHw::RNIC_DMA_LL_PREFETCH_READ:
+            return "LL_PREFETCH_READ";
+        case RdmaHw::RNIC_DMA_LL_MISS_READ:
+            return "LL_MISS_READ";
+        case RdmaHw::RNIC_DMA_TABLE_MISS_READ:
+            return "TABLE_MISS_READ";
+        default:
+            return "UNKNOWN";
+    }
+}
+
+void record_rnic_dma_event(FILE *fout, Ptr<RdmaHw> rdmahw, int32_t flow_id,
+                           uint16_t op_type, uint32_t bytes, uint64_t qdelay_ns,
+                           uint64_t service_ns, uint64_t backlog_ns, uint32_t qdepth) {
+    uint32_t host_id = (rdmahw != NULL && rdmahw->m_node != NULL) ? rdmahw->m_node->GetId() : 0;
+    fprintf(fout, "%lu,%u,%d,%u,%s,%u,%lu,%lu,%lu,%u\n", Simulator::Now().GetNanoSeconds(),
+            host_id, flow_id, op_type, GetRnicDmaOpName(op_type), bytes, qdelay_ns, service_ns,
+            backlog_ns, qdepth);
 }
 /*******************************************************************/
 #if (false)
@@ -1074,6 +1135,14 @@ int main(int argc, char *argv[]) {
                 conf >> omniDMA_event_output_file;
                 std::cerr << "OMNIDMA_EVENT_OUTPUT_FILE\t\t" << omniDMA_event_output_file << '\n';
             }
+            else if (key.compare("RNIC_DMA_BW") == 0) {
+                conf >> rnic_dma_bw;
+                std::cerr << "RNIC_DMA_BW\t\t\t" << rnic_dma_bw << '\n';
+            }
+            else if (key.compare("RNIC_DMA_FIXED_LATENCY_NS") == 0) {
+                conf >> rnic_dma_fixed_latency_ns;
+                std::cerr << "RNIC_DMA_FIXED_LATENCY_NS\t\t" << rnic_dma_fixed_latency_ns << '\n';
+            }
             
             else if (key.compare("FLOWGEN_START_TIME") == 0) {
                 double v;
@@ -1246,6 +1315,12 @@ int main(int argc, char *argv[]) {
             } else if (key.compare("MEMORY_USAGE_MON_FILE") == 0) {
                 conf >> memory_usage_mon_file;
                 std::cerr << "MEMORY_USAGE_MON_FILE\t\t\t" << memory_usage_mon_file << '\n';
+            } else if (key.compare("RNIC_DMA_STATS_FILE") == 0) {
+                conf >> rnic_dma_stats_file;
+                std::cerr << "RNIC_DMA_STATS_FILE\t\t\t" << rnic_dma_stats_file << '\n';
+            } else if (key.compare("RNIC_DMA_OPS_FILE") == 0) {
+                conf >> rnic_dma_ops_file;
+                std::cerr << "RNIC_DMA_OPS_FILE\t\t\t" << rnic_dma_ops_file << '\n';
             } else if (key.compare("QLEN_MON_START") == 0) {
                 conf >> qlen_mon_start;
                 std::cerr << "QLEN_MON_START\t\t\t\t" << qlen_mon_start << '\n';
@@ -1569,11 +1644,24 @@ int main(int argc, char *argv[]) {
                 memory_usage_mon_file =
                     fct_output_file.substr(0, pos + 1) + "out_memory_usage.txt";
             }
+            if (rnic_dma_stats_file == "out_rnic_dma_stats.txt") {
+                rnic_dma_stats_file =
+                    fct_output_file.substr(0, pos + 1) + "out_rnic_dma_stats.txt";
+            }
+            if (rnic_dma_ops_file == "out_rnic_dma_ops.txt") {
+                rnic_dma_ops_file =
+                    fct_output_file.substr(0, pos + 1) + "out_rnic_dma_ops.txt";
+            }
         }
     }
 
     fct_output = fopen(fct_output_file.c_str(), "w");
     hit_rate_output = fopen(hit_rate_output_file.c_str(), "w");
+    rnic_dma_ops_output = fopen(rnic_dma_ops_file.c_str(), "w");
+    if (rnic_dma_ops_output) {
+        fprintf(rnic_dma_ops_output,
+                "# time_ns,host_id,flow_id,op_type,op_name,bytes,queue_delay_ns,service_time_ns,backlog_ns,queue_depth_after_submit\n");
+    }
     flow_input_stream = fopen(flow_input_file.c_str(), "w");
     if (cc_mode == 1) {
         cnp_output = fopen(cnp_output_file.c_str(), "w");
@@ -1660,6 +1748,10 @@ int main(int argc, char *argv[]) {
             rdmaHw->SetAttribute("IrnEnable", BooleanValue(enable_irn));
             
             rdmaHw->SetAttribute("OmniDMAEnable", BooleanValue(enable_omnidma));
+            rdmaHw->SetAttribute("RnicDmaSchedEnable", BooleanValue(enable_omnidma));
+            rdmaHw->SetAttribute("RnicDmaBw", DataRateValue(DataRate(rnic_dma_bw)));
+            rdmaHw->SetAttribute("RnicDmaFixedLatency",
+                                 TimeValue(NanoSeconds(rnic_dma_fixed_latency_ns)));
 
             // 长距离测试(IRN)：
 
@@ -1689,6 +1781,8 @@ int main(int argc, char *argv[]) {
                                              MakeBoundCallback(qp_finish, fct_output));
             rdmaHw->TraceConnectWithoutContext("OmniDMA_Event",
                                              MakeBoundCallback(&record_omnidma_event, omniDMA_event_output, rdmaHw));
+            rdmaHw->TraceConnectWithoutContext("RNIC_DMA_Event",
+                                             MakeBoundCallback(&record_rnic_dma_event, rnic_dma_ops_output, rdmaHw));
         }
     }
 
@@ -2011,6 +2105,15 @@ int main(int argc, char *argv[]) {
     uplink_output = fopen(uplink_mon_file.c_str(), "w");  // common
     conn_output = fopen(conn_mon_file.c_str(), "w");      // common
     memory_usage_output = fopen(memory_usage_mon_file.c_str(), "w");  // common
+    rnic_dma_stats_output = fopen(rnic_dma_stats_file.c_str(), "w");  // common
+    if (memory_usage_output) {
+        fprintf(memory_usage_output,
+                "# time_ns,host_id,total_rxqp_linked_list_entries,total_rxqp_lookup_table_entries\n");
+    }
+    if (rnic_dma_stats_output) {
+        fprintf(rnic_dma_stats_output,
+                "# time_ns,host_id,inflight_ops,backlog_ns,submitted_ops,completed_ops,submitted_bytes,completed_bytes,submitted_read_ops,submitted_write_ops,avg_queue_delay_ns,max_queue_delay_ns,max_queue_depth\n");
+    }
 
     // update torId2UplinkIf, torId2DownlinkIf
     for (size_t ToRId = 0; ToRId < Settings::node_num; ToRId++) {
@@ -2040,6 +2143,7 @@ int main(int argc, char *argv[]) {
     Simulator::Schedule(Seconds(flowgen_start_time), &periodic_monitoring, voq_output,
                         voq_detail_output, uplink_output, conn_output, &lb_mode);
     Simulator::Schedule(Seconds(flowgen_start_time), &memory_usage_monitoring, memory_usage_output);
+    Simulator::Schedule(Seconds(flowgen_start_time), &rnic_dma_monitoring, rnic_dma_stats_output);
 
     //
     // Now, do the actual simulation.

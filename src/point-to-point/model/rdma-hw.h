@@ -8,6 +8,7 @@
 
 #include <unordered_map>
 #include <unordered_set>
+#include <deque>
 
 #include "qbb-net-device.h"
 #include "rdma-queue-pair.h"
@@ -28,6 +29,42 @@ struct RdmaInterfaceMgr {
 
 class RdmaHw : public Object {
    public:
+    enum RnicDmaOpType {
+        RNIC_DMA_LL_APPEND_WRITE = 1,
+        RNIC_DMA_LL_TO_TABLE_WRITE = 2,
+        RNIC_DMA_LL_PREFETCH_READ = 3,
+        RNIC_DMA_LL_MISS_READ = 4,
+        RNIC_DMA_TABLE_MISS_READ = 5,
+    };
+
+    struct RnicDmaStats {
+        uint64_t submittedOps;
+        uint64_t completedOps;
+        uint64_t submittedReadOps;
+        uint64_t submittedWriteOps;
+        uint64_t submittedBytes;
+        uint64_t completedBytes;
+        uint64_t submittedReadBytes;
+        uint64_t submittedWriteBytes;
+        uint64_t totalQueueDelayNs;
+        uint64_t totalServiceTimeNs;
+        uint64_t maxQueueDelayNs;
+        uint64_t maxQueueDepth;
+        RnicDmaStats()
+            : submittedOps(0),
+              completedOps(0),
+              submittedReadOps(0),
+              submittedWriteOps(0),
+              submittedBytes(0),
+              completedBytes(0),
+              submittedReadBytes(0),
+              submittedWriteBytes(0),
+              totalQueueDelayNs(0),
+              totalServiceTimeNs(0),
+              maxQueueDelayNs(0),
+              maxQueueDepth(0) {}
+    };
+
     static TypeId GetTypeId(void);
     RdmaHw();
 
@@ -52,6 +89,8 @@ class RdmaHw : public Object {
     QpCompleteCallback m_qpCompleteCallback;
     
     TracedCallback<int, int, uint32_t, uint32_t, const std::string &, const Adamap*> m_trace_omnidma_event;   // trace函数，用于记录omnidma的事件
+    TracedCallback<int32_t, uint16_t, uint32_t, uint64_t, uint64_t, uint64_t, uint32_t>
+        m_trace_rnic_dma_event;  // flowId, opType, bytes, qDelayNs, svcNs, backlogNs, qDepth
 
     void SetNode(Ptr<Node> node);
     void Setup(QpCompleteCallback cb);  // setup shared data and callbacks with the QbbNetDevice
@@ -208,6 +247,27 @@ class RdmaHw : public Object {
      *********************/
     bool m_omnidma;             // 主文件中 rdmaHw->SetAttribute设置的
     Time m_omnidmaTimeout;  // timeout for omnidma
+
+    /**********************
+     * RNIC DMA Scheduler (for OmniDMA metadata ops)
+     *********************/
+    bool m_rnicDmaSchedEnable;
+    DataRate m_rnicDmaBw;
+    Time m_rnicDmaFixedLatency;
+    Time m_rnicDmaNextAvailable;
+    RnicDmaStats m_rnicDmaStats;
+    struct RnicDmaCompletionRecord {
+        Time done;
+        uint32_t bytes;
+        RnicDmaCompletionRecord(Time d = Time(0), uint32_t b = 0) : done(d), bytes(b) {}
+    };
+    std::deque<RnicDmaCompletionRecord> m_rnicDmaCompletions;
+
+    Time SubmitRnicDmaOp(uint16_t opType, uint32_t bytes, bool isWrite, int32_t flowId = -1);
+    void RefreshRnicDmaSchedulerState();
+    uint32_t GetRnicDmaInflightOps();
+    uint64_t GetRnicDmaBacklogDelayNs();
+    const RnicDmaStats &GetRnicDmaStats() const { return m_rnicDmaStats; }
 };
 
 } /* namespace ns3 */

@@ -168,6 +168,83 @@ adamap在收发双端的behavior建模，请见`src/point-to-point/model/adamap-
 
 我们为Go-back-N、IRN和OmniDMA都打印了一些统计信息，请见`mix/output/*`下对应的文件夹。
 
+##### RNIC DMA调度器（仿真模型）设计
+
+为了评估高丢包率“慢流”是否会因频繁的Adamap上传/读取而占用过多RNIC调度资源、进而影响同一网卡上“快流”的性能，我们在`RdmaHw`中增加了一个面向OmniDMA元数据访问的RNIC DMA调度器模型（见`src/point-to-point/model/rdma-hw.h/cc`）。
+
+该模型的设计目标不是精确复现真实PCIe协议细节，而是建立一条可用于因果分析的链路：`Adamap元数据访问请求 -> RNIC DMA排队 -> 额外处理延迟 -> OmniNACK/重传调度推迟 -> 流性能变化`。
+
+模型的主要假设如下：
+
+- **每个host（每个`RdmaHw`）一个DMA服务队列**：用于模拟该RNIC上的OmniDMA元数据读写竞争。
+- **单队列、FCFS、非抢占**：所有元数据DMA请求按到达顺序服务。
+- **统一服务时间模型**：每个DMA操作的服务时间近似为  
+  `固定时延 + 数据量 / DMA带宽`。
+- **元数据访问粗粒度建模**：当前对Adamap大小采用近似估算（metadata字段 + bitmap字节数），用于反映相对竞争强度，而非真实PCIe TLP级精度。
+
+当前纳入DMA调度器的操作类型包括：
+
+- Adamap生成后挂到链表（写）
+- 链表节点写入查找表（写）
+- 链表头预取（读）
+- 链表cache miss时现场读取（读）
+- 查找表miss时现场DMA读取（读）
+
+这些操作会在`adamap-receiver`的关键路径中提交到RNIC DMA调度器；调度器返回的“排队+服务延迟”会累加到已有的OmniDMA处理延迟上，从而影响OmniNACK/重传相关控制包的发送时机。
+
+同时，我们增加了两类监控输出，便于分析“慢流是否挤占RNIC调度资源”：
+
+- `out_rnic_dma_ops.txt`：逐DMA请求事件日志（包含操作类型、字节数、排队延迟、服务时间、提交后队列深度等）
+- `out_rnic_dma_stats.txt`：按时间周期（默认复用10us监控周期）统计每个host的DMA队列状态（在途请求数、backlog、累计提交/完成、平均/最大排队延迟、最大队列深度等）
+
+此外，`out_memory_usage.txt`用于辅助观察每个host上所有`rxQp`的Adamap元数据占用规模（链表节点总数、查找表条目总数），可与`out_rnic_dma_*`联合分析“占用量”和“调度拥塞”之间的关系。
+
+可调参数（在配置文件中）包括：
+
+- `RNIC_DMA_BW`：RNIC DMA带宽（例如`64Gb/s`）
+- `RNIC_DMA_FIXED_LATENCY_NS`：每次DMA操作的固定时延（ns）
+- `RNIC_DMA_STATS_FILE` / `RNIC_DMA_OPS_FILE`：输出文件路径
+
+默认情况下，当开启OmniDMA（`--omnidma 1`）时会同时启用该RNIC DMA调度器模型。
+
+代码位置索引（便于阅读/修改）：
+
+- **RNIC DMA调度器核心（`RdmaHw`）**
+  - `src/point-to-point/model/rdma-hw.h`
+    - `enum RnicDmaOpType`：DMA操作类型定义（链表挂载、链表/查找表读写等）
+    - `struct RnicDmaStats`：DMA调度统计项定义
+    - `SubmitRnicDmaOp(...)` / `GetRnicDmaInflightOps()` / `GetRnicDmaBacklogDelayNs()`：调度与监控接口
+  - `src/point-to-point/model/rdma-hw.cc`
+    - `RdmaHw::GetTypeId()`：新增属性 `RnicDmaSchedEnable` / `RnicDmaBw` / `RnicDmaFixedLatency`
+    - `RdmaHw::SubmitRnicDmaOp(...)`：FCFS调度与“固定时延 + 带宽服务时间”计算
+    - `RdmaHw::RefreshRnicDmaSchedulerState()`：完成队列清理与累计完成统计
+    - `RdmaHw::HandleOmniListTimeout(...)`：超时路径中的链表转表写入与NACK发送延迟注入
+
+- **Adamap访问路径接入点（`ReceiverAdamap`）**
+  - `src/point-to-point/model/adamap-receiver.h`
+    - `PutLinkedListHeadToTable(..., Time* delay)`
+    - `FindSequenceInHeadBitmaps(..., Time* delay)`
+    - `EstimateAdamapDmaBytes(...)` / `AddRnicDmaDelay(...)`
+  - `src/point-to-point/model/adamap-receiver.cc`
+    - `EstimateAdamapDmaBytes(...)`：Adamap元数据字节数的粗粒度估算
+    - `AddRnicDmaDelay(...)`：调用 `m_hw->SubmitRnicDmaOp(...)` 并把延迟累加到当前包处理延迟
+    - `ReceiverAdamap::Record(...)`：链表挂载、链表预取/链表miss、查找表miss、链表转表写入等路径接入DMA调度器
+    - `PutLinkedListHeadToTable(...)`：链表节点拆分并写入查找表时提交DMA写请求
+    - `FindSequenceInHeadBitmaps(...)`：首次重传路径中的链表头预取与链表miss读取
+
+- **输出文件与监控逻辑（`network-load-balance`）**
+  - `scratch/network-load-balance.cc`
+    - `record_rnic_dma_event(...)`：写出 `out_rnic_dma_ops.txt`（逐DMA请求事件）
+    - `rnic_dma_monitoring(...)`：写出 `out_rnic_dma_stats.txt`（每10us周期统计）
+    - `memory_usage_monitoring(...)`：写出 `out_memory_usage.txt`（每host的rxQp链表/查找表占用）
+    - host初始化处：`TraceConnectWithoutContext("RNIC_DMA_Event", ...)` 连接DMA事件trace
+    - 输出文件打开处：`RNIC_DMA_STATS_FILE` / `RNIC_DMA_OPS_FILE` / `MEMORY_USAGE_MON_FILE`
+
+- **配置项（实验参数）**
+  - `scratch/network-load-balance.cc`
+    - 配置解析：`RNIC_DMA_BW`、`RNIC_DMA_FIXED_LATENCY_NS`、`RNIC_DMA_STATS_FILE`、`RNIC_DMA_OPS_FILE`
+    - `rdmaHw->SetAttribute(...)`：将配置写入 `RnicDmaBw` / `RnicDmaFixedLatency` / `RnicDmaSchedEnable`
+
 
 
 ##### Clean up
