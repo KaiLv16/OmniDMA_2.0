@@ -697,6 +697,7 @@ void snd_rcv_record(FILE *fout, Ptr<QbbNetDevice> dev,
  *  7: sender get adamap
  *  8: first retrans process summary
  *  9: multi retrans process summary
+ * 10: linkedlist head cache prefetch
  */
 void record_omnidma_event(FILE *fout, Ptr<RdmaHw> rdmahw, int flowid=-1, int seq=-1, 
     uint32_t event_type=0, uint32_t omni_type=0, const std::string &s="", const Adamap* adamap=NULL) {
@@ -732,6 +733,9 @@ void record_omnidma_event(FILE *fout, Ptr<RdmaHw> rdmahw, int flowid=-1, int seq
             break;
         case RdmaHw::OMNI_EVT_MULTI_RETRANS_PROCESS:
             event_name = "multi retrans process";
+            break;
+        case RdmaHw::OMNI_EVT_LL_PREFETCH:
+            event_name = "linkedlist head cache prefetch";
             break;
         default:
             break;

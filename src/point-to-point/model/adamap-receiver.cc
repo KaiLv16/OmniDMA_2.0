@@ -143,12 +143,16 @@ void ReceiverAdamap::RefillLinkedListHeadCacheFromHost(Time* delay)
   uint32_t nodesToPull = std::min(freeSlots, m_llHostNodeCount);
   uint32_t prefetchBytes = 0;
   uint32_t pulled = 0;
+  const Adamap* firstPrefetchedAdamap = NULL;
 
   for (auto it = m_finishedBitmaps.begin();
        it != m_finishedBitmaps.end() && pulled < nodesToPull;
        ++it) {
     if (!it->inRnicLlCache) {
       it->inRnicLlCache = true;
+      if (firstPrefetchedAdamap == NULL) {
+        firstPrefetchedAdamap = &it->adamap;
+      }
       prefetchBytes += EstimateAdamapDmaBytes(it->adamap);
       ++pulled;
     }
@@ -159,6 +163,11 @@ void ReceiverAdamap::RefillLinkedListHeadCacheFromHost(Time* delay)
 
   if (prefetchBytes > 0) {
     AddRnicDmaDelay(delay, RdmaHw::RNIC_DMA_LL_PREFETCH_READ, prefetchBytes, false);
+    TraceOmniEvent(this,
+                   firstPrefetchedAdamap != NULL ? firstPrefetchedAdamap->startSeq : 0,
+                   RdmaHw::OMNI_EVT_LL_PREFETCH, 0,
+                   "prefetch linkedlist head cache refill",
+                   firstPrefetchedAdamap);
   }
 }
 

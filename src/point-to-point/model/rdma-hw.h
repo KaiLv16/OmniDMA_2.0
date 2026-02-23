@@ -47,6 +47,7 @@ class RdmaHw : public Object {
         OMNI_EVT_SENDER_GET_ADAMAP = 7,
         OMNI_EVT_FIRST_RETRANS_PROCESS = 8,
         OMNI_EVT_MULTI_RETRANS_PROCESS = 9,
+        OMNI_EVT_LL_PREFETCH = 10,
     };
 
     struct RnicDmaStats {
