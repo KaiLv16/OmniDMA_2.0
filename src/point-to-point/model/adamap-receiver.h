@@ -88,6 +88,8 @@ public:
 
   uint32_t GetMapSize () const;
   void SetMapSize (uint32_t bitmapSize);
+  uint32_t GetFirstN () const;
+  void SetFirstN (uint32_t firstN);
 
   Adamap GetCurrBitmap() const;
   std::string PrintCurrBitmap() const;
@@ -100,7 +102,6 @@ public:
 
   std::string PrintAllFinishedBitmaps (void) const;
   std::string PrintInternalState (void) const;
-  
   void DeleteHeadBitmap();
 
   int AccessLookupTableLru(int32_t tableIndex);
@@ -139,10 +140,14 @@ public:
   void ResetCurrentBitmap(uint32_t newseq = 0);
   uint32_t EstimateAdamapDmaBytes(const Adamap &adamap) const;
   void AddRnicDmaDelay(Time* delay, uint16_t opType, uint32_t bytes, bool isWrite);
+  void RefillLinkedListHeadCacheFromHost(Time* delay);
+  void EraseLinkedListHeadAndRefill(Time* delay);
+  void AppendFinishedBitmapToLinkedList(const Adamap &adamap, Time* delay);
+  void AddLinkedListMissReadDelay(Time* delay, uint32_t targetIndex);
 
   // 状态变量
   bool get_last_packet;
-  int first_n;
+  uint32_t first_n;
   int m_bitmapSize;
 
   bool isFinished;
@@ -152,6 +157,8 @@ public:
   uint64_t m_linkedListCacheHitCount;
   uint64_t m_lookupTableAccessCount;
   uint64_t m_lookupTableCacheHitCount;
+  uint32_t m_llHeadCacheNodeCount;
+  uint32_t m_llHostNodeCount;
 
   // 当前活动的bitmap及其相关变量
   std::vector<bool> m_bitmap; ///< 当前bitmap，初始化为全0

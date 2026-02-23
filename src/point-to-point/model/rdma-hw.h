@@ -36,6 +36,18 @@ class RdmaHw : public Object {
         RNIC_DMA_LL_MISS_READ = 4,
         RNIC_DMA_TABLE_MISS_READ = 5,
     };
+    enum OmniDmaEventType {
+        OMNI_EVT_GEN_AND_CACHE = 0,
+        OMNI_EVT_GEN_AND_UPLOAD = 1,
+        OMNI_EVT_FETCH_LINKEDLIST = 2,
+        OMNI_EVT_CONSUME_LINKEDLIST = 3,
+        OMNI_EVT_ENTER_LOOKUPTABLE = 4,
+        OMNI_EVT_FETCH_LOOKUPTABLE = 5,
+        OMNI_EVT_CONSUME_LOOKUPTABLE = 6,
+        OMNI_EVT_SENDER_GET_ADAMAP = 7,
+        OMNI_EVT_FIRST_RETRANS_PROCESS = 8,
+        OMNI_EVT_MULTI_RETRANS_PROCESS = 9,
+    };
 
     struct RnicDmaStats {
         uint64_t submittedOps;

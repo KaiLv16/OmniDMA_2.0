@@ -424,8 +424,8 @@ void memory_usage_monitoring(FILE *fout_memory_usage) {
         uint64_t total_lookup_table_entries = 0;
         for (const auto &rx_qp_it : rdmaHw->m_rxQpMap) {
             const auto &receiver = rx_qp_it.second->adamap_receiver;
-            total_linked_list_entries += receiver.m_finishedBitmaps.size();
-            total_lookup_table_entries += receiver.m_lookupTable.size();
+            total_linked_list_entries += receiver->m_finishedBitmaps.size();
+            total_lookup_table_entries += receiver->m_lookupTable.size();
         }
         fprintf(fout_memory_usage, "%lu,%u,%lu,%lu\n", now, i, total_linked_list_entries,
                 total_lookup_table_entries);
@@ -572,10 +572,10 @@ void qp_finish(FILE *fout, Ptr<RdmaQueuePair> q) {
                                                           q->sport, q->m_pg, false);
         uint64_t ll_access = 0, ll_hit = 0, table_access = 0, table_hit = 0;
         if (rxQp != NULL) {
-            ll_access = rxQp->adamap_receiver.GetLinkedListAccessCount();
-            ll_hit = rxQp->adamap_receiver.GetLinkedListCacheHitCount();
-            table_access = rxQp->adamap_receiver.GetLookupTableAccessCount();
-            table_hit = rxQp->adamap_receiver.GetLookupTableCacheHitCount();
+            ll_access = rxQp->adamap_receiver->GetLinkedListAccessCount();
+            ll_hit = rxQp->adamap_receiver->GetLinkedListCacheHitCount();
+            table_access = rxQp->adamap_receiver->GetLookupTableAccessCount();
+            table_hit = rxQp->adamap_receiver->GetLookupTableCacheHitCount();
         }
         // sender_id receiver_id flowid list_access list_hit table_access table_hit
         fprintf(hit_rate_output, "%u %u %d %lu %lu %lu %lu\n", sid, did, q->m_flow_id, ll_access,
@@ -686,11 +686,61 @@ void snd_rcv_record(FILE *fout, Ptr<QbbNetDevice> dev,
 }
 
 /*
- * event_type: 0: generate and upload, 1:get, 2:prefetch, 3: lookup, 4: evict 
-
-*/
+ * event_type:
+ *  0: gen and cache (first_n cache)
+ *  1: gen and upload (linkedlist node to host)
+ *  2: fetch from linkedlist
+ *  3: consume from linkedlist
+ *  4: enter lookup table
+ *  5: fetch from lookup table
+ *  6: consume from lookup table
+ *  7: sender get adamap
+ *  8: first retrans process summary
+ *  9: multi retrans process summary
+ */
 void record_omnidma_event(FILE *fout, Ptr<RdmaHw> rdmahw, int flowid=-1, int seq=-1, 
     uint32_t event_type=0, uint32_t omni_type=0, const std::string &s="", const Adamap* adamap=NULL) {
+
+    const char* event_name = "unknown";
+    switch (event_type) {
+        case RdmaHw::OMNI_EVT_GEN_AND_CACHE:
+            event_name = "gen and cache";
+            break;
+        case RdmaHw::OMNI_EVT_GEN_AND_UPLOAD:
+            event_name = "gen and upload";
+            break;
+        case RdmaHw::OMNI_EVT_FETCH_LINKEDLIST:
+            event_name = "Fetch from linkedlist";
+            break;
+        case RdmaHw::OMNI_EVT_CONSUME_LINKEDLIST:
+            event_name = "consume from linkedList";
+            break;
+        case RdmaHw::OMNI_EVT_ENTER_LOOKUPTABLE:
+            event_name = "enter Lookuptable";
+            break;
+        case RdmaHw::OMNI_EVT_FETCH_LOOKUPTABLE:
+            event_name = "Fetch from Lookuptable";
+            break;
+        case RdmaHw::OMNI_EVT_CONSUME_LOOKUPTABLE:
+            event_name = "consume from Lookuptable";
+            break;
+        case RdmaHw::OMNI_EVT_SENDER_GET_ADAMAP:
+            event_name = "sender get adamap";
+            break;
+        case RdmaHw::OMNI_EVT_FIRST_RETRANS_PROCESS:
+            event_name = "first retrans process";
+            break;
+        case RdmaHw::OMNI_EVT_MULTI_RETRANS_PROCESS:
+            event_name = "multi retrans process";
+            break;
+        default:
+            break;
+    }
+
+    int seq_pkt = seq;
+    if (seq >= 0 && rdmahw != NULL && rdmahw->m_mtu > 0) {
+        seq_pkt = seq / static_cast<int>(rdmahw->m_mtu);
+    }
 
     fprintf(fout, "\n[Event %u] %lu: host %u flowid %d seq=%d | %s Adamap.\n", 
         omni_type,
@@ -698,9 +748,8 @@ void record_omnidma_event(FILE *fout, Ptr<RdmaHw> rdmahw, int flowid=-1, int seq
         rdmahw->m_node->GetId(),
         // 下面是动态填充的
         flowid,
-        seq/1000,
-        (event_type == 0) ? "gen and upload" : (event_type == 1)? "first request": (event_type == 2)? "Get an OmniNACK" 
-            : (event_type == 3)? "high-order request" : "evict"
+        seq_pkt,
+        event_name
     );
     if (adamap != NULL) {
         PrintAdamap(adamap, s, fout);

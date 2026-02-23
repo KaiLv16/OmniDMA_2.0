@@ -23,6 +23,7 @@ struct Adamap_with_index {
   bool isFinish;
   Time lastCallTime;
   int max_retrans_omni_type;
+  bool inRnicLlCache;
   // Adamap_with_index () {}
   // Adamap_with_index(int32_t index) {tableIndex = index; isFinish = false;}
 };

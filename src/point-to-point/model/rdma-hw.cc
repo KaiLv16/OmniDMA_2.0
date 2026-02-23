@@ -23,6 +23,7 @@
 #include "qbb-header.h"
 
 #include <ns3/adamap.h>
+#include <ns3/adamap-receiver.h>
 
 namespace ns3 {
 
@@ -377,11 +378,11 @@ Ptr<RdmaRxQueuePair> RdmaHw::GetRxQp(uint32_t sip, uint32_t dip, uint16_t sport,
         q->m_ecn_source.qIndex = pg;
         q->m_flow_id = -1;     // unknown
         q->m_hw = this;
-        q->adamap_receiver.m_hw = this;
+        q->adamap_receiver->m_hw = this;
 
         q->m_omnidma_enabled = omniDMA_enable;
         if (omniDMA_enable) {
-            q->adamap_receiver.SetMapSize(bitmap_size);
+            q->adamap_receiver->SetMapSize(bitmap_size);
         }
 
         m_rxQpMap[rxKey] = q;  // store in map
@@ -439,7 +440,7 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
         }
     }
     if (m_omnidma) {
-        omni65002_ready_before = rxQp->adamap_receiver.IsFinishConditionSatisfied();
+        omni65002_ready_before = rxQp->adamap_receiver->IsFinishConditionSatisfied();
     }
 
     if (ecnbits != 0) {
@@ -463,7 +464,7 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
             case FlowStatTag::FLOW_END:
                 omni_last_packet_this_pkt = true;
                 rxQp->omni_last_packet = true;
-                rxQp->adamap_receiver.get_last_packet = true;
+                rxQp->adamap_receiver->get_last_packet = true;
                 printf("%lu: flow %u ends at seq %u, last packet size=%u\n", Simulator::Now().GetTimeStep(), ch.udp.flow_id, ch.udp.seq, payload_size);
                 break;
             case FlowStatTag::FLOW_START:
@@ -493,11 +494,10 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
     if (m_omnidma) {
         uint32_t adamap_id = ch.udp.adamap_id;
         // 只有重传包中有delay的出现，才会在这里记录
-        omniRes = rxQp->adamap_receiver.Record(ch.udp.seq / m_mtu, omni_type, adamap_for_NACK, adamap_for_print, new_high_tier_cnt, &delay, adamap_id);
+        omniRes = rxQp->adamap_receiver->Record(ch.udp.seq / m_mtu, omni_type, adamap_for_NACK, adamap_for_print, new_high_tier_cnt, &delay, adamap_id);
 
         if (omni_type == 0) {        // 正常包：没有携带 table id
             if (omniRes == -6) {
-                m_trace_omnidma_event(rxQp->m_flow_id, ch.udp.seq, 0, 0, "receiver gen adamap", &adamap_for_print);
                 printf("%lu: Flow %u receiver generates OmniNACK packet at seq = %u\n", Simulator::Now().GetTimeStep(), ch.udp.flow_id, ch.udp.seq);
             }
         } else if (omni_type == 1) {    // 首次重传包：没有携带 table id
@@ -516,7 +516,7 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
             case -18:  des_str = "1st retrans call: seq outside Adamap's range, split"; break;     // seq outside Adamap's range at linked list head
             default:   break;
             }
-            m_trace_omnidma_event(rxQp->m_flow_id, ch.udp.seq, 1, 1, des_str, &adamap_for_print);
+            m_trace_omnidma_event(rxQp->m_flow_id, ch.udp.seq, OMNI_EVT_FIRST_RETRANS_PROCESS, 1, des_str, &adamap_for_print);
         }
         else {   // 高次重传包：携带了table id
             printf("\n%lu: Get a multi-retrans packet, tier=%u\n", Simulator::Now().GetTimeStep(), omni_type);
@@ -524,14 +524,14 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
                 printf("%lu: Accessing high-order context incurs a delay = %lu us\n", Simulator::Now().GetTimeStep(), delay.GetMicroSeconds());
             }
             // trigger active NACK of last access table node
-            if (!(rxQp->adamap_receiver.m_last_access_table_index == adamap_id)) {
-                for (auto it = rxQp->adamap_receiver.m_lookupTable.begin(); it != rxQp->adamap_receiver.m_lookupTable.end(); ++it) {
+            if (!(rxQp->adamap_receiver->m_last_access_table_index == adamap_id)) {
+                for (auto it = rxQp->adamap_receiver->m_lookupTable.begin(); it != rxQp->adamap_receiver->m_lookupTable.end(); ++it) {
                     
-                    if (it->tableIndex == rxQp->adamap_receiver.m_last_access_table_index) {      // 找到上一个处理的Adamap_with_index
+                    if (it->tableIndex == rxQp->adamap_receiver->m_last_access_table_index) {      // 找到上一个处理的Adamap_with_index
                         // 上一个节点未全部完成，但还未到超时时间
-                        if (!rxQp->adamap_receiver.assertLLNodeFinish(it->adamap)   
-                                && it->lastCallTime + rxQp->adamap_receiver.omni_scale_rto >= Simulator::Now()) {
-                            printf("m_last_access_table_index=%u, last Adamap ID=%u\n", rxQp->adamap_receiver.m_last_access_table_index, it->adamap.id);
+                        if (!rxQp->adamap_receiver->assertLLNodeFinish(it->adamap)   
+                                && it->lastCallTime + rxQp->adamap_receiver->omni_scale_rto >= Simulator::Now()) {
+                            printf("m_last_access_table_index=%u, last Adamap ID=%u\n", rxQp->adamap_receiver->m_last_access_table_index, it->adamap.id);
                             it->max_retrans_omni_type ++;
                             it->lastCallTime = Simulator::Now();
                             TransmitOmniNACK(3, rxQp, ch, *it, MicroSeconds(0), it->max_retrans_omni_type);
@@ -541,11 +541,11 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
                     }
                 }
             }
-            rxQp->adamap_receiver.m_last_access_table_index = adamap_id;
-            rxQp->adamap_receiver.m_last_access_table_max_retrans = omni_type;
+            rxQp->adamap_receiver->m_last_access_table_index = adamap_id;
+            rxQp->adamap_receiver->m_last_access_table_max_retrans = omni_type;
             HandleOmniListTimeout(omni_type, rxQp, ch);
             HandleOmniTableTimeout(omni_type, rxQp, ch);
-            m_trace_omnidma_event(rxQp->m_flow_id, ch.udp.seq, 3, ch.udp.omni_type, "multi retrans: call lookup table", &adamap_for_print);
+            m_trace_omnidma_event(rxQp->m_flow_id, ch.udp.seq, OMNI_EVT_MULTI_RETRANS_PROCESS, ch.udp.omni_type, "multi retrans: call lookup table", &adamap_for_print);
             if (omniRes == -100) {
                 printf("multi-retrans packet drop. \n");
                 return 0;
@@ -556,8 +556,8 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
         if (new_high_tier_cnt > 0){
             assert(omni_type == 1 && "new_high_tier_cnt > 0 should only happen in first-time retransmission");
             // assert(new_high_tier_cnt == 0 && "Halting here means has multi-retrans packet.");     // 真的没有高次重传包吗？assert一下吧
-            printf("lookuptable size = %lu\n", rxQp->adamap_receiver.m_lookupTable.size());
-            for (auto it = rxQp->adamap_receiver.m_table_last_end; it != rxQp->adamap_receiver.m_lookupTable.end(); ++it) {
+            printf("lookuptable size = %lu\n", rxQp->adamap_receiver->m_lookupTable.size());
+            for (auto it = rxQp->adamap_receiver->m_table_last_end; it != rxQp->adamap_receiver->m_lookupTable.end(); ++it) {
                 TransmitOmniNACK(0, rxQp, ch, *it, delay);
                 printf("newly generated table entry because of cache miss: last_call_time = %lu, table_id = %d\n", it->lastCallTime.GetMicroSeconds(), it->tableIndex);
                 PrintAdamap(&(it->adamap), "newly generated table entry: adamap");
@@ -565,10 +565,10 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
             }
             assert(new_high_tier_cnt == 0 && "when all the newly generated table entry is sent in NACK, new_high_tier_cnt should be 0");
         }
-        rxQp->adamap_receiver.assertFinish();
+        rxQp->adamap_receiver->assertFinish();
     }
     if (m_omnidma) {
-        omni65002_ready_after = rxQp->adamap_receiver.IsFinishConditionSatisfied();
+        omni65002_ready_after = rxQp->adamap_receiver->IsFinishConditionSatisfied();
         // Send 65002 if the condition is already true when this UDP packet arrives,
         // or it becomes true by the end of handling this packet.
         force_send_omni65002 = omni65002_ready_before ||
@@ -615,8 +615,8 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
             }
             if (rxQp->omni_last_packet) {
                 bool has_pending_omni_state =
-                    !rxQp->adamap_receiver.m_lookupTable.empty() ||
-                    !rxQp->adamap_receiver.m_finishedBitmaps.empty();
+                    !rxQp->adamap_receiver->m_lookupTable.empty() ||
+                    !rxQp->adamap_receiver->m_finishedBitmaps.empty();
                 seqh.SetOmniType(has_pending_omni_state ? 65001 : 65002);
             }
             if (force_send_omni65002) {
@@ -670,39 +670,40 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
 // 收到首次重传包时调用。搜索：Linked list length after processing
 void RdmaHw::HandleOmniListTimeout(uint16_t omni_type, Ptr<RdmaRxQueuePair> rxQp, CustomHeader &ch) {
     // std::cout << Simulator::Now().GetTimeStep() << ": Check Linked List Timeout on flow=" << rxQp->m_flow_id << std::endl;
-    if (rxQp->adamap_receiver.m_omni_list_retransmit.IsRunning()) {
-        rxQp->adamap_receiver.m_omni_list_retransmit.Cancel();
+    if (rxQp->adamap_receiver->m_omni_list_retransmit.IsRunning()) {
+        rxQp->adamap_receiver->m_omni_list_retransmit.Cancel();
         // printf("cancel omni_list_retransmit timer\n");
     }
     
-    for (auto it = rxQp->adamap_receiver.m_finishedBitmaps.begin(); 
-              it != rxQp->adamap_receiver.m_finishedBitmaps.end(); ) {  // 这里不使用 ++it
+    for (auto it = rxQp->adamap_receiver->m_finishedBitmaps.begin(); 
+              it != rxQp->adamap_receiver->m_finishedBitmaps.end(); ) {  // 这里不使用 ++it
 
-        if (it->lastCallTime + rxQp->adamap_receiver.omni_scale_rto < Simulator::Now()) {
+        if (it->lastCallTime + rxQp->adamap_receiver->omni_scale_rto < Simulator::Now()) {
             it->lastCallTime = Simulator::Now();
             Time dmaDelay = NanoSeconds(0);
-            rxQp->adamap_receiver.PutLinkedListHeadToTable("Put timeout linked list head to table",
+            rxQp->adamap_receiver->PutLinkedListHeadToTable("Put timeout linked list head to table",
                                                            false, true, &dmaDelay);
             printf("%lu: this item's tableIndex=%u, isFinish=%d, lastCallTime=%ld us, max_retrans_omni_type=%d\n",
                 it->lastCallTime.GetMicroSeconds(), it->tableIndex, it->isFinish, it->lastCallTime.GetMicroSeconds(), it->max_retrans_omni_type);
-            it = rxQp->adamap_receiver.m_finishedBitmaps.erase(it);   // 使用 erase 删除当前元素，并获取下一个有效元素
+            rxQp->adamap_receiver->EraseLinkedListHeadAndRefill(&dmaDelay);
+            it = rxQp->adamap_receiver->m_finishedBitmaps.begin();
             printf("to assert: LookupTable's last item: tableIndex=%u, isFinish=%d\n",
-                rxQp->adamap_receiver.m_lookupTable.back().tableIndex, rxQp->adamap_receiver.m_lookupTable.back().isFinish);
-            PrintAdamap(&(rxQp->adamap_receiver.m_lookupTable.back().adamap), "Timeout linked list to table:");
-            TransmitOmniNACK(1, rxQp, ch, rxQp->adamap_receiver.m_lookupTable.back(), dmaDelay);
+                rxQp->adamap_receiver->m_lookupTable.back().tableIndex, rxQp->adamap_receiver->m_lookupTable.back().isFinish);
+            PrintAdamap(&(rxQp->adamap_receiver->m_lookupTable.back().adamap), "Timeout linked list to table:");
+            TransmitOmniNACK(1, rxQp, ch, rxQp->adamap_receiver->m_lookupTable.back(), dmaDelay);
             
         } else {
             break;   // 只在不删除元素时才 ++it
         }
     }
     // Turn on Omni retrans event if it is not running
-    if (!rxQp->adamap_receiver.isFinished) {
-        rxQp->basertt = rxQp->adamap_receiver.avg_omni_rtt.IsZero()? rxQp->basertt : std::min(rxQp->basertt, rxQp->adamap_receiver.avg_omni_rtt);
-        // Time omni_retrans_delay = MicroSeconds(rxQp->basertt.GetMicroSeconds() * rxQp->adamap_receiver.rtt_scale_factor);
-        rxQp->adamap_receiver.m_omni_list_retransmit = Simulator::Schedule(rxQp->adamap_receiver.list_timeout_delay, &RdmaHw::HandleOmniListTimeout, this, omni_type, rxQp, ch);  // 自调用
+    if (!rxQp->adamap_receiver->isFinished) {
+        rxQp->basertt = rxQp->adamap_receiver->avg_omni_rtt.IsZero()? rxQp->basertt : std::min(rxQp->basertt, rxQp->adamap_receiver->avg_omni_rtt);
+        // Time omni_retrans_delay = MicroSeconds(rxQp->basertt.GetMicroSeconds() * rxQp->adamap_receiver->rtt_scale_factor);
+        rxQp->adamap_receiver->m_omni_list_retransmit = Simulator::Schedule(rxQp->adamap_receiver->list_timeout_delay, &RdmaHw::HandleOmniListTimeout, this, omni_type, rxQp, ch);  // 自调用
         // printf("%lu: resetting omni_list_retransmit timer to %ld us, next invoke time: %lu\n", 
-        //     Simulator::Now().GetTimeStep(), rxQp->adamap_receiver.list_timeout_delay.GetMicroSeconds(), 
-        //     (Simulator::Now()+rxQp->adamap_receiver.list_timeout_delay).GetTimeStep());
+        //     Simulator::Now().GetTimeStep(), rxQp->adamap_receiver->list_timeout_delay.GetMicroSeconds(), 
+        //     (Simulator::Now()+rxQp->adamap_receiver->list_timeout_delay).GetTimeStep());
     }
 }
 
@@ -710,64 +711,64 @@ void RdmaHw::HandleOmniListTimeout(uint16_t omni_type, Ptr<RdmaRxQueuePair> rxQp
 void RdmaHw::HandleOmniTableTimeout(uint16_t omni_type, Ptr<RdmaRxQueuePair> rxQp, CustomHeader &ch) {
     // std::cout << Simulator::Now().GetTimeStep() << ": Table Timeout on flow=" << rxQp->m_flow_id << std::endl;
 
-    if (rxQp->adamap_receiver.m_omni_table_retransmit.IsRunning() && omni_type == 1) {
-        rxQp->adamap_receiver.m_omni_table_retransmit.Cancel();
+    if (rxQp->adamap_receiver->m_omni_table_retransmit.IsRunning() && omni_type == 1) {
+        rxQp->adamap_receiver->m_omni_table_retransmit.Cancel();
         printf("cancel omni_list_retransmit timer\n");
     }
 
-    for (auto it = rxQp->adamap_receiver.m_lookupTable.begin(); it != rxQp->adamap_receiver.m_lookupTable.end(); ++it) {
+    for (auto it = rxQp->adamap_receiver->m_lookupTable.begin(); it != rxQp->adamap_receiver->m_lookupTable.end(); ++it) {
         if (ch.udp.adamap_id != it->tableIndex && ch.udp.omni_type >= it->max_retrans_omni_type &&
-            it->lastCallTime + rxQp->adamap_receiver.omni_scale_rto < Simulator::Now()) {
-            printf("%lu: Timeout retransmit (with lastCallTime=%lu, omni_scale_rto=%lu us):\n", Simulator::Now().GetTimeStep(), it->lastCallTime.GetTimeStep(), rxQp->adamap_receiver.omni_scale_rto.GetMicroSeconds());
+            it->lastCallTime + rxQp->adamap_receiver->omni_scale_rto < Simulator::Now()) {
+            printf("%lu: Timeout retransmit (with lastCallTime=%lu, omni_scale_rto=%lu us):\n", Simulator::Now().GetTimeStep(), it->lastCallTime.GetTimeStep(), rxQp->adamap_receiver->omni_scale_rto.GetMicroSeconds());
             TransmitOmniNACK(2, rxQp, ch, *it);
             it->lastCallTime = Simulator::Now();
         }
     }
 
     // Turn on Omni retrans event if it is not running
-    if (!rxQp->adamap_receiver.isFinished && !rxQp->adamap_receiver.m_omni_table_retransmit.IsRunning()) {
-        rxQp->basertt = rxQp->adamap_receiver.avg_omni_rtt.IsZero()? rxQp->basertt : std::min(rxQp->basertt, rxQp->adamap_receiver.avg_omni_rtt);
-        // Time omni_retrans_delay = MicroSeconds(rxQp->basertt.GetMicroSeconds() * rxQp->adamap_receiver.rtt_scale_factor);
-        rxQp->adamap_receiver.m_omni_table_retransmit = Simulator::Schedule(rxQp->adamap_receiver.table_timeout_delay, &RdmaHw::HandleOmniTableTimeout, this, omni_type, rxQp, ch);  // 自调用
+    if (!rxQp->adamap_receiver->isFinished && !rxQp->adamap_receiver->m_omni_table_retransmit.IsRunning()) {
+        rxQp->basertt = rxQp->adamap_receiver->avg_omni_rtt.IsZero()? rxQp->basertt : std::min(rxQp->basertt, rxQp->adamap_receiver->avg_omni_rtt);
+        // Time omni_retrans_delay = MicroSeconds(rxQp->basertt.GetMicroSeconds() * rxQp->adamap_receiver->rtt_scale_factor);
+        rxQp->adamap_receiver->m_omni_table_retransmit = Simulator::Schedule(rxQp->adamap_receiver->table_timeout_delay, &RdmaHw::HandleOmniTableTimeout, this, omni_type, rxQp, ch);  // 自调用
         // printf("%lu: invoke omni_table_retransmit timer to %ld us, next invoke time: %lu\n", 
-        //     Simulator::Now().GetTimeStep(), rxQp->adamap_receiver.table_timeout_delay.GetMicroSeconds(), 
-        //     (Simulator::Now() + rxQp->adamap_receiver.table_timeout_delay).GetTimeStep());
+        //     Simulator::Now().GetTimeStep(), rxQp->adamap_receiver->table_timeout_delay.GetMicroSeconds(), 
+        //     (Simulator::Now() + rxQp->adamap_receiver->table_timeout_delay).GetTimeStep());
     }
 }
 
 // void RdmaHw::HandleOmniContextTimeout(uint16_t omni_type, Ptr<RdmaRxQueuePair> rxQp, CustomHeader &ch) {
 //     // Assume Outstanding Packets are lost
 //     std::cout << Simulator::Now().GetTimeStep() << " Timeout on flow=" << rxQp->m_flow_id << std::endl;
-//     // if (rxQp->adamap_receiver.isFinished) {
+//     // if (rxQp->adamap_receiver->isFinished) {
 //     //     printf("Flow %u is finished, no need to retransmit\n", rxQp->m_flow_id);
-//     //     rxQp->adamap_receiver.m_omni_list_retransmit.Cancel();
-//     //     rxQp->adamap_receiver.m_omni_table_retransmit.Cancel();
+//     //     rxQp->adamap_receiver->m_omni_list_retransmit.Cancel();
+//     //     rxQp->adamap_receiver->m_omni_table_retransmit.Cancel();
 //     //     return;
 //     // }
-//     if (rxQp->adamap_receiver.m_omni_list_retransmit.IsRunning() && omni_type == 1) {
-//         rxQp->adamap_receiver.m_omni_list_retransmit.Cancel();
+//     if (rxQp->adamap_receiver->m_omni_list_retransmit.IsRunning() && omni_type == 1) {
+//         rxQp->adamap_receiver->m_omni_list_retransmit.Cancel();
 //         printf("cancel omni_list_retransmit timer\n");
 //     }
-//     if (rxQp->adamap_receiver.m_omni_list_retransmit.IsRunning() && omni_type == 1) {
-//         rxQp->adamap_receiver.m_omni_list_retransmit.Cancel();
+//     if (rxQp->adamap_receiver->m_omni_list_retransmit.IsRunning() && omni_type == 1) {
+//         rxQp->adamap_receiver->m_omni_list_retransmit.Cancel();
 //         printf("cancel omni_list_retransmit timer\n");
 //     }
     
 //     int refresh_timeout = 0;
-//     if (rxQp->adamap_receiver.m_finishedBitmaps.size() != 0) {
-//         rxQp->adamap_receiver.LinkedlistRtoOmniNACK(rxQp, ch);
+//     if (rxQp->adamap_receiver->m_finishedBitmaps.size() != 0) {
+//         rxQp->adamap_receiver->LinkedlistRtoOmniNACK(rxQp, ch);
 //         refresh_timeout++;
 //     }
-//     if (rxQp->adamap_receiver.m_lookupTable.size() != 0) {
-//         rxQp->adamap_receiver.LookuptableRtoOmniNACK(rxQp, ch);
+//     if (rxQp->adamap_receiver->m_lookupTable.size() != 0) {
+//         rxQp->adamap_receiver->LookuptableRtoOmniNACK(rxQp, ch);
 //         refresh_timeout++;
 //     }
 
 //     // Turn on Omni retrans event if it is not running
-//     if (!rxQp->adamap_receiver.m_omni_retransmit.IsRunning() && !rxQp->adamap_receiver.isFinished) {
-//         rxQp->basertt = rxQp->adamap_receiver.avg_omni_rtt.IsZero()? rxQp->basertt : std::min(rxQp->basertt, rxQp->adamap_receiver.avg_omni_rtt);
-//         Time omni_retrans_delay = MicroSeconds(rxQp->basertt.GetMicroSeconds() * rxQp->adamap_receiver.rtt_scale_factor);
-//         rxQp->adamap_receiver.m_omni_retransmit = Simulator::Schedule(omni_retrans_delay, &RdmaHw::HandleOmniContextTimeout, this, omni_type, rxQp, ch);  // 自调用
+//     if (!rxQp->adamap_receiver->m_omni_retransmit.IsRunning() && !rxQp->adamap_receiver->isFinished) {
+//         rxQp->basertt = rxQp->adamap_receiver->avg_omni_rtt.IsZero()? rxQp->basertt : std::min(rxQp->basertt, rxQp->adamap_receiver->avg_omni_rtt);
+//         Time omni_retrans_delay = MicroSeconds(rxQp->basertt.GetMicroSeconds() * rxQp->adamap_receiver->rtt_scale_factor);
+//         rxQp->adamap_receiver->m_omni_retransmit = Simulator::Schedule(omni_retrans_delay, &RdmaHw::HandleOmniContextTimeout, this, omni_type, rxQp, ch);  // 自调用
 //         printf("resetting omni_retransmit timer to %ld us (triggered by OmniContextTimeout())\n", omni_retrans_delay.GetTimeStep());
 //     }
 // }
@@ -971,7 +972,7 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch) {
                 adamap.reprLength = ch.ack.omniDMAAdamapReprLength;
                 // 从adamap中找到对应的包，然后将其置1
                 PrintAdamap(&adamap, "Sender get omniNACK:");
-                m_trace_omnidma_event(qp->m_flow_id, ch.udp.seq, 2, ch.ack.omni_type, "sender get adamap", &adamap);
+                m_trace_omnidma_event(qp->m_flow_id, ch.udp.seq, OMNI_EVT_SENDER_GET_ADAMAP, ch.ack.omni_type, "sender get adamap", &adamap);
                 // 65001 is a final-packet marker; the embedded Adamap (if any) is from receiver-side
                 // generation and should be treated as first-tier retransmission metadata.
                 if (ch.ack.omni_type == 65001) {

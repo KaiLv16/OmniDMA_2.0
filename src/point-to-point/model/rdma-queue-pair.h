@@ -14,7 +14,6 @@
 
 #include <ns3/adamap.h>
 #include <ns3/adamap-sender.h>
-#include <ns3/adamap-receiver.h>
 
 #include <climits> /* for CHAR_BIT */
 #include <vector>
@@ -32,6 +31,9 @@
 #define ESTIMATED_MAX_FLOW_PER_HOST 9120
 
 namespace ns3 {
+
+class RdmaHw;
+class ReceiverAdamap;
 
 enum CcMode {
     CC_MODE_DCQCN = 1,
@@ -366,7 +368,7 @@ class RdmaRxQueuePair : public Object {  // Rx side queue pair
     uint16_t m_omnidma_bitmap_size;
     bool omni_last_packet;
     uint32_t omni_cumulative_ack_seq;
-    ReceiverAdamap adamap_receiver;
+    Ptr<ReceiverAdamap> adamap_receiver;
 
     static TypeId GetTypeId(void);
     RdmaRxQueuePair();

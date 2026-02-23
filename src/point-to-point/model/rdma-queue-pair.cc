@@ -209,7 +209,8 @@ RdmaRxQueuePair::RdmaRxQueuePair() {
     m_lastNACK = 0;
     omni_last_packet = false;
     omni_cumulative_ack_seq = 0;
-    adamap_receiver.m_RxQp = this;
+    adamap_receiver = CreateObject<ReceiverAdamap>();
+    adamap_receiver->m_RxQp = this;
 }
 
 uint32_t RdmaRxQueuePair::GetHash(void) {
