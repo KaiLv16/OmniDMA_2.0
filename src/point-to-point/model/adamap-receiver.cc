@@ -1,6 +1,7 @@
 #include "ns3/rdma-queue-pair.h"
 #include "ns3/rdma-hw.h"
 #include "adamap-receiver.h"
+#include "ns3/assert.h"
 #include "ns3/log.h"
 
 
@@ -45,9 +46,9 @@ ReceiverAdamap::GetTypeId (void)
     .SetGroupName ("Tutorial")
     .AddConstructor<ReceiverAdamap> ()
     .AddAttribute("BitmapSize", "bitmap size",
-              UintegerValue(32),
+              UintegerValue(kDefaultOmniDmaBitmapSize),
               MakeUintegerAccessor(&ReceiverAdamap::GetMapSize, &ReceiverAdamap::SetMapSize),
-              MakeUintegerChecker<uint32_t>())
+              MakeUintegerChecker<uint32_t>(1, kMaxOmniDmaBitmapSize))
     .AddAttribute("FirstN", "Linked-list head cache window size for first retransmission lookup",
               UintegerValue(3), MakeUintegerAccessor(&ReceiverAdamap::first_n),
               MakeUintegerChecker<uint32_t>())
@@ -60,13 +61,18 @@ uint32_t ReceiverAdamap::GetMapSize () const {
 }
 void ReceiverAdamap::SetMapSize (uint32_t bitmapSize)
 {
+    NS_ASSERT_MSG(bitmapSize > 0 && bitmapSize <= kMaxOmniDmaBitmapSize,
+                  "ReceiverAdamap bitmap size must be in [1, 256]");
     m_reprLength = bitmapSize;
     m_bitmapSize = bitmapSize;
     m_bitmap.resize(bitmapSize, false);
+    printf("%lu: ReceiverAdamap::SetMapSize -> %u\n", Simulator::Now().GetTimeStep(), bitmapSize);
 }
 
 ReceiverAdamap::ReceiverAdamap(uint32_t bitmapSize)
 {
+  NS_ASSERT_MSG(bitmapSize > 0 && bitmapSize <= kMaxOmniDmaBitmapSize,
+                "ReceiverAdamap ctor bitmap size must be in [1, 256]");
   first_n = 2;
   m_lookupTableLruSize = 1;
   m_bitmapSize = bitmapSize;
@@ -95,7 +101,7 @@ ReceiverAdamap::ReceiverAdamap(uint32_t bitmapSize)
   m_lookupTableCacheHitCount = 0;
   m_llHeadCacheNodeCount = 0;
   m_llHostNodeCount = 0;
-  printf("%lu: Create ReceiverAdamap with bitmap size %u\n", Simulator::Now().GetTimeStep(), bitmapSize);
+  printf("%lu: Create ReceiverAdamap (ctor bitmap size %u)\n", Simulator::Now().GetTimeStep(), bitmapSize);
 }
 
 ReceiverAdamap::~ReceiverAdamap()

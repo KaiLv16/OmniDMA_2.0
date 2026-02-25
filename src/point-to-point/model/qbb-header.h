@@ -49,6 +49,7 @@ public:
 
   void SetOmniDMAAdamapId(uint32_t id);
   void SetOmniDMAAdamapBitmap(uint64_t bitmap);
+  void SetOmniDMAAdamapBitmapWords(const uint64_t* words, uint32_t nWords = kOmniDmaBitmapWireWords);
   void SetOmniDMAAdamapStartSeq(uint32_t startSeq);
   void SetOmniDMAAdamapReprLength(uint32_t reprLength);
   void SetOmniDMATableIndex(uint32_t Index);
@@ -72,6 +73,7 @@ public:
 
   uint32_t GetOmniDMAAdamapId() const;
   uint64_t GetOmniDMAAdamapBitmap() const;
+  const uint64_t* GetOmniDMAAdamapBitmapWords() const;
   uint32_t GetOmniDMAAdamapStartSeq() const;
   uint32_t GetOmniDMAAdamapReprLength() const;
   uint32_t GetOmniDMATableIndex() const;
@@ -98,7 +100,7 @@ private:
   bool enable_irn;
 
   uint32_t omniDMAAdamapId;
-  uint64_t omniDMAAdamapBitmap;
+  uint64_t omniDMAAdamapBitmap[kOmniDmaBitmapWireWords];
   uint32_t omniDMAAdamapStartSeq;
   uint32_t omniDMAAdamapReprLength;
   uint32_t omniDMATableIndex;

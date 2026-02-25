@@ -14,7 +14,7 @@ namespace ns3 {
 	qbbHeader::qbbHeader(uint16_t pg)
 		: sport(0), dport(0), flags(0), m_pg(pg), m_flow_id(0), m_omni_type(10000), m_seq(0),
 		  m_irn_nack(0), m_irn_nack_size(0), enable_irn(false),
-		  omniDMAAdamapId(0), omniDMAAdamapBitmap(0), omniDMAAdamapStartSeq(0),
+		  omniDMAAdamapId(0), omniDMAAdamapBitmap{0, 0, 0, 0}, omniDMAAdamapStartSeq(0),
 		  omniDMAAdamapReprLength(0), omniDMATableIndex(0), omniDMACumAckSeq(0)
 	{
 	}
@@ -22,7 +22,7 @@ namespace ns3 {
 	qbbHeader::qbbHeader()
 		: sport(0), dport(0), flags(0), m_pg(0), m_flow_id(0), m_omni_type(10000), m_seq(0),
 		  m_irn_nack(0), m_irn_nack_size(0), enable_irn(false),
-		  omniDMAAdamapId(0), omniDMAAdamapBitmap(0), omniDMAAdamapStartSeq(0),
+		  omniDMAAdamapId(0), omniDMAAdamapBitmap{0, 0, 0, 0}, omniDMAAdamapStartSeq(0),
 		  omniDMAAdamapReprLength(0), omniDMATableIndex(0), omniDMACumAckSeq(0)
 	{}
 
@@ -78,7 +78,15 @@ namespace ns3 {
 		omniDMAAdamapId = id;
 	}
 	void qbbHeader::SetOmniDMAAdamapBitmap(uint64_t bitmap) {
-		omniDMAAdamapBitmap = bitmap;
+		omniDMAAdamapBitmap[0] = bitmap;
+		for (uint32_t w = 1; w < kOmniDmaBitmapWireWords; ++w) {
+			omniDMAAdamapBitmap[w] = 0;
+		}
+	}
+	void qbbHeader::SetOmniDMAAdamapBitmapWords(const uint64_t* words, uint32_t nWords) {
+		for (uint32_t w = 0; w < kOmniDmaBitmapWireWords; ++w) {
+			omniDMAAdamapBitmap[w] = (words != NULL && w < nWords) ? words[w] : 0;
+		}
 	}
 	void qbbHeader::SetOmniDMAAdamapStartSeq(uint32_t startSeq){
 		omniDMAAdamapStartSeq = startSeq;
@@ -141,6 +149,9 @@ namespace ns3 {
 		return omniDMAAdamapId;
 	}
 	uint64_t qbbHeader::GetOmniDMAAdamapBitmap() const{
+		return omniDMAAdamapBitmap[0];
+	}
+	const uint64_t* qbbHeader::GetOmniDMAAdamapBitmapWords() const{
 		return omniDMAAdamapBitmap;
 	}
 	uint32_t qbbHeader::GetOmniDMAAdamapStartSeq() const{
@@ -173,7 +184,9 @@ namespace ns3 {
 	void qbbHeader::Print(std::ostream &os) const
 	{
 		os << "qbb:" << "pg=" << m_pg << "flow_id=" << m_flow_id <<",omniType=" << m_omni_type << ",seq=" << m_seq
-		<< "\n,AdamapId=" << omniDMAAdamapId << ",AdamapBitmap=" << omniDMAAdamapBitmap
+		<< "\n,AdamapId=" << omniDMAAdamapId
+		<< ",AdamapBitmapWords=[" << omniDMAAdamapBitmap[0] << "," << omniDMAAdamapBitmap[1]
+		<< "," << omniDMAAdamapBitmap[2] << "," << omniDMAAdamapBitmap[3] << "]"
 		<< "\n,StartSeq=" << omniDMAAdamapStartSeq << ",ReprLength=" << omniDMAAdamapReprLength
 		<< ",TableIndex=" << omniDMATableIndex << ",CumAckSeq=" << omniDMACumAckSeq;
 	}
@@ -201,7 +214,9 @@ namespace ns3 {
 		i.WriteU32(m_irn_nack);
 		i.WriteU16(m_irn_nack_size);
 		i.WriteU32(omniDMAAdamapId);
-		i.WriteU64(omniDMAAdamapBitmap);
+		for (uint32_t w = 0; w < kOmniDmaBitmapWireWords; ++w) {
+			i.WriteU64(omniDMAAdamapBitmap[w]);
+		}
 		i.WriteU32(omniDMAAdamapStartSeq);
 		i.WriteU32(omniDMAAdamapReprLength);
 		i.WriteU32(omniDMATableIndex);
@@ -224,7 +239,9 @@ namespace ns3 {
 		m_irn_nack = i.ReadU32();
 		m_irn_nack_size = i.ReadU16();
 		omniDMAAdamapId = i.ReadU32();
-		omniDMAAdamapBitmap = i.ReadU64();
+		for (uint32_t w = 0; w < kOmniDmaBitmapWireWords; ++w) {
+			omniDMAAdamapBitmap[w] = i.ReadU64();
+		}
 		omniDMAAdamapStartSeq = i.ReadU32();
 		omniDMAAdamapReprLength = i.ReadU32();
 		omniDMATableIndex = i.ReadU32();

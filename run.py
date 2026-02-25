@@ -40,6 +40,7 @@ SND_RCV_OUTPUT_FILE mix/output/{id}/snd_rcv_record_file.txt
 QLEN_MON_START {qlen_mon_start}
 QLEN_MON_END {qlen_mon_end}
 SW_MONITORING_INTERVAL {sw_monitoring_interval}
+OMNI_MONITORING_INTERVAL {omni_mon_interval}
 
 FLOWGEN_START_TIME {flowgen_start_time}
 FLOWGEN_STOP_TIME {flowgen_stop_time}
@@ -100,6 +101,8 @@ LOAD {load}
 RANDOM_SEED 1
 
 ENABLE_OMNIDMA {enabled_omnidma}
+ENABLE_OMNIDMA_CUBIC {enabled_omnidma_cubic}
+OMNIDMA_BITMAP_SIZE {omnidma_bitmap_size}
 MY_SWITCH_TOTAL_DROP_RATE {my_switch_total_drop_rate}
 OMNIDMA_TX_EXPIRY_TIME 1000]
 OMNIDMA_REPLY_TIMEOUT_EXTRA 4
@@ -153,6 +156,10 @@ def main():
                         type=int, default=0, help="enable IRN (default: 0)")
     parser.add_argument('--omnidma', dest='omnidma', action='store',
                         type=int, default=0, help="enable omnidma (default: 0)")
+    parser.add_argument('--omnidma_cubic', dest='omnidma_cubic', action='store',
+                        type=int, default=0, help="enable OmniDMA CUBIC sender window control (default: 0)")
+    parser.add_argument('--omnidma_bitmap_size', dest='omnidma_bitmap_size', action='store',
+                        type=int, default=16, help="OmniDMA Adamap bitmap size (1..256, default: 16)")
     parser.add_argument('--simul_time', dest='simul_time', action='store',
                         default='0.1', help="traffic time to simulate (up to 3 seconds) (default: 0.1)")
     parser.add_argument('--buffer', dest="buffer", action='store',
@@ -177,6 +184,8 @@ def main():
                         type=int, default=0, help="the window size in Bytes of self defined win (default: 0)")
     parser.add_argument('--sw_monitoring_interval', dest='sw_monitoring_interval', action='store',
                         type=int, default=10000, help="interval of sampling statistics for queue status (default: 10000ns)")
+    parser.add_argument('--omni_mon_interval', dest='omni_mon_interval', action='store',
+                        type=int, default=100000, help="interval of OmniDMA memory/RNIC DMA stats sampling (default: 100000ns = 100us)")
     parser.add_argument('--my_switch_total_drop_rate', dest='my_switch_total_drop_rate', action='store',
                         type=float, default=0.0, help="total drop rate of our switch (default: 0.0)")
 
@@ -204,6 +213,8 @@ def main():
     enabled_pfc = int(args.pfc)
     enabled_irn = int(args.irn)
     enabled_omnidma = int(args.omnidma)
+    enabled_omnidma_cubic = int(args.omnidma_cubic)
+    omnidma_bitmap_size = int(args.omnidma_bitmap_size)
     bw = int(args.bw)
     buffer = args.buffer
     topo = args.topo
@@ -217,6 +228,7 @@ def main():
     flowgen_start_time = FLOWGEN_DEFAULT_TIME  # default: 2.0
     flowgen_stop_time = flowgen_start_time + float(args.simul_time)  # default: 2.0
     sw_monitoring_interval = int(args.sw_monitoring_interval)
+    omni_mon_interval = int(args.omni_mon_interval)
 
     # get over-subscription ratio from topoogy name
 
@@ -257,6 +269,10 @@ def main():
 
     if enabled_pfc + enabled_irn + enabled_omnidma > 1:
         raise Exception("CONFIG ERROR : Only one of PFC, IRN, and OmniDMA can be enabled.")
+    if enabled_omnidma_cubic == 1 and enabled_omnidma != 1:
+        raise Exception("CONFIG ERROR : OmniDMA CUBIC requires --omnidma 1.")
+    if omnidma_bitmap_size <= 0 or omnidma_bitmap_size > 256:
+        raise Exception("CONFIG ERROR : --omnidma_bitmap_size must be in [1, 256] (header encodes bitmap in 4x uint64).")
     
     # sniff number of servers
     with open("config/{topo}.txt".format(topo=args.topo), 'r') as f_topo:
@@ -392,6 +408,7 @@ def main():
         config = config_template.format(id=config_ID, topo=topo, flow=flow,
                                         qlen_mon_start=qlen_mon_start, qlen_mon_end=qlen_mon_end, flowgen_start_time=flowgen_start_time,
                                         flowgen_stop_time=flowgen_stop_time, sw_monitoring_interval=sw_monitoring_interval,
+                                        omni_mon_interval=omni_mon_interval,
                                         load=netload, buffer_size=buffer, lb_mode=lb_mode, cwh_tx_expiry_time=cwh_tx_expiry_time,
                                         cwh_extra_reply_deadline=cwh_extra_reply_deadline, cwh_default_voq_waiting_time=cwh_default_voq_waiting_time,
                                         cwh_path_pause_time=cwh_path_pause_time, cwh_extra_voq_flush_time=cwh_extra_voq_flush_time,
@@ -400,6 +417,8 @@ def main():
                                         ai=ai, hai=hai, dctcp_ai=dctcp_ai,
                                         has_win=has_win, var_win=var_win,
                                         enabled_omnidma=enabled_omnidma,
+                                        enabled_omnidma_cubic=enabled_omnidma_cubic,
+                                        omnidma_bitmap_size=omnidma_bitmap_size,
                                         my_switch_total_drop_rate=my_switch_total_drop_rate,
                                         self_win_bytes=self_win_bytes, self_define_win=self_define_win,
                                         rate_bound=rate_bound,

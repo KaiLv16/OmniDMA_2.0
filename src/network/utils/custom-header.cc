@@ -199,7 +199,9 @@
 		   i.WriteU32(ack.irnNack);
 		   i.WriteU16(ack.irnNackSize);
 		   i.WriteU32(ack.omniDMAAdamapId);
-		   i.WriteU64(ack.omniDMAAdamapBitmap);
+		   for (uint32_t w = 0; w < 4; ++w) {
+			   i.WriteU64(ack.omniDMAAdamapBitmap[w]);
+		   }
 		   i.WriteU32(ack.omniDMAAdamapStartSeq);
 		   i.WriteU32(ack.omniDMAAdamapReprLength);
 		   i.WriteU32(ack.omniDMATableIndex);
@@ -370,7 +372,9 @@
 		   	ack.irnNack = i.ReadU32();
 		   	ack.irnNackSize = i.ReadU16();
 		   	ack.omniDMAAdamapId = i.ReadU32();
-			ack.omniDMAAdamapBitmap = i.ReadU64();
+			for (uint32_t w = 0; w < 4; ++w) {
+				ack.omniDMAAdamapBitmap[w] = i.ReadU64();
+			}
 			ack.omniDMAAdamapStartSeq = i.ReadU32();
 			ack.omniDMAAdamapReprLength = i.ReadU32();
 			ack.omniDMATableIndex = i.ReadU32();

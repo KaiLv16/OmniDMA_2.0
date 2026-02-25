@@ -14,6 +14,7 @@
 
 #include <ns3/adamap.h>
 #include <ns3/adamap-sender.h>
+#include "omni-rdma-cubic.h"
 
 #include <climits> /* for CHAR_BIT */
 #include <vector>
@@ -34,7 +35,6 @@ namespace ns3 {
 
 class RdmaHw;
 class ReceiverAdamap;
-
 enum CcMode {
     CC_MODE_DCQCN = 1,
     CC_MODE_HPCC = 3,
@@ -257,6 +257,8 @@ class RdmaQueuePair : public Object {
         uint16_t m_omnidma_bitmap_size;
         SenderAdamap adamap_sender;
     } omniDMA;
+
+    Ptr<OmniRdmaCubic> m_omniCubic;  // Optional OmniDMA CUBIC window controller
     
     struct {
         uint64_t txFirstTransPkts{0};

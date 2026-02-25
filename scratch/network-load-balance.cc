@@ -89,6 +89,7 @@ double flowgen_start_time = 2.0, flowgen_stop_time = 2.5, simulator_extra_time =
 uint64_t qlen_mon_start;               // ns
 uint64_t qlen_mon_end;                 // ns
 uint32_t switch_mon_interval = 10000;  // ns
+uint32_t omni_mon_interval = 100000;   // ns, for out_memory_usage/out_rnic_dma_stats (100us)
 uint64_t cnp_mon_start;                // ns
 uint64_t cnp_monitor_bucket = 100000;  // ns
 uint64_t irn_mon_start;                // ns
@@ -168,6 +169,8 @@ uint32_t buffer_size = 0;  // 0 to set buffer size automatically
 double load = 10.0;
 int enable_irn = 0;
 int enable_omnidma = 0;
+int enable_omnidma_cubic = 0;
+uint16_t omnidma_bitmap_size = ns3::kDefaultOmniDmaBitmapSize;
 int random_seed = 1;  // change this randomly if you want random expt
 double my_switch_total_drop_rate = 0.0;
 std::string rnic_dma_bw = "64Gb/s";
@@ -300,7 +303,7 @@ void ScheduleFlowInputs(FILE *infile) {
             pg, serverAddress[src], serverAddress[dst], sport, dport, target_len,
             has_win ? (self_define_win ? self_win_bytes : (global_t == 1 ? maxBdp : pairBdp[n.Get(src)][n.Get(dst)])) : 0,
             global_t == 1 ? maxRtt : pairRtt[n.Get(src)][n.Get(dst)],
-            enable_omnidma, 16);
+            enable_omnidma, omnidma_bitmap_size);
         clientHelper.SetAttribute("StatFlowID", IntegerValue(flow_input.idx));
 
         ApplicationContainer appCon = clientHelper.Install(n.Get(src));  // SRC
@@ -432,8 +435,8 @@ void memory_usage_monitoring(FILE *fout_memory_usage) {
     }
 
     if (Simulator::Now() < Seconds(flowgen_stop_time + 0.05)) {
-        Simulator::Schedule(NanoSeconds(switch_mon_interval), &memory_usage_monitoring,
-                            fout_memory_usage);  // every 10us
+        Simulator::Schedule(NanoSeconds(omni_mon_interval), &memory_usage_monitoring,
+                            fout_memory_usage);
     }
 }
 
@@ -462,7 +465,7 @@ void rnic_dma_monitoring(FILE *fout) {
     }
 
     if (Simulator::Now() < Seconds(flowgen_stop_time + 0.05)) {
-        Simulator::Schedule(NanoSeconds(switch_mon_interval), &rnic_dma_monitoring, fout);
+        Simulator::Schedule(NanoSeconds(omni_mon_interval), &rnic_dma_monitoring, fout);
     }
 }
 
@@ -664,23 +667,23 @@ inline const char* getPriorityString(int pkt_type) {
 /**
  * @brief record a send/recv event. 0: recv, 1: send; size: pkt_size
  */
-void snd_rcv_record(FILE *fout, Ptr<QbbNetDevice> dev, 
-                uint32_t rcv_snd_type, uint32_t pkt_type, uint32_t omni_type, uint32_t pkt_size, int flowid=-1, int seq=-1) {
+void snd_rcv_record(FILE *fout, Ptr<QbbNetDevice> dev,
+                uint32_t rcv_snd_type, uint32_t pkt_type, uint32_t omni_type, uint32_t pkt_size,
+                int flowid=-1, int seq=-1, uint32_t cc_win_size=0) {
     
-    // return;
+    bool cond = (dev->GetNode()->GetNodeType() == 0) && (rcv_snd_type == 1) && (pkt_type == 0);
     // time, nodeID, nodeType, Interface's Idx, 0:resume, 1:pause
-    if (dev->GetNode()->GetNodeType() == 0) {
-        fprintf(fout, "%lu: %s %u NIC %u %s a %s pkt. omniType=%d size=%u flowid=%d seq=%d\n", 
+    if (cond && dev->GetNode()->GetNodeType() == 0) {
+        fprintf(fout, "%lu: host %u nic %u flow %d %s a %s packet, cc_win_size=%u omniType=%u size=%u seq=%d\n",
                 Simulator::Now().GetTimeStep(), 
-                (dev->GetNode()->GetNodeType() == 0) ? " host  " : "switch ", 
                 dev->GetNode()->GetId(),
                 dev->GetIfIndex(), 
-                // 下面是动态填充的
-                (rcv_snd_type == 0) ? " recv " : " send ",
+                flowid,
+                (rcv_snd_type == 0) ? "recv" : "send",
                 getPriorityString(pkt_type),
+                cc_win_size,
                 omni_type,
                 pkt_size,
-                flowid,
                 seq);
     }
 }
@@ -1049,6 +1052,11 @@ int main(int argc, char *argv[]) {
                 conf >> v;
                 switch_mon_interval = v;
                 std::cerr << "SW_MONITORING_INTERVAL\t\t\t" << switch_mon_interval << "\n";
+            } else if (key.compare("OMNI_MONITORING_INTERVAL") == 0) {
+                uint32_t v;
+                conf >> v;
+                omni_mon_interval = v;
+                std::cerr << "OMNI_MONITORING_INTERVAL\t\t" << omni_mon_interval << "\n";
             } else if (key.compare("CONWEAVE_TX_EXPIRY_TIME") == 0) {
                 uint32_t v;
                 conf >> v;
@@ -1410,6 +1418,20 @@ int main(int argc, char *argv[]) {
                 conf >> v;
                 enable_omnidma = v;
                 std::cerr << "ENABLE_OMNIDMA\t\t" << enable_omnidma << "\n";
+            } else if (key.compare("ENABLE_OMNIDMA_CUBIC") == 0) {
+                bool v;
+                conf >> v;
+                enable_omnidma_cubic = v;
+                std::cerr << "ENABLE_OMNIDMA_CUBIC\t" << enable_omnidma_cubic << "\n";
+            } else if (key.compare("OMNIDMA_BITMAP_SIZE") == 0) {
+                uint32_t v;
+                conf >> v;
+                if (v == 0 || v > 256) {
+                    std::cerr << "OMNIDMA_BITMAP_SIZE invalid (must be 1..256): " << v << "\n";
+                    return 1;
+                }
+                omnidma_bitmap_size = static_cast<uint16_t>(v);
+                std::cerr << "OMNIDMA_BITMAP_SIZE\t\t" << omnidma_bitmap_size << "\n";
             } else if (key.compare("MY_SWITCH_TOTAL_DROP_RATE") == 0) {
                 double v;
                 conf >> v;
@@ -1449,6 +1471,7 @@ int main(int argc, char *argv[]) {
     Config::SetDefault("ns3::QbbNetDevice::QcnEnabled", BooleanValue(enable_qcn));
     Config::SetDefault("ns3::QbbNetDevice::DynamicThreshold", BooleanValue(dynamicth));
     Config::SetDefault("ns3::QbbNetDevice::QbbEnabled", BooleanValue(enable_pfc));
+    Config::SetDefault("ns3::ReceiverAdamap::BitmapSize", UintegerValue(omnidma_bitmap_size));
 
     if (cc_mode != 1 && lb_mode == 9) {
         std::cout << "Currently, ConWeave supports only DCQCN congestion control for RDMA. \nIf "
@@ -1801,6 +1824,7 @@ int main(int argc, char *argv[]) {
             rdmaHw->SetAttribute("IrnEnable", BooleanValue(enable_irn));
             
             rdmaHw->SetAttribute("OmniDMAEnable", BooleanValue(enable_omnidma));
+            rdmaHw->SetAttribute("OmniDMACubicEnable", BooleanValue(enable_omnidma && enable_omnidma_cubic));
             rdmaHw->SetAttribute("RnicDmaSchedEnable", BooleanValue(enable_omnidma));
             rdmaHw->SetAttribute("RnicDmaBw", DataRateValue(DataRate(rnic_dma_bw)));
             rdmaHw->SetAttribute("RnicDmaFixedLatency",

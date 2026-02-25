@@ -167,6 +167,12 @@ class RdmaHw : public Object {
     void PktSent(Ptr<RdmaQueuePair> qp, Ptr<Packet> pkt, Time interframeGap);
     void UpdateNextAvail(Ptr<RdmaQueuePair> qp, Time interframeGap, uint32_t pkt_size);
     void ChangeRate(Ptr<RdmaQueuePair> qp, DataRate new_rate);
+    bool UseOmniDmaCubic(Ptr<RdmaQueuePair> qp) const;
+    void InitOmniDmaCubicIfNeeded(Ptr<RdmaQueuePair> qp);
+    void HandleAckOmniCubic(Ptr<RdmaQueuePair> qp,
+                            const CustomHeader& ch,
+                            uint64_t oldSndUna,
+                            uint32_t priorInFlight);
 
     void HandleTimeout(Ptr<RdmaQueuePair> qp, Time rto);
 
@@ -259,6 +265,7 @@ class RdmaHw : public Object {
      * OmniDMA
      *********************/
     bool m_omnidma;             // 主文件中 rdmaHw->SetAttribute设置的
+    bool m_omnidmaCubic;        // Enable OmniDMA sender-side CUBIC window control
     Time m_omnidmaTimeout;  // timeout for omnidma
 
     /**********************

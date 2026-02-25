@@ -95,6 +95,38 @@ run_case_impl() {
     sleep 0.1
 }
 
+plot_case_impl() {
+    local topology="$1"
+    local drop_rate_pct="$2"
+    local pfc="$3"
+    local irn="$4"
+    local omnidma="$5"
+
+    local drop_rate
+    drop_rate="$(percent_to_drop_rate "${drop_rate_pct}")"
+
+    local config_id
+    config_id="$(build_config_id "${topology}" "${FLOW_NAME}" "${drop_rate}" "${pfc}" "${irn}" "${omnidma}")"
+    local output_dir="mix/output/${config_id}"
+    local snd_rcv_file
+    snd_rcv_file="$(resolve_output_file "${output_dir}" "${config_id}" "snd_rcv_record_file")"
+
+    if [[ ! -f "${snd_rcv_file}" ]]; then
+        cecho "RED" "Cannot plot: missing snd_rcv_record_file: ${snd_rcv_file}"
+        return 1
+    fi
+
+    cecho "GREEN" "Plot: base_folder=${output_dir}"
+    local plot_cmd=(python3 omni-tests/plot_flow_rate.py --base_folder "${output_dir}" --bucket "${PLOT_BUCKET}")
+    if [[ -n "${PLOT_FLOWIDS}" ]]; then
+        plot_cmd+=(--flowids "${PLOT_FLOWIDS}")
+    fi
+    if [[ -n "${PLOT_OUTPUT_SUBDIR}" ]]; then
+        plot_cmd+=(--output_subdir "${PLOT_OUTPUT_SUBDIR}")
+    fi
+    "${plot_cmd[@]}"
+}
+
 
 
 
@@ -114,12 +146,40 @@ run_irn_case() {
 }
 
 run_omnidma_case() {
+    # Manual OmniDMA experiment config (intentionally not using env vars).
+    local topology="topo_simple_dumbbell_OS2_500us"
+    local drop_rate_pct="0.1"
+    local pfc="0"
+    local irn="0"
+    local omnidma="1"
+    local omnidma_cubic="0"
+    local omnidma_bitmap_size="16"
+    local has_win="0"
+    local self_define_win="0"
+    local self_win_bytes="1000000000"
+    local rate_bound="0"
+    local runtime="600"
+    local netload="50"
+    local flow_name="omniDMA_flow"
+
+    # Dynamic scoping in bash lets run_case_impl read these locals instead of globals.
+    local RATE_BOUND="${rate_bound}"
+    local RUNTIME="${runtime}"
+    local NETLOAD="${netload}"
+    local FLOW_NAME="${flow_name}"
+
+    run_case_impl "${topology}" "${drop_rate_pct}" "${pfc}" "${irn}" "${omnidma}" \
+        --omnidma_cubic "${omnidma_cubic}" \
+        --omnidma_bitmap_size "${omnidma_bitmap_size}" \
+        --has_win "${has_win}" \
+        --self_define_win "${self_define_win}" \
+        --self_win_bytes "${self_win_bytes}"
+}
+
+plot_omnidma_case() {
     local topology="${1:-${DEFAULT_TOPOLOGY}}"
     local drop_rate_pct="${2:-${DEFAULT_DROP_RATE_PCT}}"
-    run_case_impl "${topology}" "${drop_rate_pct}" "0" "0" "1" \
-        --has_win "${OMNIDMA_HAS_WIN}" \
-        --self_define_win "${OMNIDMA_SELF_DEFINE_WIN}" \
-        --self_win_bytes "${OMNIDMA_SELF_WIN_BYTES}"
+    plot_case_impl "${topology}" "${drop_rate_pct}" "0" "0" "1"
 }
 
 run_sweep() {
@@ -198,6 +258,10 @@ IRN_SELF_WIN_BYTES="50000000"
 OMNIDMA_HAS_WIN="0"
 OMNIDMA_SELF_DEFINE_WIN="0"
 OMNIDMA_SELF_WIN_BYTES="1000000000"
+OMNIDMA_CUBIC="${OMNIDMA_CUBIC:-1}"
+PLOT_BUCKET="${PLOT_BUCKET:-10}"
+PLOT_FLOWIDS="${PLOT_FLOWIDS:-}"
+PLOT_OUTPUT_SUBDIR="${PLOT_OUTPUT_SUBDIR:-flow_rate_plots}"
 
 TOPOLOGIES=(
     "topo_simple_dumbbell_OS2_1us"
@@ -226,15 +290,54 @@ cecho "YELLOW" "NETWORK LOAD: ${NETLOAD}"
 cecho "YELLOW" "TIME: ${RUNTIME}"
 cecho "YELLOW" "DROP-RATE count: ${#DROP_RATE_PCTS[@]} (percent list)"
 cecho "YELLOW" "PFC=${PFC}, IRN=${IRN}, OMNIDMA=${OMNIDMA}"
+cecho "YELLOW" "OMNIDMA_CUBIC=${OMNIDMA_CUBIC}"
+cecho "YELLOW" "PLOT_BUCKET=${PLOT_BUCKET}, PLOT_FLOWIDS=${PLOT_FLOWIDS:-ALL}, PLOT_OUTPUT_SUBDIR=${PLOT_OUTPUT_SUBDIR}"
 cecho "YELLOW" "----------------------------------\n"
 
-# run_sweep run_case
-# merge_gbn_sweep_out_fct
+usage() {
+    cat <<'EOF'
+Usage:
+  ./autorun.sh <skip_flag> [topology] [drop_rate_pct]
 
-cecho "YELLOW" "Run extra OmniDMA case: 1ms RTT (topo=500us one-way), drop_rate=0.1%"
-run_omnidma_case topo_simple_dumbbell_OS2_500us 0.1
+skip_flag (string flags, can combine):
+  contains '1' -> run simulation
+  contains '2' -> plot
+  examples: 1 / 2 / 12
 
-cecho "GREEN" "Runing end"
+Defaults:
+  topology      = topo_simple_dumbbell_OS2_500us
+  drop_rate_pct = 0.1
+
+Optional env vars for plotting:
+  PLOT_FLOWIDS=1,2,3
+  PLOT_BUCKET=10
+  PLOT_OUTPUT_SUBDIR=flow_rate_plots
+EOF
+}
+
+SKIP_FLAG="${1:-12}"
+TOPO_ARG="${2:-topo_simple_dumbbell_OS2_500us}"
+DROP_ARG="${3:-0.1}"
+
+if [[ "${SKIP_FLAG}" != *1* && "${SKIP_FLAG}" != *2* ]]; then
+    cecho "RED" "Invalid skip_flag: ${SKIP_FLAG} (must contain '1' and/or '2')"
+    usage
+    exit 1
+fi
+
+cecho "YELLOW" "skip_flag=${SKIP_FLAG} (1=simulate, 2=plot)"
+
+if [[ "${SKIP_FLAG}" == *1* ]]; then
+    cecho "YELLOW" "Run simulation enabled"
+    run_omnidma_case "${TOPO_ARG}" "${DROP_ARG}" || exit $?
+fi
+
+if [[ "${SKIP_FLAG}" == *2* ]]; then
+    cecho "YELLOW" "Plot enabled"
+    plot_omnidma_case "${TOPO_ARG}" "${DROP_ARG}" || exit $?
+fi
+
+cecho "GREEN" "Running end"
 # IRN / OmniDMA examples:
 # run_irn_case
 # run_irn_case topo_simple_dumbbell_OS2_500us 0.1

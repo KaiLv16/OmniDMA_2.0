@@ -1,11 +1,19 @@
 #ifndef ADAMAP_H
 #define ADAMAP_H
 
+#include <array>
 #include <vector>
 #include <stdint.h>
 #include <ns3/simulator.h>
 
 namespace ns3 {
+
+// OmniDMA Adamap bitmap is serialized into 4 uint64_t words in packet headers,
+// so the configured bitmap size must stay within [1, 256].
+static const uint32_t kDefaultOmniDmaBitmapSize = 16;
+static const uint32_t kMaxOmniDmaBitmapSize = 256;
+static const uint32_t kOmniDmaBitmapWireWords = 4;
+static const uint32_t kOmniDmaBitmapWireBits = kOmniDmaBitmapWireWords * 64;
 
 // # define OMNI_DETAIL        // 打印详细信息
 
@@ -78,14 +86,44 @@ inline uint64_t BitmapToUint64(const std::vector<bool>& bitmap) {
 }
 
 /**
+ * @brief 将 bitmap 转换为固定 4xuint64_t 的线上传输格式（最多 256 位）
+ */
+inline std::array<uint64_t, kOmniDmaBitmapWireWords> BitmapToWireWords(
+    const std::vector<bool>& bitmap) {
+  std::array<uint64_t, kOmniDmaBitmapWireWords> words = {{0, 0, 0, 0}};
+  size_t len = bitmap.size() > kOmniDmaBitmapWireBits ? kOmniDmaBitmapWireBits : bitmap.size();
+  for (size_t i = 0; i < len; ++i) {
+    if (bitmap[i]) {
+      words[i / 64] |= (1ULL << (i % 64));
+    }
+  }
+  return words;
+}
+
+/**
+ * @brief 将固定 4xuint64_t 的线上传输格式恢复为 bitmap（最多 256 位）
+ */
+inline std::vector<bool> WireWordsToBitmap(const uint64_t* words, size_t size) {
+  if (size > kOmniDmaBitmapWireBits) size = kOmniDmaBitmapWireBits;
+  std::vector<bool> bitmap(size, false);
+  if (words == NULL) {
+    return bitmap;
+  }
+  for (size_t i = 0; i < size; ++i) {
+    bitmap[i] = (words[i / 64] & (1ULL << (i % 64))) != 0;
+  }
+  return bitmap;
+}
+
+/**
 * @brief 将 uint64_t 转换为 std::vector<bool>
 * @param value 需要转换的 uint64_t 数字
 * @param size  目标 bitmap 的大小（必须 ≤ 64）
 * @return 转换后的 bitmap
 */
-inline std::vector<bool> Uint64ToBitmap(uint64_t value, size_t size=16) {
-  std::vector<bool> bitmap(size, false); // 先初始化为全 0
+inline std::vector<bool> Uint64ToBitmap(uint64_t value, size_t size=kDefaultOmniDmaBitmapSize) {
   if (size > 64) size = 64; // 限制最大 64 位
+  std::vector<bool> bitmap(size, false); // 先初始化为全 0
 
   for (size_t i = 0; i < size; ++i) {
       bitmap[i] = (value & (1ULL << i)) != 0; // 取第 i 位

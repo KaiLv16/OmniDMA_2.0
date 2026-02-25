@@ -61,9 +61,29 @@
  
  #define MAP_KEY_EXISTS(map, key) (((map).find(key) != (map).end()))
  
- NS_LOG_COMPONENT_DEFINE("QbbNetDevice");
+NS_LOG_COMPONENT_DEFINE("QbbNetDevice");
  
  namespace ns3 {
+
+namespace {
+
+uint32_t
+GetCcWindowSizeForTrace(Ptr<RdmaQueuePair> qp)
+{
+    if (qp == 0)
+    {
+        return 0;
+    }
+    // OmniDMA CUBIC/BBR-style integrations can expose their sender window via qp->m_win.
+    // Currently only Omni CUBIC is integrated, so use it as the signal for "CC window active".
+    if (qp->m_omniCubic != 0)
+    {
+        return static_cast<uint32_t>(std::min<uint64_t>(qp->m_win, UINT32_MAX));
+    }
+    return 0;
+}
+
+} // namespace
  
  extern std::unordered_map<unsigned, Time> acc_pause_time;
  
@@ -328,7 +348,13 @@ void QbbNetDevice::DequeueAndTransmit(void) {
                 ch.getInt = 1;  // parse INT header
                 p->PeekHeader(ch);
                 m_traceDequeue(p, 0);
-                m_traceSndRcv(1, get_pkt_status(ch.l3Prot), ch.udp.omni_type, p->GetSize(), ch.udp.flow_id, ch.udp.seq);
+                m_traceSndRcv(1,
+                              get_pkt_status(ch.l3Prot),
+                              ch.udp.omni_type,
+                              p->GetSize(),
+                              ch.udp.flow_id,
+                              ch.udp.seq,
+                              0);
                 TransmitStart(p);
                 return;
             }
@@ -340,7 +366,13 @@ void QbbNetDevice::DequeueAndTransmit(void) {
             p->PeekHeader(ch);
             // transmit
             m_traceQpDequeue(p, lastQp);
-            m_traceSndRcv(1, get_pkt_status(ch.l3Prot), ch.udp.omni_type, p->GetSize(), ch.udp.flow_id, ch.udp.seq);
+            m_traceSndRcv(1,
+                          get_pkt_status(ch.l3Prot),
+                          ch.udp.omni_type,
+                          p->GetSize(),
+                          ch.udp.flow_id,
+                          ch.udp.seq,
+                          GetCcWindowSizeForTrace(lastQp));
             TransmitStart(p);
             
             // update for the next avail time (UpdateNextAvail() and Update retrans Timer)
@@ -386,7 +418,13 @@ void QbbNetDevice::DequeueAndTransmit(void) {
             CustomHeader ch(CustomHeader::L2_Header | CustomHeader::L3_Header | CustomHeader::L4_Header);
             ch.getInt = 1;  // parse INT header
             p->PeekHeader(ch);
-            m_traceSndRcv(1, get_pkt_status(ch.l3Prot), ch.udp.omni_type, p->GetSize(), ch.udp.flow_id, ch.udp.seq);
+            m_traceSndRcv(1,
+                          get_pkt_status(ch.l3Prot),
+                          ch.udp.omni_type,
+                          p->GetSize(),
+                          ch.udp.flow_id,
+                          ch.udp.seq,
+                          0);
             TransmitStart(p);
             return;
         } else {  // No queue can deliver any packet
@@ -441,7 +479,13 @@ void QbbNetDevice::Receive(Ptr<Packet> packet) {
     ch.getInt = 1;  // parse INT header
     packet->PeekHeader(ch);
     if (ch.l3Prot == 0xFE) {  // PFC
-        m_traceSndRcv(0, get_pkt_status(ch.l3Prot), ch.udp.omni_type, packet->GetSize(), ch.udp.flow_id, ch.udp.seq);
+        m_traceSndRcv(0,
+                      get_pkt_status(ch.l3Prot),
+                      ch.udp.omni_type,
+                      packet->GetSize(),
+                      ch.udp.flow_id,
+                      ch.udp.seq,
+                      0);
         if (!m_qbbEnabled) return;
         unsigned qIndex = ch.pfc.qIndex;
         // std::cerr << "PFC!!" << std::endl;
@@ -457,7 +501,13 @@ void QbbNetDevice::Receive(Ptr<Packet> packet) {
             Resume(qIndex);
         }
     } else {                              // non-PFC packets (data, ACK, NACK, CNP...)
-        m_traceSndRcv(0, get_pkt_status(ch.l3Prot), ch.udp.omni_type, packet->GetSize(), ch.udp.flow_id, ch.udp.seq);
+        m_traceSndRcv(0,
+                      get_pkt_status(ch.l3Prot),
+                      ch.udp.omni_type,
+                      packet->GetSize(),
+                      ch.udp.flow_id,
+                      ch.udp.seq,
+                      0);
         if (m_node->GetNodeType() > 0) {  // switch
             packet->AddPacketTag(FlowIdTag(m_ifIndex));
 

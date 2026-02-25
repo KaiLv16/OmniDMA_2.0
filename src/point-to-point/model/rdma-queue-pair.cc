@@ -80,6 +80,8 @@ RdmaQueuePair::RdmaQueuePair(uint16_t pg, Ipv4Address _sip, Ipv4Address _dip, ui
 
     m_timeout = MilliSeconds(4);
 
+    omniDMA.m_omnidma_enabled = false;
+    omniDMA.m_omnidma_bitmap_size = kDefaultOmniDmaBitmapSize;
     omniDMA.adamap_sender.m_Qp = this;
 }
 
@@ -207,6 +209,8 @@ RdmaRxQueuePair::RdmaRxQueuePair() {
     basertt = MilliSeconds(30);   // 30ms的basertt
     m_milestone_rx = 0;
     m_lastNACK = 0;
+    m_omnidma_enabled = false;
+    m_omnidma_bitmap_size = kDefaultOmniDmaBitmapSize;
     omni_last_packet = false;
     omni_cumulative_ack_seq = 0;
     adamap_receiver = CreateObject<ReceiverAdamap>();

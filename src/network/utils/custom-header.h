@@ -145,7 +145,7 @@ public:
 		  uint16_t irnNackSize;
 
       uint32_t omniDMAAdamapId;
-      uint64_t omniDMAAdamapBitmap;
+      uint64_t omniDMAAdamapBitmap[4];
       uint32_t omniDMAAdamapStartSeq;
       uint32_t omniDMAAdamapReprLength;
       uint32_t omniDMATableIndex;

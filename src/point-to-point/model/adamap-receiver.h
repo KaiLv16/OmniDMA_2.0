@@ -42,7 +42,7 @@ public:
 
   static TypeId GetTypeId (void);
 
-  ReceiverAdamap(uint32_t bitmapSize = 16);
+  ReceiverAdamap(uint32_t bitmapSize = kDefaultOmniDmaBitmapSize);
   virtual ~ReceiverAdamap();
 
   /**

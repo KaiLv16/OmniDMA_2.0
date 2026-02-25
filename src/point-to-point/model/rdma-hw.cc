@@ -10,6 +10,7 @@
 
 #include "cn-header.h"
 #include "flow-stat-tag.h"
+#include "omni-rdma-cubic.h"
 #include "ns3/boolean.h"
 #include "ns3/data-rate.h"
 #include "ns3/double.h"
@@ -137,6 +138,11 @@ TypeId RdmaHw::GetTypeId(void) {
 
             .AddAttribute("OmniDMAEnable", "Enable OmniDMA", BooleanValue(false),
                           MakeBooleanAccessor(&RdmaHw::m_omnidma), MakeBooleanChecker())
+            .AddAttribute("OmniDMACubicEnable",
+                          "Enable sender-side CUBIC window control for OmniDMA flows",
+                          BooleanValue(false),
+                          MakeBooleanAccessor(&RdmaHw::m_omnidmaCubic),
+                          MakeBooleanChecker())
             .AddAttribute("OmniDMATimeout", "OmniDMA high level retrans Timeout",
                           TimeValue(MicroSeconds(4000)), MakeTimeAccessor(&RdmaHw::m_omnidmaTimeout),
                           MakeTimeChecker())
@@ -161,6 +167,7 @@ RdmaHw::RdmaHw() {
     cnp_total = 0;
     cnp_by_ecn = 0;
     cnp_by_ooo = 0;
+    m_omnidmaCubic = false;
     m_rnicDmaSchedEnable = false;
     m_rnicDmaBw = DataRate("64Gb/s");
     m_rnicDmaFixedLatency = NanoSeconds(200);
@@ -298,6 +305,10 @@ void RdmaHw::AddQueuePair(uint64_t size, uint16_t pg, Ipv4Address sip, Ipv4Addre
     if (omniDMA_enable) {
         qp->SetOmniDMABitmapSize(bitmap_size);
     }
+    if (omniDMA_enable && m_omnidmaCubic) {
+        qp->m_omniCubic = Create<OmniRdmaCubic>();
+        qp->m_omniCubic->Initialize(qp, m_mtu, win);
+    }
     
     if (m_irn) {
         qp->irn.m_enabled = m_irn;
@@ -381,8 +392,12 @@ Ptr<RdmaRxQueuePair> RdmaHw::GetRxQp(uint32_t sip, uint32_t dip, uint16_t sport,
         q->adamap_receiver->m_hw = this;
 
         q->m_omnidma_enabled = omniDMA_enable;
+        q->m_omnidma_bitmap_size = q->adamap_receiver->GetMapSize();
         if (omniDMA_enable) {
-            q->adamap_receiver->SetMapSize(bitmap_size);
+            if (bitmap_size > 0) {
+                q->adamap_receiver->SetMapSize(bitmap_size);
+            }
+            q->m_omnidma_bitmap_size = q->adamap_receiver->GetMapSize();
         }
 
         m_rxQpMap[rxKey] = q;  // store in map
@@ -428,7 +443,8 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
     // printf("receive packet size %d.\n", payload_size);
 
     // find corresponding rx queue pair. If not exist, create one.
-    Ptr<RdmaRxQueuePair> rxQp = GetRxQp(ch.dip, ch.sip, ch.udp.dport, ch.udp.sport, ch.udp.pg, true);
+    Ptr<RdmaRxQueuePair> rxQp =
+        GetRxQp(ch.dip, ch.sip, ch.udp.dport, ch.udp.sport, ch.udp.pg, true, m_omnidma);
     if (rxQp == NULL) {     // 创建失败
         uint64_t rxKey = GetRxQpKey(ch.sip, ch.udp.sport, ch.udp.dport, ch.udp.pg);
         if (akashic_RxQp.find(rxKey) != akashic_RxQp.end()) {
@@ -607,7 +623,9 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
                 printf("%lu: Receiver gets a normal packet (omniType=%u) and sends a omniNACK (omniType=1)\n", Simulator::Now().GetTimeStep(), ch.udp.omni_type);
                 seqh.SetOmniType(1);            // 首次重传的OmniType
                 seqh.SetOmniDMAAdamapId(adamap_for_NACK.adamap.id);
-                seqh.SetOmniDMAAdamapBitmap(BitmapToUint64(adamap_for_NACK.adamap.bitmap));
+                std::array<uint64_t, kOmniDmaBitmapWireWords> adamapBitmapWords =
+                    BitmapToWireWords(adamap_for_NACK.adamap.bitmap);
+                seqh.SetOmniDMAAdamapBitmapWords(adamapBitmapWords.data(), adamapBitmapWords.size());
                 seqh.SetOmniDMAAdamapStartSeq(adamap_for_NACK.adamap.startSeq);
                 seqh.SetOmniDMAAdamapReprLength(adamap_for_NACK.adamap.reprLength);
                 // 这里对于customHeader（ch）而言，对应的字段是 ch.udp.adamap_id.
@@ -790,7 +808,9 @@ void RdmaHw::TransmitOmniNACK(int tx_type, Ptr<RdmaRxQueuePair> rxQp, CustomHead
     }
 
     high_tier_nack.SetOmniDMAAdamapId(entry.adamap.id);
-    high_tier_nack.SetOmniDMAAdamapBitmap(BitmapToUint64(entry.adamap.bitmap));
+    std::array<uint64_t, kOmniDmaBitmapWireWords> adamapBitmapWords =
+        BitmapToWireWords(entry.adamap.bitmap);
+    high_tier_nack.SetOmniDMAAdamapBitmapWords(adamapBitmapWords.data(), adamapBitmapWords.size());
     high_tier_nack.SetOmniDMAAdamapStartSeq(entry.adamap.startSeq);
     high_tier_nack.SetOmniDMAAdamapReprLength(entry.adamap.reprLength);
     high_tier_nack.SetOmniDMATableIndex(entry.tableIndex);
@@ -937,6 +957,8 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch) {
 
     uint32_t nic_idx = GetNicIdxOfQp(qp);
     Ptr<QbbNetDevice> dev = m_nic[nic_idx].dev;
+    uint64_t oldSndUna = qp->snd_una;
+    uint32_t priorInFlight = static_cast<uint32_t>(std::min<uint64_t>(qp->GetOnTheFly(), UINT32_MAX));
 
     if (m_ack_interval == 0)
         std::cout << "[ReceiveAck] ERROR: shouldn't receive ack\n";
@@ -967,7 +989,10 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch) {
             } else {
                 Adamap adamap;
                 adamap.id = ch.ack.omniDMAAdamapId;
-                adamap.bitmap = Uint64ToBitmap(ch.ack.omniDMAAdamapBitmap);
+                size_t bitmapSize = qp->omniDMA.m_omnidma_bitmap_size > 0
+                                        ? qp->omniDMA.m_omnidma_bitmap_size
+                                        : static_cast<uint16_t>(kDefaultOmniDmaBitmapSize);
+                adamap.bitmap = WireWordsToBitmap(ch.ack.omniDMAAdamapBitmap, bitmapSize);
                 adamap.startSeq = ch.ack.omniDMAAdamapStartSeq;
                 adamap.reprLength = ch.ack.omniDMAAdamapReprLength;
                 // 从adamap中找到对应的包，然后将其置1
@@ -1110,6 +1135,15 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch) {
         }
         printf("branch 2.  ");
     }
+    if (UseOmniDmaCubic(qp)) {
+        HandleAckOmniCubic(qp, ch, oldSndUna, priorInFlight);
+        dev->TriggerTransmit();
+#ifdef OMNI_DETAIL
+        printf("\n");
+#endif
+        return 0;
+    }
+
     // handle cnp
     if (cnp) {
         if (m_cc_mode == 1) {  // mlx version
@@ -1562,6 +1596,12 @@ void RdmaHw::HandleTimeout(Ptr<RdmaQueuePair> qp, Time rto) {
 
     if (qp->irn.m_enabled) {
         qp->irn.m_recovery = true;
+    }
+    if (UseOmniDmaCubic(qp) && qp->m_omniCubic != 0) {
+        qp->m_omniCubic->OnTimeout(
+            qp,
+            qp->snd_una,
+            static_cast<uint32_t>(std::min<uint64_t>(qp->GetOnTheFly(), UINT32_MAX)));
     }
     printf("**************************\n");
     RecoverQueue(qp);
@@ -2046,6 +2086,50 @@ void RdmaHw::HandleAckDctcp(Ptr<RdmaQueuePair> qp, Ptr<Packet> p, CustomHeader &
     // additive inc
     if (qp->dctcp.m_caState == 0 && new_batch)
         qp->m_rate = std::min(qp->m_max_rate, qp->m_rate + m_dctcp_rai);
+}
+
+bool RdmaHw::UseOmniDmaCubic(Ptr<RdmaQueuePair> qp) const {
+    return m_omnidma && m_omnidmaCubic && qp != NULL && qp->omniDMA.m_omnidma_enabled;
+}
+
+void RdmaHw::InitOmniDmaCubicIfNeeded(Ptr<RdmaQueuePair> qp) {
+    if (!UseOmniDmaCubic(qp)) {
+        return;
+    }
+    if (qp->m_omniCubic == 0) {
+        qp->m_omniCubic = Create<OmniRdmaCubic>();
+    }
+    if (!qp->m_omniCubic->IsInitialized()) {
+        qp->m_omniCubic->Initialize(qp, m_mtu, qp->m_win);
+    }
+}
+
+void RdmaHw::HandleAckOmniCubic(Ptr<RdmaQueuePair> qp,
+                                const CustomHeader& ch,
+                                uint64_t oldSndUna,
+                                uint32_t priorInFlight) {
+    InitOmniDmaCubicIfNeeded(qp);
+    if (qp == NULL || qp->m_omniCubic == 0) {
+        return;
+    }
+
+    uint64_t acked64 = qp->snd_una > oldSndUna ? (qp->snd_una - oldSndUna) : 0;
+    uint32_t ackedBytes = static_cast<uint32_t>(std::min<uint64_t>(acked64, UINT32_MAX));
+
+    Time rtt = Time(0);
+    uint64_t nowTs = Simulator::Now().GetTimeStep();
+    if (ch.ack.ih.ts > 0 && nowTs > ch.ack.ih.ts) {
+        rtt = TimeStep(nowTs - ch.ack.ih.ts);
+    }
+
+    bool lossSignal = false;
+    if (ch.l3Prot == 0xFD) {
+        lossSignal = true;
+    } else if (ch.l3Prot == 0xFA) {
+        lossSignal = (ch.ack.omni_type > 0 && ch.ack.omni_type < 65000);
+    }
+
+    qp->m_omniCubic->OnAck(qp, ackedBytes, qp->snd_una, priorInFlight, rtt, lossSignal);
 }
 
 }  // namespace ns3

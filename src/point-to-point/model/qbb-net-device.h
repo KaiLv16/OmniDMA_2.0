@@ -141,7 +141,7 @@ public:
    TracedCallback<Ptr<const Packet>, uint32_t> m_traceDequeue;
    TracedCallback<Ptr<const Packet>, uint32_t> m_traceDrop;
    TracedCallback<uint32_t> m_tracePfc; // 0: resume, 1: pause
-   TracedCallback<uint32_t, uint32_t, uint32_t, uint32_t, int, int> m_traceSndRcv; // 0: recv, 1: send
+   TracedCallback<uint32_t, uint32_t, uint32_t, uint32_t, int, int, uint32_t> m_traceSndRcv; // 0: recv, 1: send; last arg: cc_win_size (0 if unavailable)
 
    Ptr<PacketDropper> m_dropper;
    uint64_t packet_index;
