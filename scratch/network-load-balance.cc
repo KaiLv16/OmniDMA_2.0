@@ -173,6 +173,9 @@ int enable_omnidma_cubic = 0;
 uint16_t omnidma_bitmap_size = ns3::kDefaultOmniDmaBitmapSize;
 int random_seed = 1;  // change this randomly if you want random expt
 double my_switch_total_drop_rate = 0.0;
+std::string switch_drop_mode = "lossrate";
+std::string switch_drop_seqnum_config_file = "config/config_drop_by_seqnum.txt";
+std::string switch_drop_timestep_config_file = "config/config_drop_by_timestep.txt";
 std::string rnic_dma_bw = "64Gb/s";
 uint64_t rnic_dma_fixed_latency_ns = 200;
 
@@ -621,23 +624,24 @@ void record_send(FILE *fout, Ptr<QbbNetDevice> dev, uint32_t type) {
 
 
 void record_switch_drop(FILE *fout, Ptr<QbbNetDevice> dev, uint32_t pkt_idx, uint32_t drop_type, CustomHeader& ch) {
-    // time, nodeID, nodeType, Interface's Idx, 0:resume, 1:pause
+    // CSV columns:
+    // time_step,switch_id,node_type,if_index,pkt_idx,drop_type,pkt_type,flow_id,seq,omni_type,adamap_id,table_id
     if (ch.l3Prot == 0x11) {
-        fprintf(fout, "%lu: %u %u %u %u %u <udp> flow=%u seq=%u omniType=%u\n", Simulator::Now().GetTimeStep(), dev->GetNode()->GetId(),
+        fprintf(fout, "%lu,%u,%u,%u,%u,%u,udp,%u,%u,%u,,\n", Simulator::Now().GetTimeStep(), dev->GetNode()->GetId(),
             dev->GetNode()->GetNodeType(), dev->GetIfIndex(), pkt_idx, drop_type,
             ch.udp.flow_id, ch.udp.seq, ch.udp.omni_type);
         printf("%lu: [Switch Drop] sw %u (%u) port %u pkt_idx %u drop_type %u <udp> flow=%u seq=%u omniType=%u\n", Simulator::Now().GetTimeStep(), dev->GetNode()->GetId(),
             dev->GetNode()->GetNodeType(), dev->GetIfIndex(), pkt_idx, drop_type,
             ch.udp.flow_id, ch.udp.seq, ch.udp.omni_type);
     } else if (ch.l3Prot == 0xFA) {
-        fprintf(fout, "%lu %u %u %u %u %u <ack> flow=%u AdamapId=%u omniType=%u tableId=%u\n", Simulator::Now().GetTimeStep(), dev->GetNode()->GetId(),
+        fprintf(fout, "%lu,%u,%u,%u,%u,%u,ack,%u,,%u,%u,%u\n", Simulator::Now().GetTimeStep(), dev->GetNode()->GetId(),
             dev->GetNode()->GetNodeType(), dev->GetIfIndex(), pkt_idx, drop_type,
             ch.ack.flow_id, ch.ack.omniDMAAdamapId, ch.ack.omni_type, ch.ack.omniDMATableIndex);
         printf("%lu: [Switch Drop] sw %u (%u) port %u pkt_idx %u drop_type %u <ack> flow=%u AdamapId=%u omniType=%u tableId=%u\n", Simulator::Now().GetTimeStep(), dev->GetNode()->GetId(),
             dev->GetNode()->GetNodeType(), dev->GetIfIndex(), pkt_idx, drop_type,
             ch.ack.flow_id, ch.ack.omniDMAAdamapId, ch.ack.omni_type, ch.ack.omniDMATableIndex);
     } else {
-        fprintf(fout, "%lu %u %u %u %u %u <undefined drop type>\n", Simulator::Now().GetTimeStep(), dev->GetNode()->GetId(),
+        fprintf(fout, "%lu,%u,%u,%u,%u,%u,unknown,,,,,\n", Simulator::Now().GetTimeStep(), dev->GetNode()->GetId(),
             dev->GetNode()->GetNodeType(), dev->GetIfIndex(), pkt_idx, drop_type);
     }
 }
@@ -1437,6 +1441,15 @@ int main(int argc, char *argv[]) {
                 conf >> v;
                 my_switch_total_drop_rate = v;
                 std::cerr << "MY_SWITCH_TOTAL_DROP_RATE\t\t" << my_switch_total_drop_rate << "\n";
+            } else if (key.compare("SWITCH_DROP_MODE") == 0) {
+                conf >> switch_drop_mode;
+                std::cerr << "SWITCH_DROP_MODE\t\t" << switch_drop_mode << "\n";
+            } else if (key.compare("SWITCH_DROP_SEQNUM_CONFIG_FILE") == 0) {
+                conf >> switch_drop_seqnum_config_file;
+                std::cerr << "SWITCH_DROP_SEQNUM_CONFIG_FILE\t" << switch_drop_seqnum_config_file << "\n";
+            } else if (key.compare("SWITCH_DROP_TIMESTEP_CONFIG_FILE") == 0) {
+                conf >> switch_drop_timestep_config_file;
+                std::cerr << "SWITCH_DROP_TIMESTEP_CONFIG_FILE\t" << switch_drop_timestep_config_file << "\n";
             }
 
             fflush(stdout);
@@ -1557,6 +1570,11 @@ int main(int argc, char *argv[]) {
     pfc_file = fopen(pfc_output_file.c_str(), "w");
     snd_rcv_output = fopen(snd_rcv_output_file.c_str(), "w");
     switch_drop_output = fopen(switch_drop_output_file.c_str(), "w");
+    if (switch_drop_output != NULL) {
+        fprintf(switch_drop_output,
+                "time_step,switch_id,node_type,if_index,pkt_idx,drop_type,pkt_type,flow_id,seq,omni_type,adamap_id,table_id\n");
+        fflush(switch_drop_output);
+    }
     omniDMA_event_output = fopen(omniDMA_event_output_file.c_str(), "w");
 
     QbbHelper qbb;
@@ -1687,6 +1705,10 @@ int main(int argc, char *argv[]) {
                 // 新增
                 DynamicCast<QbbNetDevice>(dev)->TraceConnectWithoutContext(
                 "SwitchDropRecord", MakeBoundCallback(&record_switch_drop, switch_drop_output, DynamicCast<QbbNetDevice>(dev)));
+                dev->m_dropper->ConfigurePolicy(
+                    switch_drop_mode,
+                    switch_drop_seqnum_config_file,
+                    switch_drop_timestep_config_file);
                 if (j == 1) {
                     dev->m_dropper->SetAttribute("DropRate", DoubleValue(my_switch_total_drop_rate));
 

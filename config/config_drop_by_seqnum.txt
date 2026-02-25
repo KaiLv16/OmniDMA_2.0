@@ -1,0 +1,5 @@
+# switchId, SrcNode, flowid, seq(eg,[50000-55000, 55000, 55000])
+# Repeated seq values mean repeated drops for the same seq.
+switchId, SrcNode, flowid, seq(eg,[50000-55000, 55000, 55000])
+0, 1, 0, [55000,555000,555000,550000,555000]
+

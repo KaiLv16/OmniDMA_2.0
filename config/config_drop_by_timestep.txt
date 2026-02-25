@@ -1,0 +1,5 @@
+# switchId, SrcNode, flowid, timestep, drop_num
+switchId, SrcNode, flowid, timestep, drop_num
+0, 1, 0, 2.000501, 10     # (丢掉在第1us的时候开始的后续的10个包)
+0, 1, 0, 2.000600, 2      # (丢掉在第100us的时候开始的后续的2个包)
+

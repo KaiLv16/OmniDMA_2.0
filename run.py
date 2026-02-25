@@ -104,6 +104,9 @@ ENABLE_OMNIDMA {enabled_omnidma}
 ENABLE_OMNIDMA_CUBIC {enabled_omnidma_cubic}
 OMNIDMA_BITMAP_SIZE {omnidma_bitmap_size}
 MY_SWITCH_TOTAL_DROP_RATE {my_switch_total_drop_rate}
+SWITCH_DROP_MODE {switch_drop_mode}
+SWITCH_DROP_SEQNUM_CONFIG_FILE {switch_drop_seqnum_config_file}
+SWITCH_DROP_TIMESTEP_CONFIG_FILE {switch_drop_timestep_config_file}
 OMNIDMA_TX_EXPIRY_TIME 1000]
 OMNIDMA_REPLY_TIMEOUT_EXTRA 4
 """
@@ -188,6 +191,15 @@ def main():
                         type=int, default=100000, help="interval of OmniDMA memory/RNIC DMA stats sampling (default: 100000ns = 100us)")
     parser.add_argument('--my_switch_total_drop_rate', dest='my_switch_total_drop_rate', action='store',
                         type=float, default=0.0, help="total drop rate of our switch (default: 0.0)")
+    parser.add_argument('--switch_drop_mode', dest='switch_drop_mode', action='store',
+                        choices=['lossrate', 'seqnum', 'timestep'], default='lossrate',
+                        help="switch drop mechanism: lossrate/seqnum/timestep (default: lossrate)")
+    parser.add_argument('--switch_drop_seqnum_config', dest='switch_drop_seqnum_config', action='store',
+                        default='config/config_drop_by_seqnum.txt',
+                        help="config file for seqnum-based switch drops")
+    parser.add_argument('--switch_drop_timestep_config', dest='switch_drop_timestep_config', action='store',
+                        default='config/config_drop_by_timestep.txt',
+                        help="config file for timestep-based switch drops")
 
     # #### CONWEAVE PARAMETERS ####
     # parser.add_argument('--cwh_extra_reply_deadline', dest='cwh_extra_reply_deadline', action='store',
@@ -224,6 +236,9 @@ def main():
     self_define_win = args.self_define_win
     self_win_bytes = args.self_win_bytes
     my_switch_total_drop_rate = args.my_switch_total_drop_rate
+    switch_drop_mode = args.switch_drop_mode
+    switch_drop_seqnum_config_file = args.switch_drop_seqnum_config
+    switch_drop_timestep_config_file = args.switch_drop_timestep_config
     cdf = args.cdf
     flowgen_start_time = FLOWGEN_DEFAULT_TIME  # default: 2.0
     flowgen_stop_time = flowgen_start_time + float(args.simul_time)  # default: 2.0
@@ -285,7 +300,12 @@ def main():
     topo_tag = topo.replace("/", "-")
     flow_tag = flow.replace("/", "-")
     drop_rate_tag = str(my_switch_total_drop_rate)
-    config_ID = f"{base_config_id}_{topo_tag}_{flow_tag}_drop{drop_rate_tag}_pfc{enabled_pfc}_irn{enabled_irn}"
+    config_ID = f"{base_config_id}_{topo_tag}_{flow_tag}_dropm{switch_drop_mode}_drop{drop_rate_tag}_pfc{enabled_pfc}_irn{enabled_irn}"
+
+    if switch_drop_mode == "seqnum" and not exists(switch_drop_seqnum_config_file):
+        raise Exception(f"CONFIG ERROR : seqnum drop config not found: {switch_drop_seqnum_config_file}")
+    if switch_drop_mode == "timestep" and not exists(switch_drop_timestep_config_file):
+        raise Exception(f"CONFIG ERROR : timestep drop config not found: {switch_drop_timestep_config_file}")
 
     # check the file exists
     if (exists(os.getcwd() + "/config/" + flow + ".txt")):
@@ -420,6 +440,9 @@ def main():
                                         enabled_omnidma_cubic=enabled_omnidma_cubic,
                                         omnidma_bitmap_size=omnidma_bitmap_size,
                                         my_switch_total_drop_rate=my_switch_total_drop_rate,
+                                        switch_drop_mode=switch_drop_mode,
+                                        switch_drop_seqnum_config_file=switch_drop_seqnum_config_file,
+                                        switch_drop_timestep_config_file=switch_drop_timestep_config_file,
                                         self_win_bytes=self_win_bytes, self_define_win=self_define_win,
                                         rate_bound=rate_bound,
                                         fast_react=fast_react, mi=mi, int_multi=int_multi, ewma_gain=ewma_gain,

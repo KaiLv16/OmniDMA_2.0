@@ -21,6 +21,7 @@ build_config_id() {
     local pfc="$4"
     local irn="$5"
     local omnidma="$6"
+    local switch_drop_mode="${7:-lossrate}"
 
     local base_config_id="GBN"
     if [[ "${irn}" == "1" ]]; then
@@ -38,7 +39,7 @@ build_config_id() {
 
     local topo_tag="${topo//\//-}"
     local flow_tag="${flow//\//-}"
-    echo "${base_config_id}_${topo_tag}_${flow_tag}_drop${drop_rate_tag}_pfc${pfc}_irn${irn}"
+    echo "${base_config_id}_${topo_tag}_${flow_tag}_dropm${switch_drop_mode}_drop${drop_rate_tag}_pfc${pfc}_irn${irn}"
 }
 
 resolve_output_file() {
@@ -65,15 +66,23 @@ run_case_impl() {
 
     local drop_rate
     drop_rate="$(percent_to_drop_rate "${drop_rate_pct}")"
+    local switch_drop_mode="${SWITCH_DROP_MODE:-lossrate}"
 
     local config_id
-    config_id="$(build_config_id "${topology}" "${FLOW_NAME}" "${drop_rate}" "${pfc}" "${irn}" "${omnidma}")"
+    config_id="$(build_config_id "${topology}" "${FLOW_NAME}" "${drop_rate}" "${pfc}" "${irn}" "${omnidma}" "${switch_drop_mode}")"
     local output_dir="mix/output/${config_id}"
 
     cecho "GREEN" "Run: topo=${topology}, drop_rate=${drop_rate_pct}% (ratio=${drop_rate}), pfc=${pfc}, irn=${irn}, omnidma=${omnidma}"
     local cmd=(python3 run.py --lb fecmp --pfc "${pfc}" --irn "${irn}")
     if [[ "${omnidma}" == "1" ]]; then
         cmd+=(--omnidma "${omnidma}")
+    fi
+    cmd+=(--switch_drop_mode "${switch_drop_mode}")
+    if [[ -n "${SWITCH_DROP_SEQNUM_CONFIG:-}" ]]; then
+        cmd+=(--switch_drop_seqnum_config "${SWITCH_DROP_SEQNUM_CONFIG}")
+    fi
+    if [[ -n "${SWITCH_DROP_TIMESTEP_CONFIG:-}" ]]; then
+        cmd+=(--switch_drop_timestep_config "${SWITCH_DROP_TIMESTEP_CONFIG}")
     fi
     cmd+=(--my_switch_total_drop_rate "${drop_rate}" --rate_bound "${RATE_BOUND}" --simul_time "${RUNTIME}" --netload "${NETLOAD}" --topo "${topology}")
     if [[ $# -gt 0 ]]; then
@@ -104,9 +113,10 @@ plot_case_impl() {
 
     local drop_rate
     drop_rate="$(percent_to_drop_rate "${drop_rate_pct}")"
+    local switch_drop_mode="${SWITCH_DROP_MODE:-lossrate}"
 
     local config_id
-    config_id="$(build_config_id "${topology}" "${FLOW_NAME}" "${drop_rate}" "${pfc}" "${irn}" "${omnidma}")"
+    config_id="$(build_config_id "${topology}" "${FLOW_NAME}" "${drop_rate}" "${pfc}" "${irn}" "${omnidma}" "${switch_drop_mode}")"
     local output_dir="mix/output/${config_id}"
     local snd_rcv_file
     snd_rcv_file="$(resolve_output_file "${output_dir}" "${config_id}" "snd_rcv_record_file")"
@@ -161,12 +171,18 @@ run_omnidma_case() {
     local runtime="600"
     local netload="50"
     local flow_name="omniDMA_flow"
+    local switch_drop_mode="timestep"  # lossrate / seqnum / timestep
+    local switch_drop_seqnum_config="config/config_drop_by_seqnum.txt"
+    local switch_drop_timestep_config="config/config_drop_by_timestep.txt"
 
     # Dynamic scoping in bash lets run_case_impl read these locals instead of globals.
     local RATE_BOUND="${rate_bound}"
     local RUNTIME="${runtime}"
     local NETLOAD="${netload}"
     local FLOW_NAME="${flow_name}"
+    local SWITCH_DROP_MODE="${switch_drop_mode}"
+    local SWITCH_DROP_SEQNUM_CONFIG="${switch_drop_seqnum_config}"
+    local SWITCH_DROP_TIMESTEP_CONFIG="${switch_drop_timestep_config}"
 
     run_case_impl "${topology}" "${drop_rate_pct}" "${pfc}" "${irn}" "${omnidma}" \
         --omnidma_cubic "${omnidma_cubic}" \
@@ -212,7 +228,7 @@ merge_sweep_out_fct() {
             local drop_rate
             drop_rate="$(percent_to_drop_rate "${DROP_RATE_PCT}")"
             local config_id
-            config_id="$(build_config_id "${TOPOLOGY}" "${FLOW_NAME}" "${drop_rate}" "${pfc}" "${irn}" "${omnidma}")"
+            config_id="$(build_config_id "${TOPOLOGY}" "${FLOW_NAME}" "${drop_rate}" "${pfc}" "${irn}" "${omnidma}" "${SWITCH_DROP_MODE:-lossrate}")"
             local output_dir="mix/output/${config_id}"
             local fct_file
             fct_file="$(resolve_output_file "${output_dir}" "${config_id}" "out_fct")"

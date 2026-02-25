@@ -9,12 +9,20 @@
 #include <array>
 #include <string>  // 
 #include <algorithm>
+#include <unordered_map>
 
 namespace ns3 {
 
 class PacketDropper : public Object
 {
 public:
+  enum DropMode
+  {
+    DROP_MODE_LOSSRATE = 0,
+    DROP_MODE_SEQNUM = 1,
+    DROP_MODE_TIMESTEP = 2,
+  };
+
   static TypeId GetTypeId (void);
 
   // 默认构造函数，提供默认参数
@@ -32,9 +40,13 @@ public:
                     unsigned int seed = 12345);
   /**
    * @brief 每收到一个数据包调用
-   * @return 0：不丢包，1：随机丢包，2：高频丢包，3：片段丢包
+   * @return 0：不丢包，1：随机丢包，2：高频丢包，3：片段丢包，4：按seqnum丢包，5：按timestep丢包
    */
-  int assertDrop ();
+  int assertDrop (uint32_t switchId,
+                  uint32_t srcNodeId,
+                  uint16_t flowId,
+                  uint32_t seq,
+                  double nowSeconds);
   /**
    * @brief 用于打印当前变量状态
    */
@@ -46,15 +58,45 @@ public:
   void setDropDistribution (const std::string &distribution);
   double GetDropRate () const;
   void SetDropRate (double rate);
+  void SetDropMode (const std::string &mode);
+  std::string GetDropMode () const;
+  void SetSeqnumConfigFile (const std::string &path);
+  void SetTimestepConfigFile (const std::string &path);
+  void ConfigurePolicy (const std::string &mode,
+                        const std::string &seqnumConfigFile,
+                        const std::string &timestepConfigFile);
 
   // 新增的字符串成员，存储丢包分布类型
   std::string dropDistribution;
 
 private:
+  struct TimestepRule
+  {
+    double startSeconds;
+    uint32_t remaining;
+  };
+
+  struct TimestepState
+  {
+    std::vector<TimestepRule> rules;
+    uint32_t cursor;
+    TimestepState () : cursor (0) {}
+  };
+
   // 内部工具函数
   bool triggerEvent (double prob);
   int uniformInt (int low, int high);
   double uniformReal (double low, double high);
+  int AssertDropByLossrate ();
+  int AssertDropBySeqnum (uint32_t switchId, uint32_t srcNodeId, uint16_t flowId, uint32_t seq);
+  int AssertDropByTimestep (uint32_t switchId, uint32_t srcNodeId, uint16_t flowId, double nowSeconds);
+  void EnsureDeterministicConfigLoaded () const;
+  static void LoadSeqnumConfigIfNeeded (const std::string &path);
+  static void LoadTimestepConfigIfNeeded (const std::string &path);
+  static std::string MakeFlowKey (uint32_t switchId, uint32_t srcNodeId, uint16_t flowId);
+  static std::string Trim (const std::string &s);
+  static std::string StripComment (const std::string &line);
+  static std::string ToLower (const std::string &s);
 
   // 随机数生成器
   std::mt19937 rng;
@@ -77,6 +119,10 @@ private:
 
   double average_drop_per_event; // 每个事件的平均丢包数
   double event_probability;      // 每个包触发丢包事件的概率
+  DropMode m_dropMode;
+  std::string m_dropModeName;
+  std::string m_seqnumConfigFile;
+  std::string m_timestepConfigFile;
 
   // 各种丢包类型的占比：random, multi, outage
   // std::array<double, 3> event_percentage;
@@ -91,6 +137,14 @@ private:
    *  -1：未知
    */
   void InitDistribution ();
+
+  // Shared deterministic state across all ports/devices in one simulation run.
+  static std::string s_seqnumConfigLoadedPath;
+  static std::string s_timestepConfigLoadedPath;
+  static bool s_seqnumConfigLoaded;
+  static bool s_timestepConfigLoaded;
+  static std::unordered_map<std::string, std::unordered_map<uint32_t, uint32_t> > s_seqnumDropBudget;
+  static std::unordered_map<std::string, TimestepState> s_timestepDropState;
 };
 
 

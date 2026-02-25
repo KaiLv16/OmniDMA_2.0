@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import csv
 
 def parse_drop_file(filename, w=8):
     """解析丢包日志文件，统计丢包数据，并使用 bitmap 记录丢包"""
-    drop_counts = {1: 0, 2: 0, 3: 0}
+    drop_counts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
     total_lines = 0
     bitmaps = []  # 存储所有 bitmap
     current_bitmap = [1] * w  # 活动 bitmap，初始化全 1
@@ -15,15 +16,31 @@ def parse_drop_file(filename, w=8):
     try:
         with open(filename, "r") as fin:
             pkt_list = []
-            for line in fin:
-                parts = line.strip().split()
-                if len(parts) < 6:
+            for raw in fin:
+                line = raw.strip()
+                if not line:
                     continue
-                try:
-                    pkt_idx = int(parts[4])  # 第五列是 pkt_idx
-                    drop_type = int(parts[5])  # 第六列是丢包类型
-                except ValueError:
-                    continue
+
+                # New format: CSV with header.
+                if "," in line:
+                    parts = next(csv.reader([line]))
+                    if len(parts) < 6 or parts[0] == "time_step":
+                        continue
+                    try:
+                        pkt_idx = int(parts[4])   # pkt_idx
+                        drop_type = int(parts[5]) # drop_type
+                    except ValueError:
+                        continue
+                else:
+                    # Backward compatibility: old space-separated format
+                    parts = line.split()
+                    if len(parts) < 6:
+                        continue
+                    try:
+                        pkt_idx = int(parts[4])  # 第五列是 pkt_idx
+                        drop_type = int(parts[5])  # 第六列是丢包类型
+                    except ValueError:
+                        continue
 
                 pkt_list.append(pkt_idx)
 
@@ -101,10 +118,17 @@ def main():
     print(f"分析文件: {filename}")
     print("总行数（记录包总数）：", total_lines)
     print("各类型丢包统计及比例：")
+    drop_type_name = {
+        1: "random",
+        2: "highfreq",
+        3: "burst",
+        4: "by_seqnum",
+        5: "by_timestep",
+    }
     for dt in sorted(drop_counts.keys()):
         count = drop_counts[dt]
         percentage = (count / total_lines) * 100
-        print(f"  类型 {dt}: {count} 个包, 占 {percentage:.2f}%")
+        print(f"  类型 {dt} ({drop_type_name.get(dt, 'unknown')}): {count} 个包, 占 {percentage:.2f}%")
 
     print("\nBitmap 记录:")
     for idx, (start_idx, length, bitmap) in enumerate(bitmaps):

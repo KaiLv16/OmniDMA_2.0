@@ -511,12 +511,27 @@ void QbbNetDevice::Receive(Ptr<Packet> packet) {
         if (m_node->GetNodeType() > 0) {  // switch
             packet->AddPacketTag(FlowIdTag(m_ifIndex));
 
-            packet_index ++;
-            int drop_result = m_dropper->assertDrop();
-           if (drop_result != 0) { // 丢包
-                m_traceSwitchDrop(packet_index, drop_result, ch);
-            }
-            else {
+            // Manual switch drop logic is only applied to received UDP data packets.
+            if (ch.l3Prot == 0x11) {
+                uint32_t srcNodeId = 0xffffffffu;
+                std::map<uint32_t, uint32_t>::iterator srcIt = Settings::hostIp2IdMap.find(ch.sip);
+                if (srcIt != Settings::hostIp2IdMap.end()) {
+                    srcNodeId = srcIt->second;
+                }
+
+                packet_index++;
+                int drop_result = m_dropper->assertDrop(
+                    m_node->GetId(),
+                    srcNodeId,
+                    ch.udp.flow_id,
+                    ch.udp.seq,
+                    Simulator::Now().GetSeconds());
+                if (drop_result != 0) { // 丢包
+                    m_traceSwitchDrop(packet_index, drop_result, ch);
+                } else {
+                    m_node->SwitchReceiveFromDevice(this, packet, ch);
+                }
+            } else {
                 m_node->SwitchReceiveFromDevice(this, packet, ch);
             }
         } else {  // NIC
