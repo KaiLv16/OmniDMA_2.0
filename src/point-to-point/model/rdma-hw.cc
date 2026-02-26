@@ -598,12 +598,28 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
                                (!omni65002_ready_before && omni65002_ready_after);
     }
 
+    bool sentOmniAdamapNack = false;
+    if (m_omnidma && omniRes == -6 && !force_send_omni65002) {
+        int txOmniType = 1;
+        if (rxQp->omni_last_packet) {
+            bool has_pending_omni_state =
+                !rxQp->adamap_receiver->m_lookupTable.empty() ||
+                !rxQp->adamap_receiver->m_finishedBitmaps.empty();
+            if (has_pending_omni_state) {
+                txOmniType = 65001;
+            }
+        }
+        TransmitOmniNACK(4, rxQp, ch, adamap_for_NACK, delay, txOmniType);
+        sentOmniAdamapNack = true;
+    }
+
     /* 如果是IRN，只会返回0，2，4，6。其中2是SACK，6是NACK。但是SACK使用的是NACK的l3prot，二者仅依靠seq做区分
      * 1: 生成 ACK
      * 2: IRN 的 loss recovery，生成SACK
      * 6：NACK 但功能是 ACK
      */
-    if (x == 1 || x == 2 || x == 6 || omniRes == -6 || omni_last_packet_this_pkt || force_send_omni65002) {  // generate ACK or NACK
+    if (!sentOmniAdamapNack &&
+        (x == 1 || x == 2 || x == 6 || omniRes == -6 || omni_last_packet_this_pkt || force_send_omni65002)) {  // generate ACK or NACK
         qbbHeader seqh;
         seqh.SetSeq(rxQp->ReceiverNextExpectedSeq);
         seqh.SetPG(ch.udp.pg);
@@ -626,18 +642,6 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
         if (m_omnidma) {
             assert(m_omnidma && "omnidma should be enabled");
             seqh.SetOmniDMACumAckSeq(rxQp->omni_cumulative_ack_seq);
-            if (omniRes == -6) {
-                printf("%lu: Receiver gets a normal packet (omniType=%u) and sends a omniNACK (omniType=1)\n", Simulator::Now().GetTimeStep(), ch.udp.omni_type);
-                seqh.SetOmniType(1);            // 首次重传的OmniType
-                seqh.SetOmniDMAAdamapId(adamap_for_NACK.adamap.id);
-                std::array<uint64_t, kOmniDmaBitmapWireWords> adamapBitmapWords =
-                    BitmapToWireWords(adamap_for_NACK.adamap.bitmap);
-                seqh.SetOmniDMAAdamapBitmapWords(adamapBitmapWords.data(), adamapBitmapWords.size());
-                seqh.SetOmniDMAAdamapStartSeq(adamap_for_NACK.adamap.startSeq);
-                seqh.SetOmniDMAAdamapReprLength(adamap_for_NACK.adamap.reprLength);
-                // 这里对于customHeader（ch）而言，对应的字段是 ch.udp.adamap_id.
-                seqh.SetOmniDMATableIndex(-1);          // 首次重传包，不涉及table index，设为-1
-            }
             if (rxQp->omni_last_packet) {
                 bool has_pending_omni_state =
                     !rxQp->adamap_receiver->m_lookupTable.empty() ||
@@ -666,7 +670,7 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
         head.SetDestination(Ipv4Address(ch.sip));
         head.SetSource(Ipv4Address(ch.dip));
         // 这里只设置了ACK / NACK，根本不涉及CNP包
-        uint8_t ack_proto = (omniRes == -6 ? 0xFA : (x == 1 ? 0xFC : 0xFD));  // ack=0xFC nack=0xFD omninack=0xFA
+        uint8_t ack_proto = (x == 1 ? 0xFC : 0xFD);  // ack=0xFC nack=0xFD
         if (m_omnidma && (seqh.GetOmniType() == 65001 || seqh.GetOmniType() == 65002)) {
             ack_proto = 0xFA;
         }
@@ -706,16 +710,26 @@ void RdmaHw::HandleOmniListTimeout(uint16_t omni_type, Ptr<RdmaRxQueuePair> rxQp
         if (it->lastCallTime + rxQp->adamap_receiver->omni_scale_rto < Simulator::Now()) {
             it->lastCallTime = Simulator::Now();
             Time dmaDelay = NanoSeconds(0);
-            rxQp->adamap_receiver->PutLinkedListHeadToTable("Put timeout linked list head to table",
-                                                           false, true, &dmaDelay);
+            int newTableNodeCnt = rxQp->adamap_receiver->PutLinkedListHeadToTable(
+                "Put timeout linked list head to table", false, true, &dmaDelay);
             printf("%lu: this item's tableIndex=%u, isFinish=%d, lastCallTime=%ld us, max_retrans_omni_type=%d\n",
                 it->lastCallTime.GetMicroSeconds(), it->tableIndex, it->isFinish, it->lastCallTime.GetMicroSeconds(), it->max_retrans_omni_type);
             rxQp->adamap_receiver->EraseLinkedListHeadAndRefill(&dmaDelay);
             it = rxQp->adamap_receiver->m_finishedBitmaps.begin();
-            printf("to assert: LookupTable's last item: tableIndex=%u, isFinish=%d\n",
-                rxQp->adamap_receiver->m_lookupTable.back().tableIndex, rxQp->adamap_receiver->m_lookupTable.back().isFinish);
-            PrintAdamap(&(rxQp->adamap_receiver->m_lookupTable.back().adamap), "Timeout linked list to table:");
-            TransmitOmniNACK(1, rxQp, ch, rxQp->adamap_receiver->m_lookupTable.back(), dmaDelay);
+            if (newTableNodeCnt > 0) {
+                auto firstNewIt = rxQp->adamap_receiver->m_lookupTable.end();
+                for (int i = 0; i < newTableNodeCnt; ++i) {
+                    --firstNewIt;
+                }
+                for (auto tableIt = firstNewIt; tableIt != rxQp->adamap_receiver->m_lookupTable.end(); ++tableIt) {
+                    printf("Timeout linked list to table: tableIndex=%u, isFinish=%d\n",
+                        tableIt->tableIndex, tableIt->isFinish);
+                    PrintAdamap(&(tableIt->adamap), "Timeout linked list to table:");
+                    int timeoutOmniType = std::max(2, tableIt->max_retrans_omni_type);
+                    tableIt->max_retrans_omni_type = timeoutOmniType;
+                    TransmitOmniNACK(1, rxQp, ch, *tableIt, dmaDelay, timeoutOmniType);
+                }
+            }
             
         } else {
             break;   // 只在不删除元素时才 ++it
@@ -745,7 +759,9 @@ void RdmaHw::HandleOmniTableTimeout(uint16_t omni_type, Ptr<RdmaRxQueuePair> rxQ
         if (ch.udp.adamap_id != it->tableIndex && ch.udp.omni_type >= it->max_retrans_omni_type &&
             it->lastCallTime + rxQp->adamap_receiver->omni_scale_rto < Simulator::Now()) {
             printf("%lu: Timeout retransmit (with lastCallTime=%lu, omni_scale_rto=%lu us):\n", Simulator::Now().GetTimeStep(), it->lastCallTime.GetTimeStep(), rxQp->adamap_receiver->omni_scale_rto.GetMicroSeconds());
-            TransmitOmniNACK(2, rxQp, ch, *it);
+            int timeoutOmniType = std::max(2, it->max_retrans_omni_type);
+            it->max_retrans_omni_type = timeoutOmniType;
+            TransmitOmniNACK(2, rxQp, ch, *it, MicroSeconds(0), timeoutOmniType);
             it->lastCallTime = Simulator::Now();
         }
     }
@@ -823,8 +839,9 @@ void RdmaHw::TransmitOmniNACK(int tx_type, Ptr<RdmaRxQueuePair> rxQp, CustomHead
     high_tier_nack.SetOmniDMATableIndex(entry.tableIndex);
     high_tier_nack.SetOmniDMACumAckSeq(rxQp->omni_cumulative_ack_seq);
 
+    uint16_t effectiveOmniType = (omni_type == -1) ? uint16_t(ch.udp.omni_type + 1) : uint16_t(omni_type);
     std::ostringstream oss;
-    oss << "Transmit a OmniNACK packet. TableIndex: " << entry.tableIndex << ", isFinish: " << entry.isFinish << ", Omni_type: " << ch.udp.omni_type + 1;
+    oss << "Transmit a OmniNACK packet. TableIndex: " << entry.tableIndex << ", isFinish: " << entry.isFinish << ", Omni_type: " << effectiveOmniType;
     PrintAdamap(&(entry.adamap), oss.str());
 
     Ptr<Packet> newp = Create<Packet>(std::max(60 - 14 - 20 - (int)high_tier_nack.GetSerializedSize(), 0));

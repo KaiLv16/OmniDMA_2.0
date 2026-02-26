@@ -196,7 +196,11 @@ int RdmaEgressQueue::GetNextQindex(bool paused[]) {
         std::cout << Simulator::Now() << " Flow " << qp->m_flow_id << ": IsWinBound(): " << is_win_bound << "; CanIrnTransmit(" << m_mtu << ") = " << can_irn_transmit << "\n";
 # endif
         bool cond_window_allowed = (!is_win_bound && (!qp->irn.m_enabled || can_irn_transmit));
-        bool cond2 = (qp->GetBytesLeft() > 0 && cond_window_allowed);   // 窗口机制允许
+        bool has_omni_retrans =
+            qp->omniDMA.m_omnidma_enabled && qp->omniDMA.adamap_sender.NumRetransPkts() > 0;
+        // OmniDMA retransmissions are recovery traffic and must not be blocked by
+        // sender data-window gating, otherwise a frozen cum-ACK can deadlock recovery.
+        bool cond2 = has_omni_retrans || (qp->GetBytesLeft() > 0 && cond_window_allowed);
 
         if (!cond2 && !m_qpGrp->IsQpFinished((qIndex + m_rrlast) % fcount)) {   // 未被pause，窗口不允许
             if (qp->IsFinishedConst()) {
