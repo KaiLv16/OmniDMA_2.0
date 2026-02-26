@@ -36,7 +36,12 @@ struct Adamap_with_index {
   // Adamap_with_index(int32_t index) {tableIndex = index; isFinish = false;}
 };
 
-inline void PrintAdamap(const Adamap* adamap, const std::string& name, FILE* fout=NULL) {
+inline void PrintAdamap(const Adamap* adamap,
+                        const std::string& name,
+                        FILE* fout=NULL,
+                        Time lastCallTime=Time(),
+                        Time omniRto=Time(),
+                        bool hasTimeoutInfo=false) {
   if (fout == NULL) {
     // 输出到控制台
     std::cout << "  --------  " << name << "  ----------:\n";
@@ -50,6 +55,18 @@ inline void PrintAdamap(const Adamap* adamap, const std::string& name, FILE* fou
         std::cout << (bit ? "1" : "0");
     }
     std::cout << "(size()=" << adamap->bitmap.size() << ")" << std::endl;
+    if (hasTimeoutInfo) {
+      std::cout << "  Last Call Time: " << lastCallTime.GetTimeStep()
+                << " (" << lastCallTime.GetMicroSeconds() << " us)" << std::endl;
+      if (!omniRto.IsZero()) {
+        Time timeoutAt = lastCallTime + omniRto;
+        std::cout << "  Timeout Time: " << timeoutAt.GetTimeStep()
+                  << " (" << timeoutAt.GetMicroSeconds() << " us), RTO="
+                  << omniRto.GetMicroSeconds() << " us" << std::endl;
+      } else {
+        std::cout << "  Timeout Time: N/A (RTO unavailable)" << std::endl;
+      }
+    }
     std::cout << "  --------------------------------------:\n";
   }
   else {
@@ -64,6 +81,17 @@ inline void PrintAdamap(const Adamap* adamap, const std::string& name, FILE* fou
         fprintf(fout, "%c", bit ? '1' : '0');
     }
     fprintf(fout, "(size()=%lu)\n", adamap->bitmap.size());
+    if (hasTimeoutInfo) {
+      fprintf(fout, "  Last Call Time: %lu (%lu us)\n",
+              lastCallTime.GetTimeStep(), lastCallTime.GetMicroSeconds());
+      if (!omniRto.IsZero()) {
+        Time timeoutAt = lastCallTime + omniRto;
+        fprintf(fout, "  Timeout Time: %lu (%lu us), RTO=%lu us\n",
+                timeoutAt.GetTimeStep(), timeoutAt.GetMicroSeconds(), omniRto.GetMicroSeconds());
+      } else {
+        fprintf(fout, "  Timeout Time: N/A (RTO unavailable)\n");
+      }
+    }
     fprintf(fout, "  ---------------------------------------:\n");
   }
 }

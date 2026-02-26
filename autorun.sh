@@ -203,7 +203,7 @@ load_omnidma_case_profile() {
     OMNICASE_RUNTIME="600"
     OMNICASE_NETLOAD="50"
     OMNICASE_FLOW_NAME="omniDMA_flow"
-    OMNICASE_SWITCH_DROP_MODE="timestep"  # none / lossrate / seqnum / timestep
+    OMNICASE_SWITCH_DROP_MODE="seqnum"  # none / lossrate / seqnum / timestep
     OMNICASE_SWITCH_DROP_SEQNUM_CONFIG="config/config_drop_by_seqnum.txt"
     OMNICASE_SWITCH_DROP_TIMESTEP_CONFIG="config/config_drop_by_timestep.txt"
     # Plot x-axis range (relative to first send packet, us). Empty means auto.

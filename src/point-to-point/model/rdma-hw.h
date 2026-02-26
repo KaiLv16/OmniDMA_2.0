@@ -48,6 +48,10 @@ class RdmaHw : public Object {
         OMNI_EVT_FIRST_RETRANS_PROCESS = 8,
         OMNI_EVT_MULTI_RETRANS_PROCESS = 9,
         OMNI_EVT_LL_PREFETCH = 10,
+        OMNI_EVT_LINKEDLIST_TIMEOUT = 11,
+        OMNI_EVT_LOOKUPTABLE_TIMEOUT = 12,
+        OMNI_EVT_TX_ADAMAP = 13,
+        OMNI_EVT_SPLIT_ADAMAP = 14,
     };
 
     struct RnicDmaStats {
@@ -132,7 +136,8 @@ class RdmaHw : public Object {
     static uint64_t GetRxQpKey(uint32_t dip, uint16_t dport, uint16_t sport, uint16_t pg);
     Ptr<RdmaRxQueuePair> GetRxQp(uint32_t sip, uint32_t dip, uint16_t sport, uint16_t dport,
                                  uint16_t pg, bool create,
-                                 bool omniDMA_enable=0, uint16_t bitmap_size=0);  // get a rxQp
+                                 bool omniDMA_enable=0, uint16_t bitmap_size=0,
+                                 uint64_t baseRttNs=0);  // get a rxQp
     uint32_t GetNicIdxOfRxQp(Ptr<RdmaRxQueuePair> q);        // get the NIC index of the rxQp
     void DeleteRxQp(uint32_t dip, uint16_t dport, uint16_t sport, uint16_t pg);  // delete RxQP
 
@@ -176,8 +181,10 @@ class RdmaHw : public Object {
 
     void HandleTimeout(Ptr<RdmaQueuePair> qp, Time rto);
 
-    void HandleOmniListTimeout(uint16_t omni_type, Ptr<RdmaRxQueuePair> rxQp, CustomHeader &ch);
-    void HandleOmniTableTimeout(uint16_t omni_type, Ptr<RdmaRxQueuePair> rxQp, CustomHeader &ch);
+    void HandleOmniListTimeout(Ptr<RdmaRxQueuePair> rxQp);
+    void HandleOmniTableTimeout(Ptr<RdmaRxQueuePair> rxQp);
+    void EnsureOmniTimeoutTimers(Ptr<RdmaRxQueuePair> rxQp);
+    CustomHeader BuildOmniTimeoutHeader(Ptr<RdmaRxQueuePair> rxQp) const;
     // void HandleOmniContextTimeout(uint16_t omni_type, Ptr<RdmaRxQueuePair> rxQp, CustomHeader &ch);
 
     /* statistics */

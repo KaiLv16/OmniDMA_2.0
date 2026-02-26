@@ -299,7 +299,8 @@ bool ReceiverAdamap::assertLastHole(const Adamap &adamap, int index) const {
 void ReceiverAdamap::UpdateOmniRto(Adamap_with_index& desiredElement) {
   Time rtt = Simulator::Now() - desiredElement.lastCallTime;
   avg_omni_rtt = MicroSeconds((avg_omni_rtt.GetMicroSeconds() * omni_rtt_cnt + rtt.GetMicroSeconds()) / (omni_rtt_cnt + 1));
-  omni_scale_rto = MicroSeconds(avg_omni_rtt.GetMicroSeconds() * rtt_scale_factor);
+  Time qpRtt = (m_RxQp != NULL) ? m_RxQp->basertt : Time();
+  omni_scale_rto = qpRtt + MicroSeconds(500);
   omni_rtt_cnt++;
   printf("%lu: Update avg_omni_rtt of flow %u to %lu us\n", Simulator::Now().GetTimeStep(), m_RxQp->m_flow_id, avg_omni_rtt.GetMicroSeconds());
 }
@@ -679,6 +680,8 @@ ReceiverAdamap::splitAdamap(Adamap &node, Adamap &firstPart, bool neglectAllOneB
         firstPart.bitmap = node.bitmap;       // bitmap复制，大小不变
         firstPart.startSeq = node.startSeq;   // 起始序号不变
         firstPart.reprLength = static_cast<uint32_t>(x); // 第一部分长度为x
+        TraceOmniEvent(this, firstPart.startSeq, RdmaHw::OMNI_EVT_SPLIT_ADAMAP, 0,
+                       "split adamap chunk", &firstPart);
 
         // 更新 node 为第二部分
         node.startSeq += static_cast<uint32_t>(x);
@@ -711,8 +714,12 @@ ReceiverAdamap::splitAdamap(Adamap &node, Adamap &firstPart, bool neglectAllOneB
         // 如果拆出的部分不全为1，则返回该部分
         if (!allOnes) {
             firstPart = tempPart;
+            TraceOmniEvent(this, firstPart.startSeq, RdmaHw::OMNI_EVT_SPLIT_ADAMAP, 0,
+                           "split adamap chunk", &firstPart);
             return true;
         }
+        TraceOmniEvent(this, tempPart.startSeq, RdmaHw::OMNI_EVT_SPLIT_ADAMAP, 0,
+                       "split adamap chunk (skip all-ones)", &tempPart);
         // 否则，忽略本次拆分，继续对剩下的 node 进行拆分
     }
     // 如果循环结束，说明无法拆分出 bitmap 不全为1的部分

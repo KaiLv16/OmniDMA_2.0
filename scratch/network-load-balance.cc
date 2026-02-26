@@ -735,6 +735,10 @@ void snd_rcv_record(FILE *fout, Ptr<QbbNetDevice> dev,
  *  8: first retrans process summary
  *  9: multi retrans process summary
  * 10: linkedlist head cache prefetch
+ * 11: linkedlist timeout
+ * 12: lookup table timeout
+ * 13: transmit adamap
+ * 14: split adamap
  */
 void record_omnidma_event(FILE *fout, Ptr<RdmaHw> rdmahw, int flowid=-1, int seq=-1, 
     uint32_t event_type=0, uint32_t omni_type=0, const std::string &s="", const Adamap* adamap=NULL) {
@@ -773,6 +777,18 @@ void record_omnidma_event(FILE *fout, Ptr<RdmaHw> rdmahw, int flowid=-1, int seq
             break;
         case RdmaHw::OMNI_EVT_LL_PREFETCH:
             event_name = "linkedlist head cache prefetch";
+            break;
+        case RdmaHw::OMNI_EVT_LINKEDLIST_TIMEOUT:
+            event_name = "linkedlist timeout";
+            break;
+        case RdmaHw::OMNI_EVT_LOOKUPTABLE_TIMEOUT:
+            event_name = "lookuptable timeout";
+            break;
+        case RdmaHw::OMNI_EVT_TX_ADAMAP:
+            event_name = "tx adamap";
+            break;
+        case RdmaHw::OMNI_EVT_SPLIT_ADAMAP:
+            event_name = "split adamap";
             break;
         default:
             break;
