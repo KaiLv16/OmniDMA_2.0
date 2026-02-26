@@ -429,8 +429,11 @@ Optional env vars for plotting:
 EOF
 }
 
+
+# 在这里配置要运行的实验和绘图逻辑
 SKIP_FLAG="${1:-12}"
-TOPO_ARG="${2:-topo_simple_dumbbell_OS2_500us}"
+# TOPO_ARG="${2:-topo_simple_dumbbell_O2_500us}"
+TOPO_ARG="${2:-topo_dumbbell_incast100_OS2_500us}"
 DROP_ARG="${3:-0.1}"
 
 if [[ "${SKIP_FLAG}" != *1* && "${SKIP_FLAG}" != *2* ]]; then
