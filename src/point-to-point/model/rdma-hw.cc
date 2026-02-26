@@ -300,7 +300,12 @@ void RdmaHw::AddQueuePair(uint64_t size, uint16_t pg, Ipv4Address sip, Ipv4Addre
     qp->SetBaseRtt(baseRtt);
     qp->SetVarWin(m_var_win);
     qp->SetFlowId(flow_id);
-    qp->SetTimeout(m_waitAckTimeout);
+    if (omniDMA_enable) {
+        // baseRtt is passed from pairRtt in network-load-balance.cc and uses ns units.
+        qp->SetTimeout(NanoSeconds(baseRtt * 3) + MicroSeconds(200));
+    } else {
+        qp->SetTimeout(m_waitAckTimeout);
+    }
     qp->SetOmniDMAEnable(omniDMA_enable);
     if (omniDMA_enable) {
         qp->SetOmniDMABitmapSize(bitmap_size);
@@ -966,6 +971,8 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch) {
         if (ch.l3Prot == 0xFA) {
             // OmniDMA control packets carry a receiver-maintained cumulative ACK.
             qp->Acknowledge(ch.ack.omniDMACumAckSeq);
+            // Ensure sender timeout recovery base never falls behind the best normal ACK progress.
+            qp->Acknowledge(qp->omniDMA.m_maxNormalAckSeq);
             if (qp->snd_nxt < qp->snd_una) {
                 qp->snd_nxt = qp->snd_una;
             }
@@ -1015,12 +1022,19 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch) {
         } else {
             // OmniDMA still relies on cumulative ACK progress to retire the sender QP
             // and trigger FCT logging via QpComplete().
+            uint64_t ackForProgress = 0;
             if (!m_backto0) {
-                qp->Acknowledge(seq);
+                ackForProgress = seq;
             } else {
                 uint32_t goback_seq = seq / m_chunk * m_chunk;
-                qp->Acknowledge(goback_seq);
+                ackForProgress = goback_seq;
             }
+            if (ackForProgress > qp->omniDMA.m_maxNormalAckSeq) {
+                qp->omniDMA.m_maxNormalAckSeq = ackForProgress;
+            }
+            // OmniDMA RTO recovery uses snd_una as the resend base, so make it track
+            // the maximum progress confirmed by normal ACKs.
+            qp->Acknowledge(qp->omniDMA.m_maxNormalAckSeq);
             if (qp->snd_nxt < qp->snd_una) {
                 qp->snd_nxt = qp->snd_una;
             }
@@ -1097,20 +1111,18 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch) {
     printf("%lu : Inside ReceiveACK(%u), ", Simulator::Now().GetTimeStep(), seq);
 #endif
     // 重新设置超时重传时间
-    if (!m_omnidma) {
-        if (!qp->IsFinished() && qp->GetOnTheFly() > 0) {
-            if (qp->m_retransmit.IsRunning()) {
-                qp->m_retransmit.Cancel();
-                // std::cout << "qp->m_retransmit.Cancel()" << std::endl;
-            }
-    #if (SLB_DEBUG == true)
-            std::cout << "RdmaHw::ReceiveAck() calls GetRto()" <<std::endl;
-    # endif
-            Time qp_mtu = qp->GetRto(m_mtu);
-            qp->m_retransmit = Simulator::Schedule(qp_mtu, &RdmaHw::HandleTimeout, this, qp, qp_mtu);
-
-            printf("branch 1.  ");
+    if (!qp->IsFinished() && qp->GetOnTheFly() > 0) {
+        if (qp->m_retransmit.IsRunning()) {
+            qp->m_retransmit.Cancel();
+            // std::cout << "qp->m_retransmit.Cancel()" << std::endl;
         }
+#if (SLB_DEBUG == true)
+        std::cout << "RdmaHw::ReceiveAck() calls GetRto()" <<std::endl;
+# endif
+        Time qp_mtu = qp->GetRto(m_mtu);
+        qp->m_retransmit = Simulator::Schedule(qp_mtu, &RdmaHw::HandleTimeout, this, qp, qp_mtu);
+
+        printf("branch 1.  ");
     }
 
     if (m_irn) {
@@ -1548,25 +1560,23 @@ void RdmaHw::PktSent(Ptr<RdmaQueuePair> qp, Ptr<Packet> pkt, Time interframeGap)
 #endif
         RdmaHw::nAllPkts += 1;
         if (ch.l3Prot == 0x11) {  // UDP
-            if (!m_omnidma) {
-                // Update Timer
-                if (qp->m_retransmit.IsRunning()) {
-                    qp->m_retransmit.Cancel();
-                }
-    # if (SLB_DEBUG == true)
-                std::cout << "RdmaHw::PktSent() calls GetRto(), " << "ratebound: "<< m_rateBound 
-                    << " win: " << qp->m_win       // bound of on-the-fly packets
-                    << " baseRtt: " << qp->m_baseRtt   // base RTT of this qp
-                    << " m_nextAvail: " << qp->m_nextAvail     //< Soonest time of next send
-                    << " wp: " << qp->wp          // current window of packets
-                    << " timeout: " << qp->m_timeout
-                    << " var_win: " << m_var_win
-                    << " qp.irn.bdp: " << qp->irn.m_bdp
-                    <<std::endl;
-    # endif
-                Time qp_mtu = qp->GetRto(m_mtu);
-                qp->m_retransmit = Simulator::Schedule(qp_mtu, &RdmaHw::HandleTimeout, this, qp, qp_mtu);
+            // Update sender-side RTO timer (also enabled for OmniDMA QPs).
+            if (qp->m_retransmit.IsRunning()) {
+                qp->m_retransmit.Cancel();
             }
+# if (SLB_DEBUG == true)
+            std::cout << "RdmaHw::PktSent() calls GetRto(), " << "ratebound: "<< m_rateBound 
+                << " win: " << qp->m_win       // bound of on-the-fly packets
+                << " baseRtt: " << qp->m_baseRtt   // base RTT of this qp
+                << " m_nextAvail: " << qp->m_nextAvail     //< Soonest time of next send
+                << " wp: " << qp->wp          // current window of packets
+                << " timeout: " << qp->m_timeout
+                << " var_win: " << m_var_win
+                << " qp.irn.bdp: " << qp->irn.m_bdp
+                <<std::endl;
+# endif
+            Time qp_mtu = qp->GetRto(m_mtu);
+            qp->m_retransmit = Simulator::Schedule(qp_mtu, &RdmaHw::HandleTimeout, this, qp, qp_mtu);
         }
         else if (ch.l3Prot == 0xFC || ch.l3Prot == 0xFD || ch.l3Prot == 0xFF) {  // ACK, NACK, CNP
         } 
@@ -1578,7 +1588,14 @@ void RdmaHw::PktSent(Ptr<RdmaQueuePair> qp, Ptr<Packet> pkt, Time interframeGap)
 
 void RdmaHw::HandleTimeout(Ptr<RdmaQueuePair> qp, Time rto) {
     // Assume Outstanding Packets are lost
-    std::cout << Simulator::Now().GetTimeStep() << " Timeout on qp=" << qp << std::endl;
+    std::cout << Simulator::Now().GetTimeStep()
+              << " Timeout on qp=" << qp
+              << " flow_id=" << qp->m_flow_id
+              << " rto(us)=" << rto.GetMicroSeconds()
+              << " qp_timeout(us)=" << qp->m_timeout.GetMicroSeconds()
+              << " baseRtt(ns)=" << qp->m_baseRtt
+              << " omni=" << qp->omniDMA.m_omnidma_enabled
+              << std::endl;
     if (qp->IsFinished()) {
         return;
     }
@@ -1593,6 +1610,11 @@ void RdmaHw::HandleTimeout(Ptr<RdmaQueuePair> qp, Time rto) {
     if (acc_timeout_count.find(qp->m_flow_id) == acc_timeout_count.end())
         acc_timeout_count[qp->m_flow_id] = 0;
     acc_timeout_count[qp->m_flow_id]++;
+
+    if (qp->omniDMA.m_omnidma_enabled) {
+        // In OmniDMA, timeout resend base should at least reflect the best normal ACK progress.
+        qp->Acknowledge(qp->omniDMA.m_maxNormalAckSeq);
+    }
 
     if (qp->irn.m_enabled) {
         qp->irn.m_recovery = true;
@@ -2128,6 +2150,25 @@ void RdmaHw::HandleAckOmniCubic(Ptr<RdmaQueuePair> qp,
     } else if (ch.l3Prot == 0xFA) {
         lossSignal = (ch.ack.omni_type > 0 && ch.ack.omni_type < 65000);
     }
+
+    uint32_t cubicCwnd = qp->m_omniCubic->GetCwndBytes();
+    uint32_t cubicSsThresh = qp->m_omniCubic->GetSsThreshBytes();
+    bool isCwndLimited = priorInFlight + m_mtu >= cubicCwnd;
+    std::cout << Simulator::Now().GetTimeStep()
+              << " [OmniCubicAck]"
+              << " flow_id=" << qp->m_flow_id
+              << " proto=0x" << std::hex << static_cast<uint32_t>(ch.l3Prot) << std::dec
+              << " omniType=" << static_cast<uint32_t>(ch.ack.omni_type)
+              << " oldSndUna=" << oldSndUna
+              << " snd_una=" << qp->snd_una
+              << " ackedBytes=" << ackedBytes
+              << " priorInFlight=" << priorInFlight
+              << " cubicCwnd=" << cubicCwnd
+              << " ssthresh=" << cubicSsThresh
+              << " cwndLimited=" << isCwndLimited
+              << " lossSignal=" << lossSignal
+              << " rtt_us=" << rtt.GetMicroSeconds()
+              << std::endl;
 
     qp->m_omniCubic->OnAck(qp, ackedBytes, qp->snd_una, priorInFlight, rtt, lossSignal);
 }

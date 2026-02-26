@@ -38,6 +38,18 @@ def parse_arguments():
         default="flow_rate_plots",
         help="Subdirectory (under snd_rcv file folder) to save generated PNGs",
     )
+    parser.add_argument(
+        "--x_min_us",
+        type=float,
+        default=None,
+        help="Optional x-axis lower bound in us (relative to first send packet)",
+    )
+    parser.add_argument(
+        "--x_max_us",
+        type=float,
+        default=None,
+        help="Optional x-axis upper bound in us (relative to first send packet)",
+    )
     return parser.parse_args()
 
 
@@ -184,7 +196,7 @@ def build_window_series(df_send):
     return df_win
 
 
-def plot_rate_and_window(host_id, flow_id, df_send, bucket_us, output_path):
+def plot_rate_and_window(host_id, flow_id, df_send, bucket_us, output_path, x_min_us=None, x_max_us=None):
     df_send = df_send.sort_values("Time_us").reset_index(drop=True)
     if df_send.empty:
         return False
@@ -240,6 +252,8 @@ def plot_rate_and_window(host_id, flow_id, df_send, bucket_us, output_path):
         ax1.set_ylim(bottom=0)
     if not win.empty:
         ax2.set_ylim(bottom=0)
+    if x_min_us is not None or x_max_us is not None:
+        ax1.set_xlim(left=x_min_us, right=x_max_us)
 
     if lines:
         ax1.legend(lines, labels, loc="upper right")
@@ -266,9 +280,18 @@ def main():
     if args.bucket <= 0:
         print("[Error] --bucket must be > 0")
         return
+    if (
+        args.x_min_us is not None
+        and args.x_max_us is not None
+        and args.x_min_us > args.x_max_us
+    ):
+        print("[Error] --x_min_us must be <= --x_max_us")
+        return
 
     os.makedirs(out_dir, exist_ok=True)
     print(f"[Info] 图像输出目录: {out_dir}")
+    if args.x_min_us is not None or args.x_max_us is not None:
+        print(f"[Info] 横轴范围: [{args.x_min_us}, {args.x_max_us}] us (相对首包发送)")
 
     target_flowids = parse_flowids(args.flowids)
     if target_flowids is not None:
@@ -295,7 +318,15 @@ def main():
     generated = 0
     for (host_id, flow_id), group in df_send.groupby(["Host", "Flow"], sort=True):
         output_path = os.path.join(out_dir, f"rate_host{host_id}_flow{flow_id}.png")
-        ok = plot_rate_and_window(host_id, flow_id, group, args.bucket, output_path)
+        ok = plot_rate_and_window(
+            host_id,
+            flow_id,
+            group,
+            args.bucket,
+            output_path,
+            x_min_us=args.x_min_us,
+            x_max_us=args.x_max_us,
+        )
         if ok:
             generated += 1
             print(f"[OK] 保存图像: {output_path}")

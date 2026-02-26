@@ -42,6 +42,23 @@ build_config_id() {
     echo "${base_config_id}_${topo_tag}_${flow_tag}_dropm${switch_drop_mode}_drop${drop_rate_tag}_pfc${pfc}_irn${irn}"
 }
 
+build_output_dir_from_params() {
+    local topology="$1"
+    local drop_rate_pct="$2"
+    local pfc="$3"
+    local irn="$4"
+    local omnidma="$5"
+    local flow_name="$6"
+    local switch_drop_mode="${7:-lossrate}"
+
+    local drop_rate
+    drop_rate="$(percent_to_drop_rate "${drop_rate_pct}")"
+
+    local config_id
+    config_id="$(build_config_id "${topology}" "${flow_name}" "${drop_rate}" "${pfc}" "${irn}" "${omnidma}" "${switch_drop_mode}")"
+    echo "mix/output/${config_id}"
+}
+
 resolve_output_file() {
     local output_dir="$1"
     local config_id="$2"
@@ -111,13 +128,11 @@ plot_case_impl() {
     local irn="$4"
     local omnidma="$5"
 
-    local drop_rate
-    drop_rate="$(percent_to_drop_rate "${drop_rate_pct}")"
     local switch_drop_mode="${SWITCH_DROP_MODE:-lossrate}"
 
-    local config_id
-    config_id="$(build_config_id "${topology}" "${FLOW_NAME}" "${drop_rate}" "${pfc}" "${irn}" "${omnidma}" "${switch_drop_mode}")"
-    local output_dir="mix/output/${config_id}"
+    local output_dir
+    output_dir="$(build_output_dir_from_params "${topology}" "${drop_rate_pct}" "${pfc}" "${irn}" "${omnidma}" "${FLOW_NAME}" "${switch_drop_mode}")"
+    local config_id="${output_dir#mix/output/}"
     local snd_rcv_file
     snd_rcv_file="$(resolve_output_file "${output_dir}" "${config_id}" "snd_rcv_record_file")"
 
@@ -134,7 +149,79 @@ plot_case_impl() {
     if [[ -n "${PLOT_OUTPUT_SUBDIR}" ]]; then
         plot_cmd+=(--output_subdir "${PLOT_OUTPUT_SUBDIR}")
     fi
+    if [[ -n "${PLOT_X_MIN_US}" ]]; then
+        plot_cmd+=(--x_min_us "${PLOT_X_MIN_US}")
+    fi
+    if [[ -n "${PLOT_X_MAX_US}" ]]; then
+        plot_cmd+=(--x_max_us "${PLOT_X_MAX_US}")
+    fi
     "${plot_cmd[@]}"
+}
+
+plot_output_dir_impl() {
+    local output_dir="$1"
+    local snd_rcv_file="${output_dir}/snd_rcv_record_file.txt"
+
+    if [[ ! -f "${snd_rcv_file}" ]]; then
+        cecho "RED" "Cannot plot: missing snd_rcv_record_file: ${snd_rcv_file}"
+        return 1
+    fi
+
+    cecho "GREEN" "Plot: base_folder=${output_dir}"
+    local plot_cmd=(python3 omni-tests/plot_flow_rate.py --base_folder "${output_dir}" --bucket "${PLOT_BUCKET}")
+    if [[ -n "${PLOT_FLOWIDS}" ]]; then
+        plot_cmd+=(--flowids "${PLOT_FLOWIDS}")
+    fi
+    if [[ -n "${PLOT_OUTPUT_SUBDIR}" ]]; then
+        plot_cmd+=(--output_subdir "${PLOT_OUTPUT_SUBDIR}")
+    fi
+    if [[ -n "${PLOT_X_MIN_US}" ]]; then
+        plot_cmd+=(--x_min_us "${PLOT_X_MIN_US}")
+    fi
+    if [[ -n "${PLOT_X_MAX_US}" ]]; then
+        plot_cmd+=(--x_max_us "${PLOT_X_MAX_US}")
+    fi
+    "${plot_cmd[@]}"
+}
+
+load_omnidma_case_profile() {
+    local topology_arg="${1:-topo_simple_dumbbell_OS2_500us}"
+    local drop_rate_pct_arg="${2:-0.1}"
+
+    # Manual OmniDMA experiment config (intentionally not using env vars).
+    OMNICASE_TOPOLOGY="${topology_arg}"
+    OMNICASE_DROP_RATE_PCT="${drop_rate_pct_arg}"
+    OMNICASE_PFC="0"
+    OMNICASE_IRN="0"
+    OMNICASE_OMNIDMA="1"
+    OMNICASE_OMNIDMA_CUBIC="1"
+    OMNICASE_OMNIDMA_BITMAP_SIZE="16"
+    OMNICASE_HAS_WIN="0"
+    OMNICASE_SELF_DEFINE_WIN="0"
+    OMNICASE_SELF_WIN_BYTES="1000000000"
+    OMNICASE_RATE_BOUND="0"
+    OMNICASE_RUNTIME="600"
+    OMNICASE_NETLOAD="50"
+    OMNICASE_FLOW_NAME="omniDMA_flow"
+    OMNICASE_SWITCH_DROP_MODE="timestep"  # none / lossrate / seqnum / timestep
+    OMNICASE_SWITCH_DROP_SEQNUM_CONFIG="config/config_drop_by_seqnum.txt"
+    OMNICASE_SWITCH_DROP_TIMESTEP_CONFIG="config/config_drop_by_timestep.txt"
+    # Plot x-axis range (relative to first send packet, us). Empty means auto.
+    OMNICASE_PLOT_X_MIN_US=""
+    OMNICASE_PLOT_X_MAX_US=""
+    # Example:
+    # OMNICASE_PLOT_X_MIN_US="0"
+    # OMNICASE_PLOT_X_MAX_US="5000"
+    OMNICASE_OUTPUT_DIR="$(
+        build_output_dir_from_params \
+            "${OMNICASE_TOPOLOGY}" \
+            "${OMNICASE_DROP_RATE_PCT}" \
+            "${OMNICASE_PFC}" \
+            "${OMNICASE_IRN}" \
+            "${OMNICASE_OMNIDMA}" \
+            "${OMNICASE_FLOW_NAME}" \
+            "${OMNICASE_SWITCH_DROP_MODE}"
+    )"
 }
 
 
@@ -156,24 +243,25 @@ run_irn_case() {
 }
 
 run_omnidma_case() {
-    # Manual OmniDMA experiment config (intentionally not using env vars).
-    local topology="topo_simple_dumbbell_OS2_500us"
-    local drop_rate_pct="0.1"
-    local pfc="0"
-    local irn="0"
-    local omnidma="1"
-    local omnidma_cubic="0"
-    local omnidma_bitmap_size="16"
-    local has_win="0"
-    local self_define_win="0"
-    local self_win_bytes="1000000000"
-    local rate_bound="0"
-    local runtime="600"
-    local netload="50"
-    local flow_name="omniDMA_flow"
-    local switch_drop_mode="timestep"  # lossrate / seqnum / timestep
-    local switch_drop_seqnum_config="config/config_drop_by_seqnum.txt"
-    local switch_drop_timestep_config="config/config_drop_by_timestep.txt"
+    load_omnidma_case_profile "$1" "$2"
+
+    local topology="${OMNICASE_TOPOLOGY}"
+    local drop_rate_pct="${OMNICASE_DROP_RATE_PCT}"
+    local pfc="${OMNICASE_PFC}"
+    local irn="${OMNICASE_IRN}"
+    local omnidma="${OMNICASE_OMNIDMA}"
+    local omnidma_cubic="${OMNICASE_OMNIDMA_CUBIC}"
+    local omnidma_bitmap_size="${OMNICASE_OMNIDMA_BITMAP_SIZE}"
+    local has_win="${OMNICASE_HAS_WIN}"
+    local self_define_win="${OMNICASE_SELF_DEFINE_WIN}"
+    local self_win_bytes="${OMNICASE_SELF_WIN_BYTES}"
+    local rate_bound="${OMNICASE_RATE_BOUND}"
+    local runtime="${OMNICASE_RUNTIME}"
+    local netload="${OMNICASE_NETLOAD}"
+    local flow_name="${OMNICASE_FLOW_NAME}"
+    local switch_drop_mode="${OMNICASE_SWITCH_DROP_MODE}"
+    local switch_drop_seqnum_config="${OMNICASE_SWITCH_DROP_SEQNUM_CONFIG}"
+    local switch_drop_timestep_config="${OMNICASE_SWITCH_DROP_TIMESTEP_CONFIG}"
 
     # Dynamic scoping in bash lets run_case_impl read these locals instead of globals.
     local RATE_BOUND="${rate_bound}"
@@ -184,6 +272,7 @@ run_omnidma_case() {
     local SWITCH_DROP_SEQNUM_CONFIG="${switch_drop_seqnum_config}"
     local SWITCH_DROP_TIMESTEP_CONFIG="${switch_drop_timestep_config}"
 
+    cecho "YELLOW" "OmniDMA analysis folder: ${OMNICASE_OUTPUT_DIR}"
     run_case_impl "${topology}" "${drop_rate_pct}" "${pfc}" "${irn}" "${omnidma}" \
         --omnidma_cubic "${omnidma_cubic}" \
         --omnidma_bitmap_size "${omnidma_bitmap_size}" \
@@ -193,9 +282,13 @@ run_omnidma_case() {
 }
 
 plot_omnidma_case() {
-    local topology="${1:-${DEFAULT_TOPOLOGY}}"
-    local drop_rate_pct="${2:-${DEFAULT_DROP_RATE_PCT}}"
-    plot_case_impl "${topology}" "${drop_rate_pct}" "0" "0" "1"
+    load_omnidma_case_profile "$1" "$2"
+    # Dynamic scoping: plot_output_dir_impl -> plot_flow_rate.py reads these locals.
+    local PLOT_X_MIN_US="${OMNICASE_PLOT_X_MIN_US}"
+    local PLOT_X_MAX_US="${OMNICASE_PLOT_X_MAX_US}"
+    cecho "YELLOW" "OmniDMA analysis folder: ${OMNICASE_OUTPUT_DIR}"
+    cecho "YELLOW" "OmniDMA plot x-range(us): [${PLOT_X_MIN_US:-AUTO}, ${PLOT_X_MAX_US:-AUTO}]"
+    plot_output_dir_impl "${OMNICASE_OUTPUT_DIR}"
 }
 
 run_sweep() {
@@ -278,6 +371,8 @@ OMNIDMA_CUBIC="${OMNIDMA_CUBIC:-1}"
 PLOT_BUCKET="${PLOT_BUCKET:-10}"
 PLOT_FLOWIDS="${PLOT_FLOWIDS:-}"
 PLOT_OUTPUT_SUBDIR="${PLOT_OUTPUT_SUBDIR:-flow_rate_plots}"
+PLOT_X_MIN_US="${PLOT_X_MIN_US:-}"
+PLOT_X_MAX_US="${PLOT_X_MAX_US:-}"
 
 TOPOLOGIES=(
     "topo_simple_dumbbell_OS2_1us"
@@ -308,6 +403,7 @@ cecho "YELLOW" "DROP-RATE count: ${#DROP_RATE_PCTS[@]} (percent list)"
 cecho "YELLOW" "PFC=${PFC}, IRN=${IRN}, OMNIDMA=${OMNIDMA}"
 cecho "YELLOW" "OMNIDMA_CUBIC=${OMNIDMA_CUBIC}"
 cecho "YELLOW" "PLOT_BUCKET=${PLOT_BUCKET}, PLOT_FLOWIDS=${PLOT_FLOWIDS:-ALL}, PLOT_OUTPUT_SUBDIR=${PLOT_OUTPUT_SUBDIR}"
+cecho "YELLOW" "PLOT_X_MIN_US=${PLOT_X_MIN_US:-AUTO}, PLOT_X_MAX_US=${PLOT_X_MAX_US:-AUTO}"
 cecho "YELLOW" "----------------------------------\n"
 
 usage() {
@@ -328,6 +424,8 @@ Optional env vars for plotting:
   PLOT_FLOWIDS=1,2,3
   PLOT_BUCKET=10
   PLOT_OUTPUT_SUBDIR=flow_rate_plots
+  PLOT_X_MIN_US=0
+  PLOT_X_MAX_US=5000
 EOF
 }
 

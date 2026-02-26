@@ -255,6 +255,7 @@ class RdmaQueuePair : public Object {
     struct {
         bool m_omnidma_enabled;
         uint16_t m_omnidma_bitmap_size;
+        uint64_t m_maxNormalAckSeq{0};  // sender-observed max seq from normal ACKs (0xFC)
         SenderAdamap adamap_sender;
     } omniDMA;
 

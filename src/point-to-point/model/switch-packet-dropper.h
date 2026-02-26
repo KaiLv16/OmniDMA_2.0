@@ -18,9 +18,10 @@ class PacketDropper : public Object
 public:
   enum DropMode
   {
-    DROP_MODE_LOSSRATE = 0,
-    DROP_MODE_SEQNUM = 1,
-    DROP_MODE_TIMESTEP = 2,
+    DROP_MODE_NONE = 0,
+    DROP_MODE_LOSSRATE = 1,
+    DROP_MODE_SEQNUM = 2,
+    DROP_MODE_TIMESTEP = 3,
   };
 
   static TypeId GetTypeId (void);

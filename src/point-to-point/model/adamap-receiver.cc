@@ -319,12 +319,20 @@ int ReceiverAdamap::Record(uint32_t seq, uint16_t retrans_tier, Adamap_with_inde
 
   if (retrans_tier == 0) {        // 首次收到包
     // 如果当前bitmap中没有记录任何数据，且新序列号与当前起始连续，直接更新起始序列号，不需要记录bitmap
-    if (IsCurrentBitmapEmpty() && (seq == m_startSeq + 1) || seq == 0) {
+    if (IsCurrentBitmapEmpty() && ((seq == m_startSeq + 1) || seq == 0)) {
 #ifdef OMNI_DETAIL
       printf("update StartSeq to %u\n", m_startSeq);
 #endif
       m_startSeq = seq;
       return -1;
+    }
+
+    // OmniDMA sender-side RTO recovery may resend old packets on the normal path (omniType=0).
+    // Ignore stale/duplicate normal packets here to avoid uint32_t underflow in offset calculation.
+    if (seq <= m_startSeq) {
+      printf("%lu: ignore stale normal packet seq %u (m_startSeq=%u) in ReceiverAdamap::Record()\n",
+             Simulator::Now().GetTimeStep(), seq, m_startSeq);
+      return -7;
     }
 
     // 否则，需要记录该包。计算相对于bitmap起始的偏移量

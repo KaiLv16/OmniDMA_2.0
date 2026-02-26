@@ -675,7 +675,8 @@ void snd_rcv_record(FILE *fout, Ptr<QbbNetDevice> dev,
                 uint32_t rcv_snd_type, uint32_t pkt_type, uint32_t omni_type, uint32_t pkt_size,
                 int flowid=-1, int seq=-1, uint32_t cc_win_size=0) {
     
-    bool cond = (dev->GetNode()->GetNodeType() == 0) && (rcv_snd_type == 1) && (pkt_type == 0);
+    bool cond = true;
+    // cond &= (rcv_snd_type == 1) && (pkt_type == 0);
     // time, nodeID, nodeType, Interface's Idx, 0:resume, 1:pause
     if (cond && dev->GetNode()->GetNodeType() == 0) {
         fprintf(fout, "%lu: host %u nic %u flow %d %s a %s packet, cc_win_size=%u omniType=%u size=%u seq=%d\n",

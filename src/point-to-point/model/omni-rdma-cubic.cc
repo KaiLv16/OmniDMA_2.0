@@ -215,14 +215,15 @@ OmniRdmaCubic::OnAck(Ptr<RdmaQueuePair> qp,
         return;
     }
 
+    bool inSlowStart = m_cwndBytes < m_ssThreshBytes;
     bool isCwndLimited = priorInFlight + m_segmentSize >= m_cwndBytes;
-    if (!isCwndLimited)
+    if (!inSlowStart && !isCwndLimited)
     {
         ApplyWindow(qp);
         return;
     }
 
-    if (m_cwndBytes < m_ssThreshBytes)
+    if (inSlowStart)
     {
         m_cwndBytes += ackedBytes;
     }

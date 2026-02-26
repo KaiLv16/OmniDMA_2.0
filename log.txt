@@ -1,0 +1,35 @@
+[0;32mRunning RDMA Network Load Balancing Simulations (dumbbell topology sweep) [0m
+[0;33m\n---------------------------------- [0m
+[0;33mTOPOLOGY count: 5 [0m
+[0;33mNETWORK LOAD: 50 [0m
+[0;33mTIME: 600 [0m
+[0;33mDROP-RATE count: 9 (percent list) [0m
+[0;33mPFC=1, IRN=0, OMNIDMA=0 [0m
+[0;33mOMNIDMA_CUBIC=1 [0m
+[0;33mPLOT_BUCKET=10, PLOT_FLOWIDS=ALL, PLOT_OUTPUT_SUBDIR=flow_rate_plots [0m
+[0;33mPLOT_X_MIN_US=AUTO, PLOT_X_MAX_US=AUTO [0m
+[0;33m----------------------------------\n [0m
+[0;33mskip_flag=12 (1=simulate, 2=plot) [0m
+[0;33mRun simulation enabled [0m
+[0;33mOmniDMA analysis folder: mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0 [0m
+[0;32mRun: topo=topo_simple_dumbbell_OS2_500us, drop_rate=0.1% (ratio=0.001), pfc=0, irn=0, omnidma=1 [0m
+topo_simple_dumbbell_OS2_500us
+Input traffic file omniDMA_flow.txt already exists
+Config filename:/home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0/config.txt
+1BDP = 500002000
+Running simulation...
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0/config.log 2>&1
+Analyzing output FCT...
+python3 fctAnalysis.py -id omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0 -dir /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA -bdp 500002000 -sT 2005000000 -fT 602050000000 > /dev/null 2>&1
+
+
+============== Done ============== 
+config_ID: omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0
+2009735592: host 2 nic 1 flow 0 recv a UDP packet, cc_win_size=0 omniType=0 size=1056 seq=612000
+2009735593: host 2 nic 1 flow 0 send a ACK packet, cc_win_size=0 omniType=10000 size=108 seq=613000
+2009735676: host 2 nic 1 flow 0 recv a UDP packet, cc_win_size=0 omniType=0 size=1056 seq=613000
+2009735677: host 2 nic 1 flow 0 send a ACK packet, cc_win_size=0 omniType=10000 size=108 seq=614000
+2009735760: host 2 nic 1 flow 0 recv a UDP packet, cc_win_size=[0;33mPlot enabled [0m
+[0;33mOmniDMA analysis folder: mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0 [0m
+[0;33mOmniDMA plot x-range(us): [0, 50000] [0m
+[0;32mPlot: base_folder=mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0 [0m

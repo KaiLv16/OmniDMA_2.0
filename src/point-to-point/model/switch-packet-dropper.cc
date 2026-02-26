@@ -165,6 +165,13 @@ void
 PacketDropper::SetDropMode (const std::string &mode)
 {
   std::string normalized = ToLower (Trim (mode));
+  if (normalized == "none" || normalized == "off" || normalized == "disabled" ||
+      normalized == "no_drop" || normalized == "nodrop")
+    {
+      m_dropMode = DROP_MODE_NONE;
+      m_dropModeName = "none";
+      return;
+    }
   if (normalized.empty () || normalized == "lossrate" || normalized == "by_lossrate" ||
       normalized == "lossrate_distribution" || normalized == "by_lossrate_and_distribution")
     {
@@ -237,6 +244,8 @@ PacketDropper::assertDrop (uint32_t switchId,
 {
   switch (m_dropMode)
     {
+    case DROP_MODE_NONE:
+      return 0;
     case DROP_MODE_SEQNUM:
       EnsureDeterministicConfigLoaded ();
       return AssertDropBySeqnum (switchId, srcNodeId, flowId, seq);

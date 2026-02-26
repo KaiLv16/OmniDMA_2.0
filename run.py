@@ -192,8 +192,8 @@ def main():
     parser.add_argument('--my_switch_total_drop_rate', dest='my_switch_total_drop_rate', action='store',
                         type=float, default=0.0, help="total drop rate of our switch (default: 0.0)")
     parser.add_argument('--switch_drop_mode', dest='switch_drop_mode', action='store',
-                        choices=['lossrate', 'seqnum', 'timestep'], default='lossrate',
-                        help="switch drop mechanism: lossrate/seqnum/timestep (default: lossrate)")
+                        choices=['none', 'lossrate', 'seqnum', 'timestep'], default='lossrate',
+                        help="switch drop mechanism: none/lossrate/seqnum/timestep (default: lossrate)")
     parser.add_argument('--switch_drop_seqnum_config', dest='switch_drop_seqnum_config', action='store',
                         default='config/config_drop_by_seqnum.txt',
                         help="config file for seqnum-based switch drops")
