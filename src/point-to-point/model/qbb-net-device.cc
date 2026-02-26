@@ -67,6 +67,18 @@ NS_LOG_COMPONENT_DEFINE("QbbNetDevice");
 
 namespace {
 
+enum TraceCcStage : uint32_t
+{
+    TRACE_CC_STAGE_NONE = 0,
+    TRACE_CC_STAGE_SS = 1,
+    TRACE_CC_STAGE_CA = 2,
+};
+
+static const uint32_t TRACE_CC_STAGE_ENCODE_MARKER = (1u << 31);
+static const uint32_t TRACE_CC_STAGE_SHIFT = 29;
+static const uint32_t TRACE_CC_STAGE_VALUE_MASK = 0x3u;
+static const uint32_t TRACE_CC_WIN_VALUE_MASK = ((1u << TRACE_CC_STAGE_SHIFT) - 1u);
+
 uint32_t
 GetCcWindowSizeForTrace(Ptr<RdmaQueuePair> qp)
 {
@@ -81,6 +93,35 @@ GetCcWindowSizeForTrace(Ptr<RdmaQueuePair> qp)
         return static_cast<uint32_t>(std::min<uint64_t>(qp->m_win, UINT32_MAX));
     }
     return 0;
+}
+
+uint32_t
+GetCcStageForTrace(Ptr<RdmaQueuePair> qp, uint32_t pktType)
+{
+    if (pktType != 0 || qp == 0 || qp->m_omniCubic == 0)
+    {
+        return TRACE_CC_STAGE_NONE;
+    }
+
+    const uint32_t cwndBytes = qp->m_omniCubic->GetCwndBytes();
+    const uint32_t ssThreshBytes = qp->m_omniCubic->GetSsThreshBytes();
+    if (cwndBytes == 0 || ssThreshBytes == 0)
+    {
+        return TRACE_CC_STAGE_NONE;
+    }
+    return (cwndBytes < ssThreshBytes) ? TRACE_CC_STAGE_SS : TRACE_CC_STAGE_CA;
+}
+
+uint32_t
+EncodeCcTraceWinAndStage(uint32_t ccWinBytes, uint32_t ccStage)
+{
+    if (ccStage == TRACE_CC_STAGE_NONE)
+    {
+        return ccWinBytes;
+    }
+    return TRACE_CC_STAGE_ENCODE_MARKER |
+           ((ccStage & TRACE_CC_STAGE_VALUE_MASK) << TRACE_CC_STAGE_SHIFT) |
+           (ccWinBytes & TRACE_CC_WIN_VALUE_MASK);
 }
 
 } // namespace
@@ -366,13 +407,15 @@ void QbbNetDevice::DequeueAndTransmit(void) {
             p->PeekHeader(ch);
             // transmit
             m_traceQpDequeue(p, lastQp);
+            uint32_t pktType = get_pkt_status(ch.l3Prot);
             m_traceSndRcv(1,
-                          get_pkt_status(ch.l3Prot),
+                          pktType,
                           ch.udp.omni_type,
                           p->GetSize(),
                           ch.udp.flow_id,
                           ch.udp.seq,
-                          GetCcWindowSizeForTrace(lastQp));
+                          EncodeCcTraceWinAndStage(GetCcWindowSizeForTrace(lastQp),
+                                                  GetCcStageForTrace(lastQp, pktType)));
             TransmitStart(p);
             
             // update for the next avail time (UpdateNextAvail() and Update retrans Timer)

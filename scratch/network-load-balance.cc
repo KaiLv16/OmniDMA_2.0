@@ -668,6 +668,31 @@ inline const char* getPriorityString(int pkt_type) {
             return "Undefined";
     }
 }
+
+inline const char* getCcStageString(uint32_t cc_stage) {
+    switch (cc_stage) {
+        case 1:
+            return "SS";
+        case 2:
+            return "CA";
+        default:
+            return "NONE";
+    }
+}
+
+inline void decodeCcTraceWinAndStage(uint32_t encoded, uint32_t &cc_win_size, uint32_t &cc_stage) {
+    const uint32_t marker = (1u << 31);
+    const uint32_t stage_shift = 29;
+    const uint32_t stage_mask = 0x3u;
+    const uint32_t win_mask = ((1u << stage_shift) - 1u);
+    if ((encoded & marker) != 0) {
+        cc_stage = (encoded >> stage_shift) & stage_mask;
+        cc_win_size = encoded & win_mask;
+        return;
+    }
+    cc_stage = 0;
+    cc_win_size = encoded;
+}
 /**
  * @brief record a send/recv event. 0: recv, 1: send; size: pkt_size
  */
@@ -679,14 +704,18 @@ void snd_rcv_record(FILE *fout, Ptr<QbbNetDevice> dev,
     // cond &= (rcv_snd_type == 1) && (pkt_type == 0);
     // time, nodeID, nodeType, Interface's Idx, 0:resume, 1:pause
     if (cond && dev->GetNode()->GetNodeType() == 0) {
-        fprintf(fout, "%lu: host %u nic %u flow %d %s a %s packet, cc_win_size=%u omniType=%u size=%u seq=%d\n",
+        uint32_t decoded_cc_win_size = cc_win_size;
+        uint32_t decoded_cc_stage = 0;
+        decodeCcTraceWinAndStage(cc_win_size, decoded_cc_win_size, decoded_cc_stage);
+        fprintf(fout, "%lu: host %u nic %u flow %d %s a %s packet, cc_win_size=%u cc_stage=%s omniType=%u size=%u seq=%d\n",
                 Simulator::Now().GetTimeStep(), 
                 dev->GetNode()->GetId(),
                 dev->GetIfIndex(), 
                 flowid,
                 (rcv_snd_type == 0) ? "recv" : "send",
                 getPriorityString(pkt_type),
-                cc_win_size,
+                decoded_cc_win_size,
+                getCcStageString(decoded_cc_stage),
                 omni_type,
                 pkt_size,
                 seq);

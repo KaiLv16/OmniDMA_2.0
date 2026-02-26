@@ -73,6 +73,7 @@ def configure_font():
 NEW_FMT_RE = re.compile(
     r"^\s*(?P<ts>\d+):\s*host\s+(?P<host>\d+)\s+nic\s+(?P<nic>\d+)\s+flow\s+(?P<flow>-?\d+)\s+"
     r"(?P<action>send|recv)\s+a\s+(?P<pkt>[A-Za-z0-9_]+)\s+packet,\s+cc_win_size=(?P<win>\d+)"
+    r"(?:\s+cc_stage=(?P<cc_stage>[A-Za-z_]+))?"
     r".*?\bomniType=(?P<omni>-?\d+)\b.*?\bsize=(?P<size>\d+)\b.*?\bseq=(?P<seq>-?\d+)\b",
     re.IGNORECASE,
 )
@@ -111,6 +112,7 @@ def read_snd_rcv_log(filepath):
                         "Action": m.group("action").lower(),
                         "PacketType": m.group("pkt"),
                         "CcWin": int(m.group("win")),
+                        "CcStage": (m.group("cc_stage") or "NONE").upper(),
                         "OmniType": int(m.group("omni")),
                         "Size": int(m.group("size")),
                         "Seq": int(m.group("seq")),
@@ -129,6 +131,7 @@ def read_snd_rcv_log(filepath):
                         "Action": m.group("action").lower(),
                         "PacketType": m.group("pkt"),
                         "CcWin": 0,
+                        "CcStage": "NONE",
                         "OmniType": int(m.group("omni")),
                         "Size": int(m.group("size")),
                         "Seq": int(m.group("seq")),
@@ -150,6 +153,7 @@ def read_snd_rcv_log(filepath):
                 "Action",
                 "PacketType",
                 "CcWin",
+                "CcStage",
                 "OmniType",
                 "Size",
                 "Seq",
@@ -184,11 +188,11 @@ def calculate_throughput(df_send, bucket_size_us):
 
 def build_window_series(df_send):
     if df_send.empty:
-        return pd.DataFrame(columns=["Time_us", "CcWin"])
+        return pd.DataFrame(columns=["Time_us", "CcWin", "CcStage"])
 
     # Use send-time samples; duplicate timestamps keep the latest observed window.
     df_win = (
-        df_send[["Time_us", "CcWin"]]
+        df_send[["Time_us", "CcWin", "CcStage"]]
         .sort_values("Time_us")
         .drop_duplicates(subset=["Time_us"], keep="last")
         .reset_index(drop=True)
@@ -211,6 +215,7 @@ def plot_rate_and_window(host_id, flow_id, df_send, bucket_us, output_path, x_mi
     if not win.empty:
         win = win.copy()
         win["Time_us"] = win["Time_us"] - start_us
+        win["CcStage"] = win["CcStage"].fillna("NONE").astype(str).str.upper()
 
     fig, ax1 = plt.subplots(figsize=(12, 7))
     ax2 = ax1.twinx()
@@ -235,12 +240,35 @@ def plot_rate_and_window(host_id, flow_id, df_send, bucket_us, output_path, x_mi
             win["CcWin"],
             where="post",
             color="#d62728",
-            linewidth=1.8,
+            linewidth=1.2,
             linestyle="--",
+            alpha=0.75,
             label="CC窗口 (Bytes)",
         )[0]
         lines.append(line2)
         labels.append(line2.get_label())
+
+        stage_style = {
+            "SS": ("#ff7f0e", "慢启动 (SS)"),
+            "CA": ("#2ca02c", "CUBIC拥塞避免 (CA)"),
+            "NONE": ("#7f7f7f", "无CUBIC/未知"),
+        }
+        for stage in ["SS", "CA", "NONE"]:
+            stage_points = win[win["CcStage"] == stage]
+            if stage_points.empty:
+                continue
+            color, stage_label = stage_style[stage]
+            marker = ax2.scatter(
+                stage_points["Time_us"],
+                stage_points["CcWin"],
+                s=10,
+                c=color,
+                alpha=0.9 if stage != "NONE" else 0.5,
+                label=stage_label,
+                zorder=3,
+            )
+            lines.append(marker)
+            labels.append(stage_label)
 
     ax1.set_xlabel("时间 (us, 相对首包发送)")
     ax1.set_ylabel("发送速率 (Gbps)", color="#1f77b4")

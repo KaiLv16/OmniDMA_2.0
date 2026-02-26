@@ -1,0 +1,777 @@
+[0;32mRunning RDMA Network Load Balancing Simulations (dumbbell topology sweep) [0m
+[0;33m\n---------------------------------- [0m
+[0;33mTOPOLOGY count: 5 [0m
+[0;33mNETWORK LOAD: 50 [0m
+[0;33mTIME: 600 [0m
+[0;33mDROP-RATE count: 9 (percent list) [0m
+[0;33mPFC=1, IRN=0, OMNIDMA=0 [0m
+[0;33mOMNIDMA_CUBIC=1 [0m
+[0;33mPLOT_BUCKET=10, PLOT_FLOWIDS=ALL, PLOT_OUTPUT_SUBDIR=flow_rate_plots [0m
+[0;33mPLOT_X_MIN_US=AUTO, PLOT_X_MAX_US=AUTO [0m
+[0;33m----------------------------------\n [0m
+[0;33mskip_flag=12 (1=simulate, 2=plot) [0m
+[0;33mRun simulation enabled [0m
+[0;33mOmniDMA analysis folder: mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0 [0m
+[0;32mRun: topo=topo_simple_dumbbell_OS2_500us, drop_rate=0.1% (ratio=0.001), pfc=0, irn=0, omnidma=1 [0m
+Waf: Entering directory `/home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/build'
+[ 703/1455] cxx: scratch/network-load-balance.cc -> build/scratch/network-load-balance.cc.1.o
+../scratch/network-load-balance.cc: In function ‘int main(int, char**)’:
+../scratch/network-load-balance.cc:1672:115: error: no matching function for call to ‘MakeBoundCallback(void (*)(FILE*, ns3::Ptr<ns3::QbbNetDevice>, uint32_t, uint32_t, uint32_t, uint32_t, int, int, uint32_t, uint32_t), FILE*&, ns3::Ptr<ns3::QbbNetDevice>)’
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1463:13: note: candidate: ‘template<class R, class TX, class ARG> ns3::Callback<R> ns3::MakeBoundCallback(R (*)(TX), ARG)’
+ 1463 | Callback<R> MakeBoundCallback (R (*fnPtr)(TX), ARG a1) {
+      |             ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1463:13: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 1 argument, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1470:16: note: candidate: ‘template<class R, class TX, class ARG, class T1> ns3::Callback<R, T1> ns3::MakeBoundCallback(R (*)(TX, T1), ARG)’
+ 1470 | Callback<R,T1> MakeBoundCallback (R (*fnPtr)(TX,T1), ARG a1) {
+      |                ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1470:16: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 2 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1477:19: note: candidate: ‘template<class R, class TX, class ARG, class T1, class T2> ns3::Callback<R, T1, T2> ns3::MakeBoundCallback(R (*)(TX, T1, T2), ARG)’
+ 1477 | Callback<R,T1,T2> MakeBoundCallback (R (*fnPtr)(TX,T1,T2), ARG a1) {
+      |                   ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1477:19: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 3 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1484:22: note: candidate: ‘template<class R, class TX, class ARG, class T1, class T2, class T3> ns3::Callback<R, T1, T2, T3> ns3::MakeBoundCallback(R (*)(TX, T1, T2, T3), ARG)’
+ 1484 | Callback<R,T1,T2,T3> MakeBoundCallback (R (*fnPtr)(TX,T1,T2,T3), ARG a1) {
+      |                      ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1484:22: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 4 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1491:25: note: candidate: ‘template<class R, class TX, class ARG, class T1, class T2, class T3, class T4> ns3::Callback<R, T1, T2, T3, T4> ns3::MakeBoundCallback(R (*)(TX, T1, T2, T3, T4), ARG)’
+ 1491 | Callback<R,T1,T2,T3,T4> MakeBoundCallback (R (*fnPtr)(TX,T1,T2,T3,T4), ARG a1) {
+      |                         ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1491:25: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 5 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1498:28: note: candidate: ‘template<class R, class TX, class ARG, class T1, class T2, class T3, class T4, class T5> ns3::Callback<R, T1, T2, T3, T4, T5> ns3::MakeBoundCallback(R (*)(TX, T1, T2, T3, T4, T5), ARG)’
+ 1498 | Callback<R,T1,T2,T3,T4,T5> MakeBoundCallback (R (*fnPtr)(TX,T1,T2,T3,T4,T5), ARG a1) {
+      |                            ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1498:28: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 6 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1505:31: note: candidate: ‘template<class R, class TX, class ARG, class T1, class T2, class T3, class T4, class T5, class T6> ns3::Callback<R, T1, T2, T3, T4, T5, T6> ns3::MakeBoundCallback(R (*)(TX, T1, T2, T3, T4, T5, T6), ARG)’
+ 1505 | Callback<R,T1,T2,T3,T4,T5,T6> MakeBoundCallback (R (*fnPtr)(TX,T1,T2,T3,T4,T5,T6), ARG a1) {
+      |                               ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1505:31: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 7 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1512:34: note: candidate: ‘template<class R, class TX, class ARG, class T1, class T2, class T3, class T4, class T5, class T6, class T7> ns3::Callback<R, T3, T4, T5, T6, T7, T8, T9> ns3::MakeBoundCallback(R (*)(TX, T1, T2, T3, T4, T5, T6, T7), ARG)’
+ 1512 | Callback<R,T1,T2,T3,T4,T5,T6,T7> MakeBoundCallback (R (*fnPtr)(TX,T1,T2,T3,T4,T5,T6,T7), ARG a1) {
+      |                                  ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1512:34: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 8 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1519:37: note: candidate: ‘template<class R, class TX, class ARG, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8> ns3::Callback<R, T1, T2, T3, T4, T5, T6, T7, T8> ns3::MakeBoundCallback(R (*)(TX, T1, T2, T3, T4, T5, T6, T7, T8), ARG)’
+ 1519 | Callback<R,T1,T2,T3,T4,T5,T6,T7,T8> MakeBoundCallback (R (*fnPtr)(TX,T1,T2,T3,T4,T5,T6,T7,T8), ARG a1) {
+      |                                     ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1519:37: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 9 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1534:13: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2> ns3::Callback<R> ns3::MakeBoundCallback(R (*)(TX1, TX2), ARG1, ARG2)’
+ 1534 | Callback<R> MakeBoundCallback (R (*fnPtr)(TX1,TX2), ARG1 a1, ARG2 a2) {
+      |             ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1534:13: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 2 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1541:16: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2, class T1> ns3::Callback<R, T1> ns3::MakeBoundCallback(R (*)(TX1, TX2, T1), ARG1, ARG2)’
+ 1541 | Callback<R,T1> MakeBoundCallback (R (*fnPtr)(TX1,TX2,T1), ARG1 a1, ARG2 a2) {
+      |                ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1541:16: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 3 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1548:19: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2, class T1, class T2> ns3::Callback<R, T1, T2> ns3::MakeBoundCallback(R (*)(TX1, TX2, T1, T2), ARG1, ARG2)’
+ 1548 | Callback<R,T1,T2> MakeBoundCallback (R (*fnPtr)(TX1,TX2,T1,T2), ARG1 a1, ARG2 a2) {
+      |                   ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1548:19: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 4 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1555:22: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2, class T1, class T2, class T3> ns3::Callback<R, T1, T2, T3> ns3::MakeBoundCallback(R (*)(TX1, TX2, T1, T2, T3), ARG1, ARG2)’
+ 1555 | Callback<R,T1,T2,T3> MakeBoundCallback (R (*fnPtr)(TX1,TX2,T1,T2,T3), ARG1 a1, ARG2 a2) {
+      |                      ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1555:22: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 5 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1562:25: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2, class T1, class T2, class T3, class T4> ns3::Callback<R, T1, T2, T3, T4> ns3::MakeBoundCallback(R (*)(TX1, TX2, T1, T2, T3, T4), ARG1, ARG2)’
+ 1562 | Callback<R,T1,T2,T3,T4> MakeBoundCallback (R (*fnPtr)(TX1,TX2,T1,T2,T3,T4), ARG1 a1, ARG2 a2) {
+      |                         ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1562:25: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 6 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1569:28: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2, class T1, class T2, class T3, class T4, class T5> ns3::Callback<R, T1, T2, T3, T4, T5> ns3::MakeBoundCallback(R (*)(TX1, TX2, T1, T2, T3, T4, T5), ARG1, ARG2)’
+ 1569 | Callback<R,T1,T2,T3,T4,T5> MakeBoundCallback (R (*fnPtr)(TX1,TX2,T1,T2,T3,T4,T5), ARG1 a1, ARG2 a2) {
+      |                            ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1569:28: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 7 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1576:31: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2, class T1, class T2, class T3, class T4, class T5, class T6> ns3::Callback<R, T1, T2, T3, T4, T5, T6> ns3::MakeBoundCallback(R (*)(TX1, TX2, T1, T2, T3, T4, T5, T6), ARG1, ARG2)’
+ 1576 | Callback<R,T1,T2,T3,T4,T5,T6> MakeBoundCallback (R (*fnPtr)(TX1,TX2,T1,T2,T3,T4,T5,T6), ARG1 a1, ARG2 a2) {
+      |                               ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1576:31: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 8 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1583:34: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2, class T1, class T2, class T3, class T4, class T5, class T6, class T7> ns3::Callback<R, T1, T2, T3, T4, T5, T6, T7> ns3::MakeBoundCallback(R (*)(TX1, TX2, T1, T2, T3, T4, T5, T6, T7), ARG1, ARG2)’
+ 1583 | Callback<R,T1,T2,T3,T4,T5,T6,T7> MakeBoundCallback (R (*fnPtr)(TX1,TX2,T1,T2,T3,T4,T5,T6,T7), ARG1 a1, ARG2 a2) {
+      |                                  ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1583:34: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 9 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1599:13: note: candidate: ‘template<class R, class TX1, class TX2, class TX3, class ARG1, class ARG2, class ARG3> ns3::Callback<R> ns3::MakeBoundCallback(R (*)(TX1, TX2, TX3), ARG1, ARG2, ARG3)’
+ 1599 | Callback<R> MakeBoundCallback (R (*fnPtr)(TX1,TX2,TX3), ARG1 a1, ARG2 a2, ARG3 a3) {
+      |             ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1599:13: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 3 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1606:16: note: candidate: ‘template<class R, class TX1, class TX2, class TX3, class ARG1, class ARG2, class ARG3, class T1> ns3::Callback<R, T1> ns3::MakeBoundCallback(R (*)(TX1, TX2, TX3, T1), ARG1, ARG2, ARG3)’
+ 1606 | Callback<R,T1> MakeBoundCallback (R (*fnPtr)(TX1,TX2,TX3,T1), ARG1 a1, ARG2 a2, ARG3 a3) {
+      |                ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1606:16: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 4 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1613:19: note: candidate: ‘template<class R, class TX1, class TX2, class TX3, class ARG1, class ARG2, class ARG3, class T1, class T2> ns3::Callback<R, T1, T2> ns3::MakeBoundCallback(R (*)(TX1, TX2, TX3, T1, T2), ARG1, ARG2, ARG3)’
+ 1613 | Callback<R,T1,T2> MakeBoundCallback (R (*fnPtr)(TX1,TX2,TX3,T1,T2), ARG1 a1, ARG2 a2, ARG3 a3) {
+      |                   ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1613:19: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 5 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1620:22: note: candidate: ‘template<class R, class TX1, class TX2, class TX3, class ARG1, class ARG2, class ARG3, class T1, class T2, class T3> ns3::Callback<R, T1, T2, T3> ns3::MakeBoundCallback(R (*)(TX1, TX2, TX3, T1, T2, T3), ARG1, ARG2, ARG3)’
+ 1620 | Callback<R,T1,T2,T3> MakeBoundCallback (R (*fnPtr)(TX1,TX2,TX3,T1,T2,T3), ARG1 a1, ARG2 a2, ARG3 a3) {
+      |                      ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1620:22: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 6 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1627:25: note: candidate: ‘template<class R, class TX1, class TX2, class TX3, class ARG1, class ARG2, class ARG3, class T1, class T2, class T3, class T4> ns3::Callback<R, T1, T2, T3, T4> ns3::MakeBoundCallback(R (*)(TX1, TX2, TX3, T1, T2, T3, T4), ARG1, ARG2, ARG3)’
+ 1627 | Callback<R,T1,T2,T3,T4> MakeBoundCallback (R (*fnPtr)(TX1,TX2,TX3,T1,T2,T3,T4), ARG1 a1, ARG2 a2, ARG3 a3) {
+      |                         ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1627:25: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 7 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1634:28: note: candidate: ‘template<class R, class TX1, class TX2, class TX3, class ARG1, class ARG2, class ARG3, class T1, class T2, class T3, class T4, class T5> ns3::Callback<R, T1, T2, T3, T4, T5> ns3::MakeBoundCallback(R (*)(TX1, TX2, TX3, T1, T2, T3, T4, T5), ARG1, ARG2, ARG3)’
+ 1634 | Callback<R,T1,T2,T3,T4,T5> MakeBoundCallback (R (*fnPtr)(TX1,TX2,TX3,T1,T2,T3,T4,T5), ARG1 a1, ARG2 a2, ARG3 a3) {
+      |                            ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1634:28: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 8 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1641:31: note: candidate: ‘template<class R, class TX1, class TX2, class TX3, class ARG1, class ARG2, class ARG3, class T1, class T2, class T3, class T4, class T5, class T6> ns3::Callback<R, T1, T2, T3, T4, T5, T6> ns3::MakeBoundCallback(R (*)(TX1, TX2, TX3, T1, T2, T3, T4, T5, T6), ARG1, ARG2, ARG3)’
+ 1641 | Callback<R,T1,T2,T3,T4,T5,T6> MakeBoundCallback (R (*fnPtr)(TX1,TX2,TX3,T1,T2,T3,T4,T5,T6), ARG1 a1, ARG2 a2, ARG3 a3) {
+      |                               ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1641:31: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1672:115: note:   candidate expects 9 arguments, 10 provided
+ 1672 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(0))));
+      |                                                                                                                   ^
+../scratch/network-load-balance.cc:1674:115: error: no matching function for call to ‘MakeBoundCallback(void (*)(FILE*, ns3::Ptr<ns3::QbbNetDevice>, uint32_t, uint32_t, uint32_t, uint32_t, int, int, uint32_t, uint32_t), FILE*&, ns3::Ptr<ns3::QbbNetDevice>)’
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1463:13: note: candidate: ‘template<class R, class TX, class ARG> ns3::Callback<R> ns3::MakeBoundCallback(R (*)(TX), ARG)’
+ 1463 | Callback<R> MakeBoundCallback (R (*fnPtr)(TX), ARG a1) {
+      |             ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1463:13: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 1 argument, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1470:16: note: candidate: ‘template<class R, class TX, class ARG, class T1> ns3::Callback<R, T1> ns3::MakeBoundCallback(R (*)(TX, T1), ARG)’
+ 1470 | Callback<R,T1> MakeBoundCallback (R (*fnPtr)(TX,T1), ARG a1) {
+      |                ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1470:16: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 2 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1477:19: note: candidate: ‘template<class R, class TX, class ARG, class T1, class T2> ns3::Callback<R, T1, T2> ns3::MakeBoundCallback(R (*)(TX, T1, T2), ARG)’
+ 1477 | Callback<R,T1,T2> MakeBoundCallback (R (*fnPtr)(TX,T1,T2), ARG a1) {
+      |                   ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1477:19: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 3 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1484:22: note: candidate: ‘template<class R, class TX, class ARG, class T1, class T2, class T3> ns3::Callback<R, T1, T2, T3> ns3::MakeBoundCallback(R (*)(TX, T1, T2, T3), ARG)’
+ 1484 | Callback<R,T1,T2,T3> MakeBoundCallback (R (*fnPtr)(TX,T1,T2,T3), ARG a1) {
+      |                      ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1484:22: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 4 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1491:25: note: candidate: ‘template<class R, class TX, class ARG, class T1, class T2, class T3, class T4> ns3::Callback<R, T1, T2, T3, T4> ns3::MakeBoundCallback(R (*)(TX, T1, T2, T3, T4), ARG)’
+ 1491 | Callback<R,T1,T2,T3,T4> MakeBoundCallback (R (*fnPtr)(TX,T1,T2,T3,T4), ARG a1) {
+      |                         ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1491:25: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 5 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1498:28: note: candidate: ‘template<class R, class TX, class ARG, class T1, class T2, class T3, class T4, class T5> ns3::Callback<R, T1, T2, T3, T4, T5> ns3::MakeBoundCallback(R (*)(TX, T1, T2, T3, T4, T5), ARG)’
+ 1498 | Callback<R,T1,T2,T3,T4,T5> MakeBoundCallback (R (*fnPtr)(TX,T1,T2,T3,T4,T5), ARG a1) {
+      |                            ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1498:28: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 6 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1505:31: note: candidate: ‘template<class R, class TX, class ARG, class T1, class T2, class T3, class T4, class T5, class T6> ns3::Callback<R, T1, T2, T3, T4, T5, T6> ns3::MakeBoundCallback(R (*)(TX, T1, T2, T3, T4, T5, T6), ARG)’
+ 1505 | Callback<R,T1,T2,T3,T4,T5,T6> MakeBoundCallback (R (*fnPtr)(TX,T1,T2,T3,T4,T5,T6), ARG a1) {
+      |                               ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1505:31: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 7 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1512:34: note: candidate: ‘template<class R, class TX, class ARG, class T1, class T2, class T3, class T4, class T5, class T6, class T7> ns3::Callback<R, T3, T4, T5, T6, T7, T8, T9> ns3::MakeBoundCallback(R (*)(TX, T1, T2, T3, T4, T5, T6, T7), ARG)’
+ 1512 | Callback<R,T1,T2,T3,T4,T5,T6,T7> MakeBoundCallback (R (*fnPtr)(TX,T1,T2,T3,T4,T5,T6,T7), ARG a1) {
+      |                                  ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1512:34: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 8 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1519:37: note: candidate: ‘template<class R, class TX, class ARG, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8> ns3::Callback<R, T1, T2, T3, T4, T5, T6, T7, T8> ns3::MakeBoundCallback(R (*)(TX, T1, T2, T3, T4, T5, T6, T7, T8), ARG)’
+ 1519 | Callback<R,T1,T2,T3,T4,T5,T6,T7,T8> MakeBoundCallback (R (*fnPtr)(TX,T1,T2,T3,T4,T5,T6,T7,T8), ARG a1) {
+      |                                     ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1519:37: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 9 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1534:13: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2> ns3::Callback<R> ns3::MakeBoundCallback(R (*)(TX1, TX2), ARG1, ARG2)’
+ 1534 | Callback<R> MakeBoundCallback (R (*fnPtr)(TX1,TX2), ARG1 a1, ARG2 a2) {
+      |             ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1534:13: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 2 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1541:16: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2, class T1> ns3::Callback<R, T1> ns3::MakeBoundCallback(R (*)(TX1, TX2, T1), ARG1, ARG2)’
+ 1541 | Callback<R,T1> MakeBoundCallback (R (*fnPtr)(TX1,TX2,T1), ARG1 a1, ARG2 a2) {
+      |                ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1541:16: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 3 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1548:19: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2, class T1, class T2> ns3::Callback<R, T1, T2> ns3::MakeBoundCallback(R (*)(TX1, TX2, T1, T2), ARG1, ARG2)’
+ 1548 | Callback<R,T1,T2> MakeBoundCallback (R (*fnPtr)(TX1,TX2,T1,T2), ARG1 a1, ARG2 a2) {
+      |                   ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1548:19: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 4 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1555:22: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2, class T1, class T2, class T3> ns3::Callback<R, T1, T2, T3> ns3::MakeBoundCallback(R (*)(TX1, TX2, T1, T2, T3), ARG1, ARG2)’
+ 1555 | Callback<R,T1,T2,T3> MakeBoundCallback (R (*fnPtr)(TX1,TX2,T1,T2,T3), ARG1 a1, ARG2 a2) {
+      |                      ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1555:22: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 5 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1562:25: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2, class T1, class T2, class T3, class T4> ns3::Callback<R, T1, T2, T3, T4> ns3::MakeBoundCallback(R (*)(TX1, TX2, T1, T2, T3, T4), ARG1, ARG2)’
+ 1562 | Callback<R,T1,T2,T3,T4> MakeBoundCallback (R (*fnPtr)(TX1,TX2,T1,T2,T3,T4), ARG1 a1, ARG2 a2) {
+      |                         ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1562:25: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 6 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1569:28: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2, class T1, class T2, class T3, class T4, class T5> ns3::Callback<R, T1, T2, T3, T4, T5> ns3::MakeBoundCallback(R (*)(TX1, TX2, T1, T2, T3, T4, T5), ARG1, ARG2)’
+ 1569 | Callback<R,T1,T2,T3,T4,T5> MakeBoundCallback (R (*fnPtr)(TX1,TX2,T1,T2,T3,T4,T5), ARG1 a1, ARG2 a2) {
+      |                            ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1569:28: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 7 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1576:31: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2, class T1, class T2, class T3, class T4, class T5, class T6> ns3::Callback<R, T1, T2, T3, T4, T5, T6> ns3::MakeBoundCallback(R (*)(TX1, TX2, T1, T2, T3, T4, T5, T6), ARG1, ARG2)’
+ 1576 | Callback<R,T1,T2,T3,T4,T5,T6> MakeBoundCallback (R (*fnPtr)(TX1,TX2,T1,T2,T3,T4,T5,T6), ARG1 a1, ARG2 a2) {
+      |                               ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1576:31: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 8 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1583:34: note: candidate: ‘template<class R, class TX1, class TX2, class ARG1, class ARG2, class T1, class T2, class T3, class T4, class T5, class T6, class T7> ns3::Callback<R, T1, T2, T3, T4, T5, T6, T7> ns3::MakeBoundCallback(R (*)(TX1, TX2, T1, T2, T3, T4, T5, T6, T7), ARG1, ARG2)’
+ 1583 | Callback<R,T1,T2,T3,T4,T5,T6,T7> MakeBoundCallback (R (*fnPtr)(TX1,TX2,T1,T2,T3,T4,T5,T6,T7), ARG1 a1, ARG2 a2) {
+      |                                  ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1583:34: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 9 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1599:13: note: candidate: ‘template<class R, class TX1, class TX2, class TX3, class ARG1, class ARG2, class ARG3> ns3::Callback<R> ns3::MakeBoundCallback(R (*)(TX1, TX2, TX3), ARG1, ARG2, ARG3)’
+ 1599 | Callback<R> MakeBoundCallback (R (*fnPtr)(TX1,TX2,TX3), ARG1 a1, ARG2 a2, ARG3 a3) {
+      |             ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1599:13: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 3 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1606:16: note: candidate: ‘template<class R, class TX1, class TX2, class TX3, class ARG1, class ARG2, class ARG3, class T1> ns3::Callback<R, T1> ns3::MakeBoundCallback(R (*)(TX1, TX2, TX3, T1), ARG1, ARG2, ARG3)’
+ 1606 | Callback<R,T1> MakeBoundCallback (R (*fnPtr)(TX1,TX2,TX3,T1), ARG1 a1, ARG2 a2, ARG3 a3) {
+      |                ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1606:16: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 4 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1613:19: note: candidate: ‘template<class R, class TX1, class TX2, class TX3, class ARG1, class ARG2, class ARG3, class T1, class T2> ns3::Callback<R, T1, T2> ns3::MakeBoundCallback(R (*)(TX1, TX2, TX3, T1, T2), ARG1, ARG2, ARG3)’
+ 1613 | Callback<R,T1,T2> MakeBoundCallback (R (*fnPtr)(TX1,TX2,TX3,T1,T2), ARG1 a1, ARG2 a2, ARG3 a3) {
+      |                   ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1613:19: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 5 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1620:22: note: candidate: ‘template<class R, class TX1, class TX2, class TX3, class ARG1, class ARG2, class ARG3, class T1, class T2, class T3> ns3::Callback<R, T1, T2, T3> ns3::MakeBoundCallback(R (*)(TX1, TX2, TX3, T1, T2, T3), ARG1, ARG2, ARG3)’
+ 1620 | Callback<R,T1,T2,T3> MakeBoundCallback (R (*fnPtr)(TX1,TX2,TX3,T1,T2,T3), ARG1 a1, ARG2 a2, ARG3 a3) {
+      |                      ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1620:22: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 6 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1627:25: note: candidate: ‘template<class R, class TX1, class TX2, class TX3, class ARG1, class ARG2, class ARG3, class T1, class T2, class T3, class T4> ns3::Callback<R, T1, T2, T3, T4> ns3::MakeBoundCallback(R (*)(TX1, TX2, TX3, T1, T2, T3, T4), ARG1, ARG2, ARG3)’
+ 1627 | Callback<R,T1,T2,T3,T4> MakeBoundCallback (R (*fnPtr)(TX1,TX2,TX3,T1,T2,T3,T4), ARG1 a1, ARG2 a2, ARG3 a3) {
+      |                         ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1627:25: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 7 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1634:28: note: candidate: ‘template<class R, class TX1, class TX2, class TX3, class ARG1, class ARG2, class ARG3, class T1, class T2, class T3, class T4, class T5> ns3::Callback<R, T1, T2, T3, T4, T5> ns3::MakeBoundCallback(R (*)(TX1, TX2, TX3, T1, T2, T3, T4, T5), ARG1, ARG2, ARG3)’
+ 1634 | Callback<R,T1,T2,T3,T4,T5> MakeBoundCallback (R (*fnPtr)(TX1,TX2,TX3,T1,T2,T3,T4,T5), ARG1 a1, ARG2 a2, ARG3 a3) {
+      |                            ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1634:28: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 8 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+In file included from ./ns3/trace-source-accessor.h:24,
+                 from ./ns3/type-id.h:25,
+                 from ./ns3/object-base.h:23,
+                 from ./ns3/object.h:29,
+                 from ./ns3/application.h:26,
+                 from ./ns3/application-container.h:26,
+                 from ./ns3/rdma-client-helper.h:24,
+                 from ../scratch/network-load-balance.cc:22:
+./ns3/callback.h:1641:31: note: candidate: ‘template<class R, class TX1, class TX2, class TX3, class ARG1, class ARG2, class ARG3, class T1, class T2, class T3, class T4, class T5, class T6> ns3::Callback<R, T1, T2, T3, T4, T5, T6> ns3::MakeBoundCallback(R (*)(TX1, TX2, TX3, T1, T2, T3, T4, T5, T6), ARG1, ARG2, ARG3)’
+ 1641 | Callback<R,T1,T2,T3,T4,T5,T6> MakeBoundCallback (R (*fnPtr)(TX1,TX2,TX3,T1,T2,T3,T4,T5,T6), ARG1 a1, ARG2 a2, ARG3 a3) {
+      |                               ^~~~~~~~~~~~~~~~~
+./ns3/callback.h:1641:31: note:   template argument deduction/substitution failed:
+../scratch/network-load-balance.cc:1674:115: note:   candidate expects 9 arguments, 10 provided
+ 1674 |             "SndRcvRecord", MakeBoundCallback(&snd_rcv_record, snd_rcv_output, DynamicCast<QbbNetDevice>(d.Get(1))));
+      |                                                                                                                   ^
+Waf: Leaving directory `/home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/build'
+Build failed
+ -> task in 'network-load-balance' failed (exit status 1): 
+	{task 140040795680016: cxx network-load-balance.cc -> network-load-balance.cc.1.o}
+['/usr/bin/g++', '-O3', '-g', '-std=gnu++11', '-march=native', '-Wno-error=deprecated-declarations', '-fstrict-aliasing', '-Wstrict-aliasing', '-pthread', '-I.', '-I..', '-DHAVE_PACKET_H=1', '-DHAVE_IF_TUN_H=1', '../scratch/network-load-balance.cc', '-c', '-o', 'scratch/network-load-balance.cc.1.o']
+topo_simple_dumbbell_OS2_500us
+Input traffic file omniDMA_flow.txt already exists
+Config filename:/home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0/config.txt
+1BDP = 500002000
+Running simulation...
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0/config.log 2>&1
+Analyzing output FCT...
+python3 fctAnalysis.py -id omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0 -dir /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA -bdp 500002000 -sT 2005000000 -fT 602050000000 > /dev/null 2>&1
+
+
+============== Done ============== 
+config_ID: omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0
+2756672399: host 1 nic 1 flow 0 recv a ACK packet, cc_win_size=0 omniType=10000 size=108 seq=99996000
+2756672483: host 1 nic 1 flow 0 recv a ACK packet, cc_win_size=0 omniType=10000 size=108 seq=99997000
+2756672567: host 1 nic 1 flow 0 recv a ACK packet, cc_win_size=0 omniType=10000 size=108 seq=99998000
+2756672651: host 1 nic 1 flow 0 recv a ACK packet, cc_win_size=0 omniType=10000 size=108 seq=99999000
+2756672735: host 1 nic 1 flow 0 recv a OmniNACK packet, cc_win_size=0 omniType=65002 size=108 seq=100000000
+[0;33mPlot enabled [0m
+[0;33mOmniDMA analysis folder: mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0 [0m
+[0;33mOmniDMA plot x-range(us): [AUTO, AUTO] [0m
+[0;32mPlot: base_folder=mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0 [0m
+成功加载并全局应用字体: Times New Roman + SimSun
+[Info] 图像输出目录: /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0/flow_rate_plots
+[Info] 分析所有 flowid
+[Info] 读取日志: /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0/snd_rcv_record_file.txt
+[OK] 保存图像: /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmtimestep_drop0.001_pfc0_irn0/flow_rate_plots/rate_host1_flow0.png
+[Done] 共生成 1 张图
+[0;32mRunning end [0m

@@ -311,7 +311,7 @@ void RdmaHw::AddQueuePair(uint64_t size, uint16_t pg, Ipv4Address sip, Ipv4Addre
         qp->SetOmniDMABitmapSize(bitmap_size);
     }
     if (omniDMA_enable && m_omnidmaCubic) {
-        qp->m_omniCubic = Create<OmniRdmaCubic>();
+        qp->m_omniCubic = CreateObject<OmniRdmaCubic>();
         qp->m_omniCubic->Initialize(qp, m_mtu, win);
     }
     
@@ -507,8 +507,8 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
     }
     assert(ch.udp.seq / m_mtu* m_mtu == ch.udp.seq && "Currently we only support m_mtu aligned seq number");
     
-    Adamap_with_index adamap_for_NACK;
-    Adamap adamap_for_print;
+    Adamap_with_index adamap_for_NACK{};
+    Adamap adamap_for_print{};
     uint16_t omni_type = ch.udp.omni_type;
     Time delay = MicroSeconds(0);
 
@@ -566,7 +566,9 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
             rxQp->adamap_receiver->m_last_access_table_max_retrans = omni_type;
             HandleOmniListTimeout(omni_type, rxQp, ch);
             HandleOmniTableTimeout(omni_type, rxQp, ch);
-            m_trace_omnidma_event(rxQp->m_flow_id, ch.udp.seq, OMNI_EVT_MULTI_RETRANS_PROCESS, ch.udp.omni_type, "multi retrans: call lookup table", &adamap_for_print);
+            if (omniRes != -100) {
+                m_trace_omnidma_event(rxQp->m_flow_id, ch.udp.seq, OMNI_EVT_MULTI_RETRANS_PROCESS, ch.udp.omni_type, "multi retrans: call lookup table", &adamap_for_print);
+            }
             if (omniRes == -100) {
                 printf("multi-retrans packet drop. \n");
                 return 0;
@@ -2119,7 +2121,7 @@ void RdmaHw::InitOmniDmaCubicIfNeeded(Ptr<RdmaQueuePair> qp) {
         return;
     }
     if (qp->m_omniCubic == 0) {
-        qp->m_omniCubic = Create<OmniRdmaCubic>();
+        qp->m_omniCubic = CreateObject<OmniRdmaCubic>();
     }
     if (!qp->m_omniCubic->IsInitialized()) {
         qp->m_omniCubic->Initialize(qp, m_mtu, qp->m_win);

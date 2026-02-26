@@ -55,8 +55,8 @@ inline void PrintAdamap(const Adamap* adamap, const std::string& name, FILE* fou
   else {
     // 输出到文件
     fprintf(fout, "  --------  %s  ----------:\n", name.c_str());
-    fprintf(fout, "  Adamap ID: %d\n", adamap->id);
-    fprintf(fout, "  Start Sequence: %d\n", adamap->startSeq);
+    fprintf(fout, "  Adamap ID: %u\n", adamap->id);
+    fprintf(fout, "  Start Sequence: %u\n", adamap->startSeq);
     fprintf(fout, "  Representation Length: %u (%u ~ %u) (%u)\n", adamap->reprLength, adamap->startSeq + 1, adamap->startSeq + adamap->reprLength,
       uint32_t(adamap->reprLength - std::count((adamap->bitmap).begin(), adamap->bitmap.end(), true)));
     fprintf(fout, "  Bitmap: ");

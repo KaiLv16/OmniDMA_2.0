@@ -2,8 +2,11 @@
 
 #include "rdma-queue-pair.h"
 
+#include "ns3/boolean.h"
+#include "ns3/double.h"
 #include "ns3/log.h"
 #include "ns3/simulator.h"
+#include "ns3/uinteger.h"
 
 #include <algorithm>
 #include <cmath>
@@ -13,6 +16,48 @@ namespace ns3
 {
 
 NS_LOG_COMPONENT_DEFINE("OmniRdmaCubic");
+NS_OBJECT_ENSURE_REGISTERED(OmniRdmaCubic);
+
+TypeId
+OmniRdmaCubic::GetTypeId(void)
+{
+    static TypeId tid =
+        TypeId("ns3::OmniRdmaCubic")
+            .SetParent<Object>()
+            .AddConstructor<OmniRdmaCubic>()
+            .SetGroupName("PointToPoint")
+            .AddAttribute("FastConvergence",
+                          "Enable (true) or disable (false) fast convergence",
+                          BooleanValue(true),
+                          MakeBooleanAccessor(&OmniRdmaCubic::m_fastConvergence),
+                          MakeBooleanChecker())
+            .AddAttribute("TcpFriendliness",
+                          "Enable (true) or disable (false) TCP friendliness",
+                          BooleanValue(false),
+                          MakeBooleanAccessor(&OmniRdmaCubic::m_tcpFriendliness),
+                          MakeBooleanChecker())
+            .AddAttribute("Beta",
+                          "Beta for multiplicative decrease and fast-convergence behavior",
+                          DoubleValue(0.7),
+                          MakeDoubleAccessor(&OmniRdmaCubic::m_beta),
+                          MakeDoubleChecker<double>(0.0))
+            .AddAttribute("C",
+                          "CUBIC scaling factor used in W_cubic(t), 0.4 by default, 2500 to observe ~1s K value with 1ms RTT",
+                          DoubleValue(25000),
+                          MakeDoubleAccessor(&OmniRdmaCubic::m_c),
+                          MakeDoubleChecker<double>(0.0))
+            .AddAttribute("CntClamp",
+                          "Counter clamp used before first loss to bound cwnd growth pace",
+                          UintegerValue(20),
+                          MakeUintegerAccessor(&OmniRdmaCubic::m_cntClamp),
+                          MakeUintegerChecker<uint8_t>())
+            .AddAttribute("CubicDelta",
+                          "Time to wait after recovery before refreshing delayMin",
+                          TimeValue(MilliSeconds(10)),
+                          MakeTimeAccessor(&OmniRdmaCubic::m_cubicDelta),
+                          MakeTimeChecker());
+    return tid;
+}
 
 void
 OmniRdmaCubic::Initialize(Ptr<RdmaQueuePair> qp, uint32_t segmentSize, uint32_t initialWindowBytes)

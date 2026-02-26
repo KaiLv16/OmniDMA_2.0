@@ -2,8 +2,8 @@
 #define OMNI_RDMA_CUBIC_H
 
 #include "ns3/nstime.h"
+#include "ns3/object.h"
 #include "ns3/ptr.h"
-#include "ns3/simple-ref-count.h"
 
 #include <cstdint>
 
@@ -19,9 +19,11 @@ class RdmaQueuePair;
  * It updates qp->m_win (bytes) based on ACK/loss feedback and leaves qp->m_rate
  * unchanged so the existing rate scheduler can keep working.
  */
-class OmniRdmaCubic : public SimpleRefCount<OmniRdmaCubic>
+class OmniRdmaCubic : public Object
 {
   public:
+    static TypeId GetTypeId(void);
+
     OmniRdmaCubic() = default;
 
     void Initialize(Ptr<RdmaQueuePair> qp, uint32_t segmentSize, uint32_t initialWindowBytes);
@@ -50,7 +52,7 @@ class OmniRdmaCubic : public SimpleRefCount<OmniRdmaCubic>
 
     // Tunables (match ns-3 TcpCubic defaults)
     bool m_fastConvergence{true};
-    bool m_tcpFriendliness{true};
+    bool m_tcpFriendliness{false};
     double m_beta{0.7};
     double m_c{0.4};
     uint8_t m_cntClamp{20};

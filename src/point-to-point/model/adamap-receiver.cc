@@ -545,6 +545,8 @@ int ReceiverAdamap::Record(uint32_t seq, uint16_t retrans_tier, Adamap_with_inde
         }
 
         PrintAdamap(&amap, "After receiving a multi-retrans packet");
+        // Return the post-update snapshot to RdmaHw for summary event logging.
+        adamap_for_print = amap;
         // 检查从起始位置到 reprLength 表示的范围是否全部为 1
         bool allReceived = true;
         // 遍历 [0, reprLength) 范围
