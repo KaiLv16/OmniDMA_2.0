@@ -133,6 +133,7 @@ topo2bdp = {
     "leaf_spine_128_100G_OS2": 104000,  # 2-tier -> all 100Gbps
     "fat_k8_100G_OS2": 156000,  # 3-tier -> all 100Gbps
     "topo_simple_dumbbell_OS2": 500002000,  # 单向有2个10ms，中间有1个交换机，(2 * 20 * 1000000 + 80 * 4) * 12.5.
+    "topo_dumbbell_incast100_OS2": 500002000,
 }
     # 104000 / 8320 = 12.5
     # topo2bdpMap[std::string("leaf_spine_128_100G_OS2")] = 104000;  // RTT=8320
@@ -175,6 +176,8 @@ def main():
                         default='leaf_spine_128_100G', help="the name of the topology file (default: leaf_spine_128_100G_OS2)")
     parser.add_argument('--cdf', dest='cdf', action='store',
                         default='AliStorage2019', help="the name of the cdf file (default: AliStorage2019)")
+    parser.add_argument('--flow', dest='flow', action='store',
+                        default='omniDMA_flow', help="the name of the input flow file without .txt (default: omniDMA_flow)")
     parser.add_argument('--enforce_win', dest='enforce_win', action='store',
                         type=int, default=0, help="enforce to use window scheme (default: 0)")
     parser.add_argument('--has_win', dest='has_win', action='store',
@@ -295,7 +298,7 @@ def main():
         n_host = int(line[0]) - int(line[1])
 
     # assert (hostload >= 0 and hostload < 100)
-    flow = "omniDMA_flow"
+    flow = args.flow
 
     topo_tag = topo.replace("/", "-")
     flow_tag = flow.replace("/", "-")
@@ -398,11 +401,17 @@ def main():
             if topo.startswith(base_key + "_"):
                 topo_bdp_key = base_key
                 break
+    bdp = None
     if topo_bdp_key not in topo2bdp:
-        print("ERROR - topology is not registered in run.py!!", flush=True)
-        return
-    bdp = int(topo2bdp[topo_bdp_key])
-    print("1BDP = {}".format(bdp))
+        if enabled_omnidma == 1:
+            print("WARNING - topology is not registered in run.py topo2bdp; "
+                  "continue for OmniDMA and skip 1BDP-based FCT analysis.", flush=True)
+        else:
+            print("ERROR - topology is not registered in run.py!!", flush=True)
+            return
+    else:
+        bdp = int(topo2bdp[topo_bdp_key])
+        print("1BDP = {}".format(bdp))
 
     # DCQCN parameters (NOTE: HPCC's 400KB/1600KB is too large, although used in Microsoft)
     kmax_map = "6 %d %d %d %d %d %d %d %d %d %d %d %d" % (
@@ -480,11 +489,14 @@ def main():
     fct_analysistime_limit_end = int(
         flowgen_stop_time * 1e9) + int(0.05 * 1e9)  # extra term
 
-    print("Analyzing output FCT...")
-    print("python3 fctAnalysis.py -id {config_ID} -dir {dir} -bdp {bdp} -sT {fct_analysis_time_limit_begin} -fT {fct_analysistime_limit_end} > /dev/null 2>&1".format(
-        config_ID=config_ID, dir=os.getcwd(), bdp=bdp, fct_analysis_time_limit_begin=fct_analysis_time_limit_begin, fct_analysistime_limit_end=fct_analysistime_limit_end))
-    os.system("python3 fctAnalysis.py -id {config_ID} -dir {dir} -bdp {bdp} -sT {fct_analysis_time_limit_begin} -fT {fct_analysistime_limit_end} > /dev/null 2>&1".format(
-        config_ID=config_ID, dir=os.getcwd(), bdp=bdp, fct_analysis_time_limit_begin=fct_analysis_time_limit_begin, fct_analysistime_limit_end=fct_analysistime_limit_end))
+    if bdp is None:
+        print("Skipping fctAnalysis.py because 1BDP is unavailable for this topology.", flush=True)
+    else:
+        print("Analyzing output FCT...")
+        print("python3 fctAnalysis.py -id {config_ID} -dir {dir} -bdp {bdp} -sT {fct_analysis_time_limit_begin} -fT {fct_analysistime_limit_end} > /dev/null 2>&1".format(
+            config_ID=config_ID, dir=os.getcwd(), bdp=bdp, fct_analysis_time_limit_begin=fct_analysis_time_limit_begin, fct_analysistime_limit_end=fct_analysistime_limit_end))
+        os.system("python3 fctAnalysis.py -id {config_ID} -dir {dir} -bdp {bdp} -sT {fct_analysis_time_limit_begin} -fT {fct_analysistime_limit_end} > /dev/null 2>&1".format(
+            config_ID=config_ID, dir=os.getcwd(), bdp=bdp, fct_analysis_time_limit_begin=fct_analysis_time_limit_begin, fct_analysistime_limit_end=fct_analysistime_limit_end))
 
     if lb_mode == 9: # ConWeave Logging
         ################################################################

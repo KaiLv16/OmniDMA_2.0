@@ -101,7 +101,7 @@ run_case_impl() {
     if [[ -n "${SWITCH_DROP_TIMESTEP_CONFIG:-}" ]]; then
         cmd+=(--switch_drop_timestep_config "${SWITCH_DROP_TIMESTEP_CONFIG}")
     fi
-    cmd+=(--my_switch_total_drop_rate "${drop_rate}" --rate_bound "${RATE_BOUND}" --simul_time "${RUNTIME}" --netload "${NETLOAD}" --topo "${topology}")
+    cmd+=(--my_switch_total_drop_rate "${drop_rate}" --rate_bound "${RATE_BOUND}" --simul_time "${RUNTIME}" --netload "${NETLOAD}" --topo "${topology}" --flow "${FLOW_NAME}")
     if [[ $# -gt 0 ]]; then
         cmd+=("$@")
     fi
@@ -187,6 +187,7 @@ plot_output_dir_impl() {
 load_omnidma_case_profile() {
     local topology_arg="${1:-topo_simple_dumbbell_OS2_500us}"
     local drop_rate_pct_arg="${2:-0.1}"
+    local flow_name_arg="${3:-omniDMA_flow}"
 
     # Manual OmniDMA experiment config (intentionally not using env vars).
     OMNICASE_TOPOLOGY="${topology_arg}"
@@ -202,8 +203,8 @@ load_omnidma_case_profile() {
     OMNICASE_RATE_BOUND="0"
     OMNICASE_RUNTIME="600"
     OMNICASE_NETLOAD="50"
-    OMNICASE_FLOW_NAME="omniDMA_flow"
-    OMNICASE_SWITCH_DROP_MODE="seqnum"  # none / lossrate / seqnum / timestep
+    OMNICASE_FLOW_NAME="${flow_name_arg}"
+    OMNICASE_SWITCH_DROP_MODE="timestep"  # none / lossrate / seqnum / timestep
     OMNICASE_SWITCH_DROP_SEQNUM_CONFIG="config/config_drop_by_seqnum.txt"
     OMNICASE_SWITCH_DROP_TIMESTEP_CONFIG="config/config_drop_by_timestep.txt"
     # Plot x-axis range (relative to first send packet, us). Empty means auto.
@@ -243,7 +244,7 @@ run_irn_case() {
 }
 
 run_omnidma_case() {
-    load_omnidma_case_profile "$1" "$2"
+    load_omnidma_case_profile "$1" "$2" "$3"
 
     local topology="${OMNICASE_TOPOLOGY}"
     local drop_rate_pct="${OMNICASE_DROP_RATE_PCT}"
@@ -282,7 +283,7 @@ run_omnidma_case() {
 }
 
 plot_omnidma_case() {
-    load_omnidma_case_profile "$1" "$2"
+    load_omnidma_case_profile "$1" "$2" "$3"
     # Dynamic scoping: plot_output_dir_impl -> plot_flow_rate.py reads these locals.
     local PLOT_X_MIN_US="${OMNICASE_PLOT_X_MIN_US}"
     local PLOT_X_MAX_US="${OMNICASE_PLOT_X_MAX_US}"
@@ -374,6 +375,15 @@ PLOT_OUTPUT_SUBDIR="${PLOT_OUTPUT_SUBDIR:-flow_rate_plots}"
 PLOT_X_MIN_US="${PLOT_X_MIN_US:-}"
 PLOT_X_MAX_US="${PLOT_X_MAX_US:-}"
 
+# 在这里配置要运行的实验和绘图逻辑
+SKIP_FLAG="${1:-12}"
+# TOPO_ARG="${2:-topo_simple_dumbbell_O2_500us}"
+TOPO_ARG="${2:-topo_dumbbell_incast100_OS2_500us}"
+DROP_ARG="${3:-0.1}"
+# FLOW_ARG="${4:-omniDMA_flow}"
+FLOW_ARG="${4:-flow_omni_1flows_dumbbell_avg1ms_var1ms}"
+
+
 TOPOLOGIES=(
     "topo_simple_dumbbell_OS2_1us"
     "topo_simple_dumbbell_OS2_50us"
@@ -409,7 +419,7 @@ cecho "YELLOW" "----------------------------------\n"
 usage() {
     cat <<'EOF'
 Usage:
-  ./autorun.sh <skip_flag> [topology] [drop_rate_pct]
+  ./autorun.sh <skip_flag> [topology] [drop_rate_pct] [flow_name]
 
 skip_flag (string flags, can combine):
   contains '1' -> run simulation
@@ -419,6 +429,7 @@ skip_flag (string flags, can combine):
 Defaults:
   topology      = topo_simple_dumbbell_OS2_500us
   drop_rate_pct = 0.1
+  flow_name     = omniDMA_flow
 
 Optional env vars for plotting:
   PLOT_FLOWIDS=1,2,3
@@ -430,11 +441,6 @@ EOF
 }
 
 
-# 在这里配置要运行的实验和绘图逻辑
-SKIP_FLAG="${1:-12}"
-# TOPO_ARG="${2:-topo_simple_dumbbell_O2_500us}"
-TOPO_ARG="${2:-topo_dumbbell_incast100_OS2_500us}"
-DROP_ARG="${3:-0.1}"
 
 if [[ "${SKIP_FLAG}" != *1* && "${SKIP_FLAG}" != *2* ]]; then
     cecho "RED" "Invalid skip_flag: ${SKIP_FLAG} (must contain '1' and/or '2')"
@@ -443,15 +449,16 @@ if [[ "${SKIP_FLAG}" != *1* && "${SKIP_FLAG}" != *2* ]]; then
 fi
 
 cecho "YELLOW" "skip_flag=${SKIP_FLAG} (1=simulate, 2=plot)"
+cecho "YELLOW" "TOPO_ARG=${TOPO_ARG}, DROP_ARG=${DROP_ARG}, FLOW_ARG=${FLOW_ARG}"
 
 if [[ "${SKIP_FLAG}" == *1* ]]; then
     cecho "YELLOW" "Run simulation enabled"
-    run_omnidma_case "${TOPO_ARG}" "${DROP_ARG}" || exit $?
+    run_omnidma_case "${TOPO_ARG}" "${DROP_ARG}" "${FLOW_ARG}" || exit $?
 fi
 
 if [[ "${SKIP_FLAG}" == *2* ]]; then
     cecho "YELLOW" "Plot enabled"
-    plot_omnidma_case "${TOPO_ARG}" "${DROP_ARG}" || exit $?
+    plot_omnidma_case "${TOPO_ARG}" "${DROP_ARG}" "${FLOW_ARG}" || exit $?
 fi
 
 cecho "GREEN" "Running end"

@@ -5,10 +5,12 @@ Output format:
   First line: number of flows
   Following lines: "src dst 3 size start_time"
 
-Start times are generated in seconds. To support independently configurable
-mean/variance, this script samples from a Gamma distribution (which matches the
-requested mean and variance exactly in expectation). When variance is 0, start
-times are deterministic (= mean).
+Start times are generated in seconds. The first flow starts at `base_time_s`,
+and each subsequent flow time is formed by adding a sampled inter-arrival.
+To support independently configurable inter-arrival mean/variance, this script
+samples inter-arrivals from a Gamma distribution (which matches the requested
+mean and variance exactly in expectation). When variance is 0, the inter-arrival
+is deterministic (= mean).
 """
 
 import argparse
@@ -44,7 +46,7 @@ def fmt_label_ms(value):
     return s + "ms"
 
 
-def sample_start_time_seconds(mean_ms, var_ms, base_time_s):
+def sample_interval_seconds(mean_ms, var_ms):
     if mean_ms < 0:
         raise ValueError("mean must be >= 0")
     if var_ms < 0:
@@ -54,13 +56,22 @@ def sample_start_time_seconds(mean_ms, var_ms, base_time_s):
     var_s2 = var_ms / 1000.0 / 1000.0  # treat input numerically as ms^2 -> s^2
 
     if var_ms == 0:
-        return base_time_s + mean_s
+        return mean_s
     if mean_ms == 0:
-        return base_time_s
+        raise ValueError("mean must be > 0 when variance > 0")
 
     shape = (mean_s * mean_s) / var_s2
     scale = var_s2 / mean_s
-    return base_time_s + random.gammavariate(shape, scale)
+    return random.gammavariate(shape, scale)
+
+
+def build_start_times(nflows, mean_ms, var_ms, base_time_s):
+    if nflows <= 0:
+        return []
+    times = [base_time_s]
+    for _ in range(1, nflows):
+        times.append(times[-1] + sample_interval_seconds(mean_ms, var_ms))
+    return times
 
 
 def write_flow_file(path, flows):
@@ -72,19 +83,17 @@ def write_flow_file(path, flows):
 
 def build_incast_flows(nflows, flow_size, mean_ms, var_ms, base_time_s):
     flows = []
-    for src in range(nflows):
-        t = sample_start_time_seconds(mean_ms, var_ms, base_time_s)
+    start_times = build_start_times(nflows, mean_ms, var_ms, base_time_s)
+    for src, t in enumerate(start_times):
         flows.append((src, 100, flow_size, t))
-    flows.sort(key=lambda x: x[3])
     return flows
 
 
 def build_dumbbell_flows(nflows, flow_size, mean_ms, var_ms, base_time_s):
     flows = []
-    for src in range(nflows):
-        t = sample_start_time_seconds(mean_ms, var_ms, base_time_s)
+    start_times = build_start_times(nflows, mean_ms, var_ms, base_time_s)
+    for src, t in enumerate(start_times):
         flows.append((src, 100 + src, flow_size, t))
-    flows.sort(key=lambda x: x[3])
     return flows
 
 
@@ -112,13 +121,13 @@ def main():
         "--avg-ms",
         type=float,
         default=1.0,
-        help="mean start time in ms (default: 1.0)",
+        help="mean inter-arrival time in ms (default: 1.0)",
     )
     parser.add_argument(
         "--var-ms",
         type=float,
         default=1.0,
-        help="start-time variance in ms^2 (default: 1.0)",
+        help="inter-arrival variance in ms^2 (default: 1.0)",
     )
     parser.add_argument(
         "--flow-size",
@@ -129,8 +138,8 @@ def main():
     parser.add_argument(
         "--base-time-s",
         type=float,
-        default=0.0,
-        help="base time offset in seconds (default: 0.0)",
+        default=2.0,
+        help="base time offset in seconds (default: 2.0)",
     )
     parser.add_argument(
         "--seed",

@@ -1844,6 +1844,7 @@ int main(int argc, char *argv[]) {
     topo2bdpMap[std::string("leaf_spine_128_100G_OS2")] = 104000;  // RTT=8320
     topo2bdpMap[std::string("fat_k8_100G_OS2")] = 156000;      // RTT=12480 --> all 100G links
     topo2bdpMap[std::string("topo_simple_dumbbell_OS2")] = 500002000;
+    topo2bdpMap[std::string("topo_dumbbell_incast100_OS2")] = 500002000;
 
     // topology_file
     bool found_topo2bdpMap = false;
@@ -1857,9 +1858,16 @@ int main(int argc, char *argv[]) {
         }
     }
     if (found_topo2bdpMap == false) {
-        std::cout << __FILE__ << "(" << __LINE__ << ")"
-                  << " ERROR - topo2bdpMap has no matched item with " << topology_file << std::endl;
-        assert(false);
+        if (enable_irn) {
+            std::cout << __FILE__ << "(" << __LINE__ << ")"
+                      << " ERROR - topo2bdpMap has no matched item with " << topology_file
+                      << " (required when IRN is enabled)" << std::endl;
+            assert(false);
+        } else {
+            std::cout << __FILE__ << "(" << __LINE__ << ")"
+                      << " WARNING - topo2bdpMap has no matched item with " << topology_file
+                      << "; continuing because IRN is disabled." << std::endl;
+        }
     }
 
     // rdmaHw config
