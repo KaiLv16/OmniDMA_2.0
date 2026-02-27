@@ -43,6 +43,7 @@ SW_MONITORING_INTERVAL {sw_monitoring_interval}
 OMNI_MONITORING_INTERVAL {omni_mon_interval}
 RNIC_DMA_BW {rnic_dma_bw}
 RNIC_DMA_FIXED_LATENCY_NS {rnic_dma_fixed_latency_ns}
+RNIC_DMA_TLP_PAYLOAD_BYTES {rnic_dma_tlp_payload_bytes}
 
 FLOWGEN_START_TIME {flowgen_start_time}
 FLOWGEN_STOP_TIME {flowgen_stop_time}
@@ -211,6 +212,9 @@ def main():
     parser.add_argument('--rnic_dma_fixed_latency_ns', dest='rnic_dma_fixed_latency_ns', action='store',
                         type=int, default=200,
                         help="RNIC DMA fixed latency in ns (default: 200)")
+    parser.add_argument('--rnic_dma_tlp_payload_bytes', dest='rnic_dma_tlp_payload_bytes', action='store',
+                        type=int, default=256,
+                        help="RNIC DMA max payload bytes per TLP (default: 256)")
 
     # #### CONWEAVE PARAMETERS ####
     # parser.add_argument('--cwh_extra_reply_deadline', dest='cwh_extra_reply_deadline', action='store',
@@ -252,6 +256,7 @@ def main():
     switch_drop_timestep_config_file = args.switch_drop_timestep_config
     rnic_dma_bw = args.rnic_dma_bw
     rnic_dma_fixed_latency_ns = args.rnic_dma_fixed_latency_ns
+    rnic_dma_tlp_payload_bytes = args.rnic_dma_tlp_payload_bytes
     cdf = args.cdf
     flowgen_start_time = FLOWGEN_DEFAULT_TIME  # default: 2.0
     flowgen_stop_time = flowgen_start_time + float(args.simul_time)  # default: 2.0
@@ -464,6 +469,7 @@ def main():
                                         switch_drop_timestep_config_file=switch_drop_timestep_config_file,
                                         rnic_dma_bw=rnic_dma_bw,
                                         rnic_dma_fixed_latency_ns=rnic_dma_fixed_latency_ns,
+                                        rnic_dma_tlp_payload_bytes=rnic_dma_tlp_payload_bytes,
                                         self_win_bytes=self_win_bytes, self_define_win=self_define_win,
                                         rate_bound=rate_bound,
                                         fast_react=fast_react, mi=mi, int_multi=int_multi, ewma_gain=ewma_gain,

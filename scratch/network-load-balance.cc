@@ -178,6 +178,7 @@ std::string switch_drop_seqnum_config_file = "config/config_drop_by_seqnum.txt";
 std::string switch_drop_timestep_config_file = "config/config_drop_by_timestep.txt";
 std::string rnic_dma_bw = "64Gb/s";
 uint64_t rnic_dma_fixed_latency_ns = 200;
+uint32_t rnic_dma_tlp_payload_bytes = 256;
 
 
 uint64_t maxRtt, maxBdp;
@@ -1254,6 +1255,10 @@ int main(int argc, char *argv[]) {
                 conf >> rnic_dma_fixed_latency_ns;
                 std::cerr << "RNIC_DMA_FIXED_LATENCY_NS\t\t" << rnic_dma_fixed_latency_ns << '\n';
             }
+            else if (key.compare("RNIC_DMA_TLP_PAYLOAD_BYTES") == 0) {
+                conf >> rnic_dma_tlp_payload_bytes;
+                std::cerr << "RNIC_DMA_TLP_PAYLOAD_BYTES\t" << rnic_dma_tlp_payload_bytes << '\n';
+            }
             
             else if (key.compare("FLOWGEN_START_TIME") == 0) {
                 double v;
@@ -1905,6 +1910,8 @@ int main(int argc, char *argv[]) {
             rdmaHw->SetAttribute("RnicDmaBw", DataRateValue(DataRate(rnic_dma_bw)));
             rdmaHw->SetAttribute("RnicDmaFixedLatency",
                                  TimeValue(NanoSeconds(rnic_dma_fixed_latency_ns)));
+            rdmaHw->SetAttribute("RnicDmaTlpPayloadBytes",
+                                 UintegerValue(rnic_dma_tlp_payload_bytes));
 
             // 长距离测试(IRN)：
 

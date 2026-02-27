@@ -108,6 +108,9 @@ run_case_impl() {
     if [[ -n "${RNIC_DMA_FIXED_LATENCY_NS:-}" ]]; then
         cmd+=(--rnic_dma_fixed_latency_ns "${RNIC_DMA_FIXED_LATENCY_NS}")
     fi
+    if [[ -n "${RNIC_DMA_TLP_PAYLOAD_BYTES:-}" ]]; then
+        cmd+=(--rnic_dma_tlp_payload_bytes "${RNIC_DMA_TLP_PAYLOAD_BYTES}")
+    fi
     if [[ $# -gt 0 ]]; then
         cmd+=("$@")
     fi
@@ -190,48 +193,7 @@ plot_output_dir_impl() {
     "${plot_cmd[@]}"
 }
 
-load_omnidma_case_profile() {
-    local topology_arg="${1:-topo_simple_dumbbell_OS2_500us}"
-    local drop_rate_pct_arg="${2:-0.1}"
-    local flow_name_arg="${3:-omniDMA_flow}"
-    local switch_drop_mode_arg="${4:-timestep}"
-    local omnidma_cubic_arg="${5:-1}"
 
-    # Manual OmniDMA experiment config (intentionally not using env vars).
-    OMNICASE_TOPOLOGY="${topology_arg}"
-    OMNICASE_DROP_RATE_PCT="${drop_rate_pct_arg}"
-    OMNICASE_PFC="0"
-    OMNICASE_IRN="0"
-    OMNICASE_OMNIDMA="1"
-    OMNICASE_OMNIDMA_CUBIC="${omnidma_cubic_arg}"
-    OMNICASE_OMNIDMA_BITMAP_SIZE="16"
-    OMNICASE_HAS_WIN="0"
-    OMNICASE_SELF_DEFINE_WIN="0"
-    OMNICASE_SELF_WIN_BYTES="1000000000"
-    OMNICASE_RATE_BOUND="0"
-    OMNICASE_RUNTIME="600"
-    OMNICASE_NETLOAD="50"
-    OMNICASE_FLOW_NAME="${flow_name_arg}"
-    OMNICASE_SWITCH_DROP_MODE="${switch_drop_mode_arg}"  # none / lossrate / seqnum / timestep
-    OMNICASE_SWITCH_DROP_SEQNUM_CONFIG="config/config_drop_by_seqnum.txt"
-    OMNICASE_SWITCH_DROP_TIMESTEP_CONFIG="config/config_drop_by_timestep.txt"
-    # Plot x-axis range (relative to first send packet, us). Empty means auto.
-    OMNICASE_PLOT_X_MIN_US=""
-    OMNICASE_PLOT_X_MAX_US=""
-    # Example:
-    # OMNICASE_PLOT_X_MIN_US="0"
-    # OMNICASE_PLOT_X_MAX_US="5000"
-    OMNICASE_OUTPUT_DIR="$(
-        build_output_dir_from_params \
-            "${OMNICASE_TOPOLOGY}" \
-            "${OMNICASE_DROP_RATE_PCT}" \
-            "${OMNICASE_PFC}" \
-            "${OMNICASE_IRN}" \
-            "${OMNICASE_OMNIDMA}" \
-            "${OMNICASE_FLOW_NAME}" \
-            "${OMNICASE_SWITCH_DROP_MODE}"
-    )"
-}
 
 
 
@@ -361,6 +323,53 @@ merge_omnidma_sweep_out_fct() {
 
 cecho "GREEN" "Running RDMA Network Load Balancing Simulations (dumbbell topology sweep)"
 
+
+
+# 参数配置
+load_omnidma_case_profile() {
+    local topology_arg="${1:-topo_simple_dumbbell_OS2_500us}"
+    local drop_rate_pct_arg="${2:-0.1}"
+    local flow_name_arg="${3:-omniDMA_flow}"
+    local switch_drop_mode_arg="${4:-timestep}"
+    local omnidma_cubic_arg="${5:-1}"
+
+    # Manual OmniDMA experiment config (intentionally not using env vars).
+    OMNICASE_TOPOLOGY="${topology_arg}"
+    OMNICASE_DROP_RATE_PCT="${drop_rate_pct_arg}"
+    OMNICASE_PFC="0"
+    OMNICASE_IRN="0"
+    OMNICASE_OMNIDMA="1"
+    OMNICASE_OMNIDMA_CUBIC="${omnidma_cubic_arg}"
+    OMNICASE_OMNIDMA_BITMAP_SIZE="32"
+    OMNICASE_HAS_WIN="0"
+    OMNICASE_SELF_DEFINE_WIN="0"
+    OMNICASE_SELF_WIN_BYTES="1000000000"
+    OMNICASE_RATE_BOUND="0"
+    OMNICASE_RUNTIME="600"
+    OMNICASE_NETLOAD="50"
+    OMNICASE_FLOW_NAME="${flow_name_arg}"
+    OMNICASE_SWITCH_DROP_MODE="${switch_drop_mode_arg}"  # none / lossrate / seqnum / timestep
+    OMNICASE_SWITCH_DROP_SEQNUM_CONFIG="config/config_drop_by_seqnum.txt"
+    OMNICASE_SWITCH_DROP_TIMESTEP_CONFIG="config/config_drop_by_timestep.txt"
+    # Plot x-axis range (relative to first send packet, us). Empty means auto.
+    OMNICASE_PLOT_X_MIN_US=""
+    OMNICASE_PLOT_X_MAX_US=""
+    # Example:
+    # OMNICASE_PLOT_X_MIN_US="0"
+    # OMNICASE_PLOT_X_MAX_US="5000"
+    OMNICASE_OUTPUT_DIR="$(
+        build_output_dir_from_params \
+            "${OMNICASE_TOPOLOGY}" \
+            "${OMNICASE_DROP_RATE_PCT}" \
+            "${OMNICASE_PFC}" \
+            "${OMNICASE_IRN}" \
+            "${OMNICASE_OMNIDMA}" \
+            "${OMNICASE_FLOW_NAME}" \
+            "${OMNICASE_SWITCH_DROP_MODE}"
+    )"
+}
+
+
 NETLOAD="50"   # network load 50%
 RUNTIME="600"  # simulation time (seconds)
 RATE_BOUND="0"
@@ -382,8 +391,10 @@ PLOT_FLOWIDS="${PLOT_FLOWIDS:-}"
 PLOT_OUTPUT_SUBDIR="${PLOT_OUTPUT_SUBDIR:-flow_rate_plots}"
 PLOT_X_MIN_US="${PLOT_X_MIN_US:-}"
 PLOT_X_MAX_US="${PLOT_X_MAX_US:-}"
-RNIC_DMA_BW="${RNIC_DMA_BW:-64Gb/s}"
-RNIC_DMA_FIXED_LATENCY_NS="${RNIC_DMA_FIXED_LATENCY_NS:-200}"
+
+RNIC_DMA_BW="${RNIC_DMA_BW:-128Gb/s}"
+RNIC_DMA_FIXED_LATENCY_NS="${RNIC_DMA_FIXED_LATENCY_NS:-250}"
+RNIC_DMA_TLP_PAYLOAD_BYTES="${RNIC_DMA_TLP_PAYLOAD_BYTES:-256}"
 
 # 在这里配置要运行的实验和绘图逻辑
 SKIP_FLAG="${1:-12}"
@@ -424,7 +435,7 @@ cecho "YELLOW" "TIME: ${RUNTIME}"
 cecho "YELLOW" "DROP-RATE count: ${#DROP_RATE_PCTS[@]} (percent list)"
 cecho "YELLOW" "PFC=${PFC}, IRN=${IRN}, OMNIDMA=${OMNIDMA}"
 cecho "YELLOW" "OMNIDMA_CUBIC_ARG=${OMNIDMA_CUBIC_ARG}"
-cecho "YELLOW" "RNIC_DMA_BW=${RNIC_DMA_BW}, RNIC_DMA_FIXED_LATENCY_NS=${RNIC_DMA_FIXED_LATENCY_NS}"
+cecho "YELLOW" "RNIC_DMA_BW=${RNIC_DMA_BW}, RNIC_DMA_FIXED_LATENCY_NS=${RNIC_DMA_FIXED_LATENCY_NS}, RNIC_DMA_TLP_PAYLOAD_BYTES=${RNIC_DMA_TLP_PAYLOAD_BYTES}"
 cecho "YELLOW" "PLOT_BUCKET=${PLOT_BUCKET}, PLOT_FLOWIDS=${PLOT_FLOWIDS:-ALL}, PLOT_OUTPUT_SUBDIR=${PLOT_OUTPUT_SUBDIR}"
 cecho "YELLOW" "PLOT_X_MIN_US=${PLOT_X_MIN_US:-AUTO}, PLOT_X_MAX_US=${PLOT_X_MAX_US:-AUTO}"
 cecho "YELLOW" "----------------------------------\n"

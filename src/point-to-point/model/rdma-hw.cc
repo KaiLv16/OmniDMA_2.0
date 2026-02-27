@@ -156,6 +156,12 @@ TypeId RdmaHw::GetTypeId(void) {
             .AddAttribute("RnicDmaFixedLatency", "Per DMA operation fixed latency",
                           TimeValue(NanoSeconds(200)),
                           MakeTimeAccessor(&RdmaHw::m_rnicDmaFixedLatency), MakeTimeChecker())
+            .AddAttribute("RnicDmaTlpPayloadBytes",
+                          "Max data bytes carried by one DMA TLP packet (each TLP adds 16B "
+                          "header + 4B LCRC)",
+                          UintegerValue(256),
+                          MakeUintegerAccessor(&RdmaHw::m_rnicDmaTlpPayloadBytes),
+                          MakeUintegerChecker<uint32_t>(1))
             .AddTraceSource("OmniDMA_Event", "record a OmniDMA event.",
                             MakeTraceSourceAccessor(&RdmaHw::m_trace_omnidma_event))
             .AddTraceSource("RNIC_DMA_Event", "record a RNIC DMA scheduler event.",
@@ -172,7 +178,19 @@ RdmaHw::RdmaHw() {
     m_rnicDmaSchedEnable = false;
     m_rnicDmaBw = DataRate("64Gb/s");
     m_rnicDmaFixedLatency = NanoSeconds(200);
-    m_rnicDmaNextAvailable = NanoSeconds(0);
+    m_rnicDmaTlpPayloadBytes = 256;
+    m_rnicDmaNextSerializeAvailable.fill(NanoSeconds(0));
+}
+
+uint32_t RdmaHw::ComputeRnicDmaTransferBytes(uint32_t payloadBytes) const {
+    if (payloadBytes == 0) {
+        return 0;
+    }
+
+    uint64_t tlpCount = (payloadBytes + m_rnicDmaTlpPayloadBytes - 1) / m_rnicDmaTlpPayloadBytes;
+    uint64_t wireBytes =
+        payloadBytes + tlpCount * (m_rnicDmaTlpHeaderBytes + m_rnicDmaTlpLcrcBytes);
+    return wireBytes > UINT32_MAX ? UINT32_MAX : static_cast<uint32_t>(wireBytes);
 }
 
 void RdmaHw::RefreshRnicDmaSchedulerState() {
@@ -180,27 +198,40 @@ void RdmaHw::RefreshRnicDmaSchedulerState() {
         return;
     }
     Time now = Simulator::Now();
-    while (!m_rnicDmaCompletions.empty() && m_rnicDmaCompletions.front().done <= now) {
-        m_rnicDmaStats.completedOps++;
-        m_rnicDmaStats.completedBytes += m_rnicDmaCompletions.front().bytes;
-        m_rnicDmaCompletions.pop_front();
+    for (uint32_t dir = 0; dir < RNIC_DMA_DIR_CNT; ++dir) {
+        while (!m_rnicDmaCompletions[dir].empty() && m_rnicDmaCompletions[dir].front().done <= now) {
+            m_rnicDmaStats.completedOps++;
+            m_rnicDmaStats.completedBytes += m_rnicDmaCompletions[dir].front().bytes;
+            m_rnicDmaCompletions[dir].pop_front();
+        }
     }
 }
 
 uint32_t RdmaHw::GetRnicDmaInflightOps() {
     RefreshRnicDmaSchedulerState();
-    return static_cast<uint32_t>(m_rnicDmaCompletions.size());
+    return static_cast<uint32_t>(m_rnicDmaCompletions[RNIC_DMA_READ_DIR].size() +
+                                 m_rnicDmaCompletions[RNIC_DMA_WRITE_DIR].size());
 }
 
 uint64_t RdmaHw::GetRnicDmaBacklogDelayNs() {
     RefreshRnicDmaSchedulerState();
     Time now = Simulator::Now();
-    if (!m_rnicDmaSchedEnable || m_rnicDmaNextAvailable <= now) {
+    if (!m_rnicDmaSchedEnable) {
         return 0;
     }
-    return (m_rnicDmaNextAvailable - now).GetNanoSeconds();
+    uint64_t readBacklogNs =
+        (m_rnicDmaNextSerializeAvailable[RNIC_DMA_READ_DIR] > now)
+            ? (m_rnicDmaNextSerializeAvailable[RNIC_DMA_READ_DIR] - now).GetNanoSeconds()
+            : 0;
+    uint64_t writeBacklogNs =
+        (m_rnicDmaNextSerializeAvailable[RNIC_DMA_WRITE_DIR] > now)
+            ? (m_rnicDmaNextSerializeAvailable[RNIC_DMA_WRITE_DIR] - now).GetNanoSeconds()
+            : 0;
+    return std::max(readBacklogNs, writeBacklogNs);
 }
 
+// 该函数做的事情是：当有一个新的DMA操作提交时，首先刷新DMA调度器的状态，计算该操作的排队延迟和服务时间，并将其记录在统计信息中。
+// 最后返回该操作的总延迟（排队延迟 + 服务时间）。
 Time RdmaHw::SubmitRnicDmaOp(uint16_t opType, uint32_t bytes, bool isWrite, int32_t flowId) {
     if (!m_rnicDmaSchedEnable || bytes == 0) {
         return NanoSeconds(0);
@@ -209,23 +240,32 @@ Time RdmaHw::SubmitRnicDmaOp(uint16_t opType, uint32_t bytes, bool isWrite, int3
     RefreshRnicDmaSchedulerState();
 
     Time now = Simulator::Now();
-    uint32_t qDepthBefore = static_cast<uint32_t>(m_rnicDmaCompletions.size());
-    Time start = (m_rnicDmaNextAvailable > now) ? m_rnicDmaNextAvailable : now;
-    Time queueDelay = start - now;
-    Time serviceTime = m_rnicDmaFixedLatency + Seconds(m_rnicDmaBw.CalculateTxTime(bytes));
-    Time done = start + serviceTime;
+    RnicDmaDirection dir = isWrite ? RNIC_DMA_WRITE_DIR : RNIC_DMA_READ_DIR;
+    uint32_t wireBytes = ComputeRnicDmaTransferBytes(bytes);
 
-    m_rnicDmaNextAvailable = done;
-    m_rnicDmaCompletions.push_back(RnicDmaCompletionRecord(done, bytes));
+    uint32_t qDepthBefore = static_cast<uint32_t>(m_rnicDmaCompletions[RNIC_DMA_READ_DIR].size() +
+                                                  m_rnicDmaCompletions[RNIC_DMA_WRITE_DIR].size());
+    Time serializeStart = (m_rnicDmaNextSerializeAvailable[dir] > now)
+                              ? m_rnicDmaNextSerializeAvailable[dir]
+                              : now;
+    Time queueDelay = serializeStart - now;
+    Time txTime = Seconds(m_rnicDmaBw.CalculateTxTime(wireBytes));
+    Time serviceTime = m_rnicDmaFixedLatency + txTime;
+    Time done = serializeStart + serviceTime;
+
+    // Same direction uses a pipeline model: serialization is queued, but fixed latency
+    // is overlapped between concurrent operations.
+    m_rnicDmaNextSerializeAvailable[dir] = serializeStart + txTime;
+    m_rnicDmaCompletions[dir].push_back(RnicDmaCompletionRecord(done, wireBytes));
 
     m_rnicDmaStats.submittedOps++;
-    m_rnicDmaStats.submittedBytes += bytes;
+    m_rnicDmaStats.submittedBytes += wireBytes;
     if (isWrite) {
         m_rnicDmaStats.submittedWriteOps++;
-        m_rnicDmaStats.submittedWriteBytes += bytes;
+        m_rnicDmaStats.submittedWriteBytes += wireBytes;
     } else {
         m_rnicDmaStats.submittedReadOps++;
-        m_rnicDmaStats.submittedReadBytes += bytes;
+        m_rnicDmaStats.submittedReadBytes += wireBytes;
     }
     m_rnicDmaStats.totalQueueDelayNs += queueDelay.GetNanoSeconds();
     m_rnicDmaStats.totalServiceTimeNs += serviceTime.GetNanoSeconds();
@@ -238,7 +278,7 @@ Time RdmaHw::SubmitRnicDmaOp(uint16_t opType, uint32_t bytes, bool isWrite, int3
     }
 
     uint64_t backlogNs = (done > now) ? (done - now).GetNanoSeconds() : 0;
-    m_trace_rnic_dma_event(flowId, opType, bytes, queueDelay.GetNanoSeconds(),
+    m_trace_rnic_dma_event(flowId, opType, wireBytes, queueDelay.GetNanoSeconds(),
                            serviceTime.GetNanoSeconds(), backlogNs, qDepthAfter);
 
     return queueDelay + serviceTime;

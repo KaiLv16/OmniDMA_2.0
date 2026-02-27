@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <deque>
+#include <array>
 
 #include "qbb-net-device.h"
 #include "rdma-queue-pair.h"
@@ -107,7 +108,7 @@ class RdmaHw : public Object {
     
     TracedCallback<int, int, uint32_t, uint32_t, const std::string &, const Adamap*> m_trace_omnidma_event;   // trace函数，用于记录omnidma的事件
     TracedCallback<int32_t, uint16_t, uint32_t, uint64_t, uint64_t, uint64_t, uint32_t>
-        m_trace_rnic_dma_event;  // flowId, opType, bytes, qDelayNs, svcNs, backlogNs, qDepth
+        m_trace_rnic_dma_event;  // flowId, opType, txBytes(with TLP), qDelayNs, svcNs, backlogNs, qDepth
 
     void SetNode(Ptr<Node> node);
     void Setup(QpCompleteCallback cb);  // setup shared data and callbacks with the QbbNetDevice
@@ -281,17 +282,26 @@ class RdmaHw : public Object {
     bool m_rnicDmaSchedEnable;
     DataRate m_rnicDmaBw;
     Time m_rnicDmaFixedLatency;
-    Time m_rnicDmaNextAvailable;
+    uint32_t m_rnicDmaTlpPayloadBytes;
     RnicDmaStats m_rnicDmaStats;
+    static constexpr uint32_t m_rnicDmaTlpHeaderBytes = 16;
+    static constexpr uint32_t m_rnicDmaTlpLcrcBytes = 4;
     struct RnicDmaCompletionRecord {
         Time done;
         uint32_t bytes;
         RnicDmaCompletionRecord(Time d = Time(0), uint32_t b = 0) : done(d), bytes(b) {}
     };
-    std::deque<RnicDmaCompletionRecord> m_rnicDmaCompletions;
+    enum RnicDmaDirection {
+        RNIC_DMA_READ_DIR = 0,
+        RNIC_DMA_WRITE_DIR = 1,
+        RNIC_DMA_DIR_CNT = 2,
+    };
+    std::array<Time, RNIC_DMA_DIR_CNT> m_rnicDmaNextSerializeAvailable;
+    std::array<std::deque<RnicDmaCompletionRecord>, RNIC_DMA_DIR_CNT> m_rnicDmaCompletions;
 
     Time SubmitRnicDmaOp(uint16_t opType, uint32_t bytes, bool isWrite, int32_t flowId = -1);
     void RefreshRnicDmaSchedulerState();
+    uint32_t ComputeRnicDmaTransferBytes(uint32_t payloadBytes) const;
     uint32_t GetRnicDmaInflightOps();
     uint64_t GetRnicDmaBacklogDelayNs();
     const RnicDmaStats &GetRnicDmaStats() const { return m_rnicDmaStats; }
