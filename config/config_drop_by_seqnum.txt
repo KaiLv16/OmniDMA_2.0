@@ -2,7 +2,7 @@
 # Repeated seq values mean repeated drops for the same seq.
 switchId, SrcNode, flowid, seq(eg,[50000-55000, 55000, 55000])
 200, 0, 0, [100000-200000]
-200, 0, 0, [100000-200000]
+200, 0, 0, [210000-220000]
 200, 0, 0, [100000-200000]
 200, 0, 0, [100000-200000]
 

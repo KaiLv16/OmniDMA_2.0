@@ -88,6 +88,8 @@ public:
 
   uint32_t GetMapSize () const;
   void SetMapSize (uint32_t bitmapSize);
+  uint32_t GetLookupTableLruSize() const;
+  void SetLookupTableLruSize(uint32_t lruSize);
   uint32_t GetFirstN () const;
   void SetFirstN (uint32_t firstN);
 

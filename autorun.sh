@@ -102,6 +102,12 @@ run_case_impl() {
         cmd+=(--switch_drop_timestep_config "${SWITCH_DROP_TIMESTEP_CONFIG}")
     fi
     cmd+=(--my_switch_total_drop_rate "${drop_rate}" --rate_bound "${RATE_BOUND}" --simul_time "${RUNTIME}" --netload "${NETLOAD}" --topo "${topology}" --flow "${FLOW_NAME}")
+    if [[ -n "${RNIC_DMA_BW:-}" ]]; then
+        cmd+=(--rnic_dma_bw "${RNIC_DMA_BW}")
+    fi
+    if [[ -n "${RNIC_DMA_FIXED_LATENCY_NS:-}" ]]; then
+        cmd+=(--rnic_dma_fixed_latency_ns "${RNIC_DMA_FIXED_LATENCY_NS}")
+    fi
     if [[ $# -gt 0 ]]; then
         cmd+=("$@")
     fi
@@ -188,6 +194,8 @@ load_omnidma_case_profile() {
     local topology_arg="${1:-topo_simple_dumbbell_OS2_500us}"
     local drop_rate_pct_arg="${2:-0.1}"
     local flow_name_arg="${3:-omniDMA_flow}"
+    local switch_drop_mode_arg="${4:-timestep}"
+    local omnidma_cubic_arg="${5:-1}"
 
     # Manual OmniDMA experiment config (intentionally not using env vars).
     OMNICASE_TOPOLOGY="${topology_arg}"
@@ -195,7 +203,7 @@ load_omnidma_case_profile() {
     OMNICASE_PFC="0"
     OMNICASE_IRN="0"
     OMNICASE_OMNIDMA="1"
-    OMNICASE_OMNIDMA_CUBIC="1"
+    OMNICASE_OMNIDMA_CUBIC="${omnidma_cubic_arg}"
     OMNICASE_OMNIDMA_BITMAP_SIZE="16"
     OMNICASE_HAS_WIN="0"
     OMNICASE_SELF_DEFINE_WIN="0"
@@ -204,7 +212,7 @@ load_omnidma_case_profile() {
     OMNICASE_RUNTIME="600"
     OMNICASE_NETLOAD="50"
     OMNICASE_FLOW_NAME="${flow_name_arg}"
-    OMNICASE_SWITCH_DROP_MODE="timestep"  # none / lossrate / seqnum / timestep
+    OMNICASE_SWITCH_DROP_MODE="${switch_drop_mode_arg}"  # none / lossrate / seqnum / timestep
     OMNICASE_SWITCH_DROP_SEQNUM_CONFIG="config/config_drop_by_seqnum.txt"
     OMNICASE_SWITCH_DROP_TIMESTEP_CONFIG="config/config_drop_by_timestep.txt"
     # Plot x-axis range (relative to first send packet, us). Empty means auto.
@@ -244,7 +252,7 @@ run_irn_case() {
 }
 
 run_omnidma_case() {
-    load_omnidma_case_profile "$1" "$2" "$3"
+    load_omnidma_case_profile "$1" "$2" "$3" "$4" "$5"
 
     local topology="${OMNICASE_TOPOLOGY}"
     local drop_rate_pct="${OMNICASE_DROP_RATE_PCT}"
@@ -283,7 +291,7 @@ run_omnidma_case() {
 }
 
 plot_omnidma_case() {
-    load_omnidma_case_profile "$1" "$2" "$3"
+    load_omnidma_case_profile "$1" "$2" "$3" "$4" "$5"
     # Dynamic scoping: plot_output_dir_impl -> plot_flow_rate.py reads these locals.
     local PLOT_X_MIN_US="${OMNICASE_PLOT_X_MIN_US}"
     local PLOT_X_MAX_US="${OMNICASE_PLOT_X_MAX_US}"
@@ -374,6 +382,8 @@ PLOT_FLOWIDS="${PLOT_FLOWIDS:-}"
 PLOT_OUTPUT_SUBDIR="${PLOT_OUTPUT_SUBDIR:-flow_rate_plots}"
 PLOT_X_MIN_US="${PLOT_X_MIN_US:-}"
 PLOT_X_MAX_US="${PLOT_X_MAX_US:-}"
+RNIC_DMA_BW="${RNIC_DMA_BW:-64Gb/s}"
+RNIC_DMA_FIXED_LATENCY_NS="${RNIC_DMA_FIXED_LATENCY_NS:-200}"
 
 # 在这里配置要运行的实验和绘图逻辑
 SKIP_FLAG="${1:-12}"
@@ -382,6 +392,8 @@ TOPO_ARG="${2:-topo_dumbbell_incast100_OS2_500us}"
 DROP_ARG="${3:-0.1}"
 # FLOW_ARG="${4:-omniDMA_flow}"
 FLOW_ARG="${4:-flow_omni_1flows_dumbbell_avg1ms_var1ms}"
+SWITCH_DROP_MODE_ARG="${5:-seqnum}"  # none / lossrate / seqnum / timestep
+OMNIDMA_CUBIC_ARG="${6:-0}"          # 0/1
 
 
 TOPOLOGIES=(
@@ -411,7 +423,8 @@ cecho "YELLOW" "NETWORK LOAD: ${NETLOAD}"
 cecho "YELLOW" "TIME: ${RUNTIME}"
 cecho "YELLOW" "DROP-RATE count: ${#DROP_RATE_PCTS[@]} (percent list)"
 cecho "YELLOW" "PFC=${PFC}, IRN=${IRN}, OMNIDMA=${OMNIDMA}"
-cecho "YELLOW" "OMNIDMA_CUBIC=${OMNIDMA_CUBIC}"
+cecho "YELLOW" "OMNIDMA_CUBIC_ARG=${OMNIDMA_CUBIC_ARG}"
+cecho "YELLOW" "RNIC_DMA_BW=${RNIC_DMA_BW}, RNIC_DMA_FIXED_LATENCY_NS=${RNIC_DMA_FIXED_LATENCY_NS}"
 cecho "YELLOW" "PLOT_BUCKET=${PLOT_BUCKET}, PLOT_FLOWIDS=${PLOT_FLOWIDS:-ALL}, PLOT_OUTPUT_SUBDIR=${PLOT_OUTPUT_SUBDIR}"
 cecho "YELLOW" "PLOT_X_MIN_US=${PLOT_X_MIN_US:-AUTO}, PLOT_X_MAX_US=${PLOT_X_MAX_US:-AUTO}"
 cecho "YELLOW" "----------------------------------\n"
@@ -419,7 +432,7 @@ cecho "YELLOW" "----------------------------------\n"
 usage() {
     cat <<'EOF'
 Usage:
-  ./autorun.sh <skip_flag> [topology] [drop_rate_pct] [flow_name]
+  ./autorun.sh <skip_flag> [topology] [drop_rate_pct] [flow_name] [switch_drop_mode] [omnidma_cubic]
 
 skip_flag (string flags, can combine):
   contains '1' -> run simulation
@@ -430,6 +443,8 @@ Defaults:
   topology      = topo_simple_dumbbell_OS2_500us
   drop_rate_pct = 0.1
   flow_name     = omniDMA_flow
+  switch_drop_mode = seqnum
+  omnidma_cubic = 1
 
 Optional env vars for plotting:
   PLOT_FLOWIDS=1,2,3
@@ -449,16 +464,16 @@ if [[ "${SKIP_FLAG}" != *1* && "${SKIP_FLAG}" != *2* ]]; then
 fi
 
 cecho "YELLOW" "skip_flag=${SKIP_FLAG} (1=simulate, 2=plot)"
-cecho "YELLOW" "TOPO_ARG=${TOPO_ARG}, DROP_ARG=${DROP_ARG}, FLOW_ARG=${FLOW_ARG}"
+cecho "YELLOW" "TOPO_ARG=${TOPO_ARG}, DROP_ARG=${DROP_ARG}, FLOW_ARG=${FLOW_ARG}, SWITCH_DROP_MODE_ARG=${SWITCH_DROP_MODE_ARG}, OMNIDMA_CUBIC_ARG=${OMNIDMA_CUBIC_ARG}"
 
 if [[ "${SKIP_FLAG}" == *1* ]]; then
     cecho "YELLOW" "Run simulation enabled"
-    run_omnidma_case "${TOPO_ARG}" "${DROP_ARG}" "${FLOW_ARG}" || exit $?
+    run_omnidma_case "${TOPO_ARG}" "${DROP_ARG}" "${FLOW_ARG}" "${SWITCH_DROP_MODE_ARG}" "${OMNIDMA_CUBIC_ARG}" || exit $?
 fi
 
 if [[ "${SKIP_FLAG}" == *2* ]]; then
     cecho "YELLOW" "Plot enabled"
-    plot_omnidma_case "${TOPO_ARG}" "${DROP_ARG}" "${FLOW_ARG}" || exit $?
+    plot_omnidma_case "${TOPO_ARG}" "${DROP_ARG}" "${FLOW_ARG}" "${SWITCH_DROP_MODE_ARG}" "${OMNIDMA_CUBIC_ARG}" || exit $?
 fi
 
 cecho "GREEN" "Running end"
@@ -469,6 +484,6 @@ cecho "GREEN" "Running end"
 # merge_irn_sweep_out_fct
 #
 # run_omnidma_case
-# run_omnidma_case topo_simple_dumbbell_OS2_500us 0.1
+# run_omnidma_case topo_simple_dumbbell_OS2_500us 0.1 omniDMA_flow timestep 1
 # run_sweep run_omnidma_case
 # merge_omnidma_sweep_out_fct

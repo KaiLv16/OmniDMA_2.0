@@ -151,7 +151,7 @@ TypeId RdmaHw::GetTypeId(void) {
                           BooleanValue(false), MakeBooleanAccessor(&RdmaHw::m_rnicDmaSchedEnable),
                           MakeBooleanChecker())
             .AddAttribute("RnicDmaBw", "RNIC DMA bandwidth for OmniDMA metadata operations",
-                          DataRateValue(DataRate("64Gb/s")),
+                          DataRateValue(DataRate("4Gb/s")),
                           MakeDataRateAccessor(&RdmaHw::m_rnicDmaBw), MakeDataRateChecker())
             .AddAttribute("RnicDmaFixedLatency", "Per DMA operation fixed latency",
                           TimeValue(NanoSeconds(200)),
@@ -585,7 +585,15 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
                             printf("m_last_access_table_index=%u, last Adamap ID=%u\n", rxQp->adamap_receiver->m_last_access_table_index, it->adamap.id);
                             it->max_retrans_omni_type ++;
                             it->lastCallTime = Simulator::Now();
-                            TransmitOmniNACK(3, rxQp, ch, *it, MicroSeconds(0), it->max_retrans_omni_type);
+                            Time activeNackDelay = MicroSeconds(0);
+                            if (rxQp->adamap_receiver->AccessLookupTableLru(it->tableIndex) == 1) {
+                                rxQp->adamap_receiver->AddRnicDmaDelay(
+                                    &activeNackDelay,
+                                    RdmaHw::RNIC_DMA_TABLE_MISS_READ,
+                                    rxQp->adamap_receiver->EstimateAdamapDmaBytes(it->adamap),
+                                    false);
+                            }
+                            TransmitOmniNACK(3, rxQp, ch, *it, activeNackDelay, it->max_retrans_omni_type);
                             printf("trigger active NACK of last access table node - done!\n");
                             break;
                         }
@@ -853,7 +861,15 @@ void RdmaHw::HandleOmniTableTimeout(Ptr<RdmaRxQueuePair> rxQp) {
             printf("%lu: Timeout retransmit (with lastCallTime=%lu, omni_scale_rto=%lu us):\n", Simulator::Now().GetTimeStep(), it->lastCallTime.GetTimeStep(), rxQp->adamap_receiver->omni_scale_rto.GetMicroSeconds());
             int timeoutOmniType = std::max(2, it->max_retrans_omni_type);
             it->max_retrans_omni_type = timeoutOmniType;
-            TransmitOmniNACK(2, rxQp, timeoutCh, *it, MicroSeconds(0), timeoutOmniType);
+            Time timeoutDmaDelay = MicroSeconds(0);
+            if (rxQp->adamap_receiver->AccessLookupTableLru(it->tableIndex) == 1) {
+                rxQp->adamap_receiver->AddRnicDmaDelay(
+                    &timeoutDmaDelay,
+                    RdmaHw::RNIC_DMA_TABLE_MISS_READ,
+                    rxQp->adamap_receiver->EstimateAdamapDmaBytes(it->adamap),
+                    false);
+            }
+            TransmitOmniNACK(2, rxQp, timeoutCh, *it, timeoutDmaDelay, timeoutOmniType);
             it->lastCallTime = Simulator::Now();
         }
     }

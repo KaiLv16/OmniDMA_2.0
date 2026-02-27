@@ -52,6 +52,12 @@ ReceiverAdamap::GetTypeId (void)
     .AddAttribute("FirstN", "Linked-list head cache window size for first retransmission lookup",
               UintegerValue(3), MakeUintegerAccessor(&ReceiverAdamap::first_n),
               MakeUintegerChecker<uint32_t>())
+    .AddAttribute("LookupTableLruSize",
+              "NIC-side LRU cache size for lookup-table Adamap contexts",
+              UintegerValue(2),
+              MakeUintegerAccessor(&ReceiverAdamap::GetLookupTableLruSize,
+                                   &ReceiverAdamap::SetLookupTableLruSize),
+              MakeUintegerChecker<uint32_t>(1))
     ;
   return tid;
 }
@@ -67,6 +73,18 @@ void ReceiverAdamap::SetMapSize (uint32_t bitmapSize)
     m_bitmapSize = bitmapSize;
     m_bitmap.resize(bitmapSize, false);
     printf("%lu: ReceiverAdamap::SetMapSize -> %u\n", Simulator::Now().GetTimeStep(), bitmapSize);
+}
+
+uint32_t ReceiverAdamap::GetLookupTableLruSize() const {
+  return static_cast<uint32_t>(m_lookupTableLruSize);
+}
+
+void ReceiverAdamap::SetLookupTableLruSize(uint32_t lruSize) {
+  NS_ASSERT_MSG(lruSize > 0, "LookupTableLruSize must be greater than 0");
+  m_lookupTableLruSize = static_cast<int>(lruSize);
+  if (m_lookupTableLru.size() > lruSize) {
+    m_lookupTableLru.resize(lruSize);
+  }
 }
 
 ReceiverAdamap::ReceiverAdamap(uint32_t bitmapSize)
@@ -135,7 +153,12 @@ void ReceiverAdamap::AddRnicDmaDelay(Time* delay, uint16_t opType, uint32_t byte
   int32_t flowId = (m_RxQp == NULL) ? -1 : m_RxQp->m_flow_id;
   Time opDelay = m_hw->SubmitRnicDmaOp(opType, bytes, isWrite, flowId);
   if (delay != NULL) {
-    *delay += opDelay;
+    // SubmitRnicDmaOp() already returns completion latency from "now"
+    // (queue backlog + this op service). Keep the chain delay as the
+    // latest completion point to avoid double-counting backlog.
+    Time chainDone = Simulator::Now() + *delay;
+    Time opDone = Simulator::Now() + opDelay;
+    *delay = std::max(chainDone, opDone) - Simulator::Now();
   }
 }
 
@@ -636,7 +659,7 @@ int ReceiverAdamap::PutLinkedListHeadToTable(std::string str, bool do_erase, boo
   return newTableNodeCnt;
 }
 
-
+// 返回0表示cache hit，1表示cache miss
 int ReceiverAdamap::AccessLookupTableLru(int32_t tableIndex) {
   ++m_lookupTableAccessCount;
   // 在 vector 中查找该元素

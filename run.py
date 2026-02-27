@@ -41,6 +41,8 @@ QLEN_MON_START {qlen_mon_start}
 QLEN_MON_END {qlen_mon_end}
 SW_MONITORING_INTERVAL {sw_monitoring_interval}
 OMNI_MONITORING_INTERVAL {omni_mon_interval}
+RNIC_DMA_BW {rnic_dma_bw}
+RNIC_DMA_FIXED_LATENCY_NS {rnic_dma_fixed_latency_ns}
 
 FLOWGEN_START_TIME {flowgen_start_time}
 FLOWGEN_STOP_TIME {flowgen_stop_time}
@@ -203,6 +205,12 @@ def main():
     parser.add_argument('--switch_drop_timestep_config', dest='switch_drop_timestep_config', action='store',
                         default='config/config_drop_by_timestep.txt',
                         help="config file for timestep-based switch drops")
+    parser.add_argument('--rnic_dma_bw', dest='rnic_dma_bw', action='store',
+                        default='64Gb/s',
+                        help="RNIC DMA bandwidth, e.g., 64Gb/s or 4Gb/s (default: 64Gb/s)")
+    parser.add_argument('--rnic_dma_fixed_latency_ns', dest='rnic_dma_fixed_latency_ns', action='store',
+                        type=int, default=200,
+                        help="RNIC DMA fixed latency in ns (default: 200)")
 
     # #### CONWEAVE PARAMETERS ####
     # parser.add_argument('--cwh_extra_reply_deadline', dest='cwh_extra_reply_deadline', action='store',
@@ -242,6 +250,8 @@ def main():
     switch_drop_mode = args.switch_drop_mode
     switch_drop_seqnum_config_file = args.switch_drop_seqnum_config
     switch_drop_timestep_config_file = args.switch_drop_timestep_config
+    rnic_dma_bw = args.rnic_dma_bw
+    rnic_dma_fixed_latency_ns = args.rnic_dma_fixed_latency_ns
     cdf = args.cdf
     flowgen_start_time = FLOWGEN_DEFAULT_TIME  # default: 2.0
     flowgen_stop_time = flowgen_start_time + float(args.simul_time)  # default: 2.0
@@ -452,6 +462,8 @@ def main():
                                         switch_drop_mode=switch_drop_mode,
                                         switch_drop_seqnum_config_file=switch_drop_seqnum_config_file,
                                         switch_drop_timestep_config_file=switch_drop_timestep_config_file,
+                                        rnic_dma_bw=rnic_dma_bw,
+                                        rnic_dma_fixed_latency_ns=rnic_dma_fixed_latency_ns,
                                         self_win_bytes=self_win_bytes, self_define_win=self_define_win,
                                         rate_bound=rate_bound,
                                         fast_react=fast_react, mi=mi, int_multi=int_multi, ewma_gain=ewma_gain,
