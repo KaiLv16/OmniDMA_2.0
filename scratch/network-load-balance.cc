@@ -419,6 +419,9 @@ void periodic_monitoring(FILE *fout_voq, FILE *fout_voq_detail, FILE *fout_uplin
  * output format: <time(ns)>,<hostId>,<sum_finished_bitmap_list_entries>,<sum_lookup_table_entries>
  */
 void memory_usage_monitoring(FILE *fout_memory_usage) {
+    if (!enable_omnidma || fout_memory_usage == NULL) {
+        return;
+    }
     uint64_t now = Simulator::Now().GetNanoSeconds();
     for (uint32_t i = 0; i < Settings::node_num; i++) {
         if (n.Get(i)->GetNodeType() != 0) continue;  // only hosts
@@ -451,6 +454,9 @@ void memory_usage_monitoring(FILE *fout_memory_usage) {
  * submittedReadOps,submittedWriteOps,avgQueueDelayNs,maxQueueDelayNs,maxQueueDepth
  */
 void rnic_dma_monitoring(FILE *fout) {
+    if (!enable_omnidma || fout == NULL) {
+        return;
+    }
     uint64_t now = Simulator::Now().GetNanoSeconds();
     for (uint32_t i = 0; i < Settings::node_num; i++) {
         if (n.Get(i)->GetNodeType() != 0) continue;
@@ -701,7 +707,7 @@ void snd_rcv_record(FILE *fout, Ptr<QbbNetDevice> dev,
                 uint32_t rcv_snd_type, uint32_t pkt_type, uint32_t omni_type, uint32_t pkt_size,
                 int flowid=-1, int seq=-1, uint32_t cc_win_size=0) {
     
-    bool cond = true;
+    bool cond = false;   // 默认不打印，防止打印的太多撑爆磁盘
     // cond &= (rcv_snd_type == 1) && (pkt_type == 0);
     // time, nodeID, nodeType, Interface's Idx, 0:resume, 1:pause
     if (cond && dev->GetNode()->GetNodeType() == 0) {
@@ -1853,7 +1859,8 @@ int main(int argc, char *argv[]) {
 
     // topology_file
     bool found_topo2bdpMap = false;
-    uint32_t irn_bdp_lookup = 0;
+    const uint32_t irn_bdp_fallback = 100000;  // keep consistent with RdmaHw default IrnBdp.
+    uint32_t irn_bdp_lookup = irn_bdp_fallback;
     for (auto pair : topo2bdpMap) {
         if (topology_file.find(pair.first) !=
             std::string::npos) {  // if topology file string includes the word
@@ -1863,16 +1870,10 @@ int main(int argc, char *argv[]) {
         }
     }
     if (found_topo2bdpMap == false) {
-        if (enable_irn) {
-            std::cout << __FILE__ << "(" << __LINE__ << ")"
-                      << " ERROR - topo2bdpMap has no matched item with " << topology_file
-                      << " (required when IRN is enabled)" << std::endl;
-            assert(false);
-        } else {
-            std::cout << __FILE__ << "(" << __LINE__ << ")"
-                      << " WARNING - topo2bdpMap has no matched item with " << topology_file
-                      << "; continuing because IRN is disabled." << std::endl;
-        }
+        std::cout << __FILE__ << "(" << __LINE__ << ")"
+                  << " WARNING - topo2bdpMap has no matched item with " << topology_file
+                  << "; using fallback IrnBdp=" << irn_bdp_lookup
+                  << " and continuing." << std::endl;
     }
 
     // rdmaHw config
@@ -2264,15 +2265,17 @@ int main(int argc, char *argv[]) {
 
     uplink_output = fopen(uplink_mon_file.c_str(), "w");  // common
     conn_output = fopen(conn_mon_file.c_str(), "w");      // common
-    memory_usage_output = fopen(memory_usage_mon_file.c_str(), "w");  // common
-    rnic_dma_stats_output = fopen(rnic_dma_stats_file.c_str(), "w");  // common
-    if (memory_usage_output) {
-        fprintf(memory_usage_output,
-                "# time_ns,host_id,total_rxqp_linked_list_entries,total_rxqp_lookup_table_entries\n");
-    }
-    if (rnic_dma_stats_output) {
-        fprintf(rnic_dma_stats_output,
-                "# time_ns,host_id,inflight_ops,backlog_ns,submitted_ops,completed_ops,submitted_bytes,completed_bytes,submitted_read_ops,submitted_write_ops,avg_queue_delay_ns,max_queue_delay_ns,max_queue_depth\n");
+    if (enable_omnidma) {
+        memory_usage_output = fopen(memory_usage_mon_file.c_str(), "w");
+        rnic_dma_stats_output = fopen(rnic_dma_stats_file.c_str(), "w");
+        if (memory_usage_output) {
+            fprintf(memory_usage_output,
+                    "# time_ns,host_id,total_rxqp_linked_list_entries,total_rxqp_lookup_table_entries\n");
+        }
+        if (rnic_dma_stats_output) {
+            fprintf(rnic_dma_stats_output,
+                    "# time_ns,host_id,inflight_ops,backlog_ns,submitted_ops,completed_ops,submitted_bytes,completed_bytes,submitted_read_ops,submitted_write_ops,avg_queue_delay_ns,max_queue_delay_ns,max_queue_depth\n");
+        }
     }
 
     // update torId2UplinkIf, torId2DownlinkIf
@@ -2302,8 +2305,10 @@ int main(int argc, char *argv[]) {
     }
     Simulator::Schedule(Seconds(flowgen_start_time), &periodic_monitoring, voq_output,
                         voq_detail_output, uplink_output, conn_output, &lb_mode);
-    Simulator::Schedule(Seconds(flowgen_start_time), &memory_usage_monitoring, memory_usage_output);
-    Simulator::Schedule(Seconds(flowgen_start_time), &rnic_dma_monitoring, rnic_dma_stats_output);
+    if (enable_omnidma) {
+        Simulator::Schedule(Seconds(flowgen_start_time), &memory_usage_monitoring, memory_usage_output);
+        Simulator::Schedule(Seconds(flowgen_start_time), &rnic_dma_monitoring, rnic_dma_stats_output);
+    }
 
     //
     // Now, do the actual simulation.

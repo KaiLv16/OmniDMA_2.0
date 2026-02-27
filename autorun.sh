@@ -14,6 +14,11 @@ percent_to_drop_rate() {
     python3 -c 'import sys; print(str(float(sys.argv[1]) / 100.0))' "${pct}"
 }
 
+normalize_switch_drop_mode() {
+    local mode="${1:-lossrate}"
+    echo "${mode}" | tr '[:upper:]' '[:lower:]'
+}
+
 build_config_id() {
     local topo="$1"
     local flow="$2"
@@ -22,6 +27,10 @@ build_config_id() {
     local irn="$5"
     local omnidma="$6"
     local switch_drop_mode="${7:-lossrate}"
+    local has_win="${8:-${CASE_HAS_WIN:-${IRN_HAS_WIN:-0}}}"
+    local self_define_win="${9:-${CASE_SELF_DEFINE_WIN:-${IRN_SELF_DEFINE_WIN:-0}}}"
+    local self_win_bytes="${10:-${CASE_SELF_WIN_BYTES:-${IRN_SELF_WIN_BYTES:-0}}}"
+    switch_drop_mode="$(normalize_switch_drop_mode "${switch_drop_mode}")"
 
     local base_config_id="GBN"
     if [[ "${irn}" == "1" ]]; then
@@ -39,7 +48,11 @@ build_config_id() {
 
     local topo_tag="${topo//\//-}"
     local flow_tag="${flow//\//-}"
-    echo "${base_config_id}_${topo_tag}_${flow_tag}_dropm${switch_drop_mode}_drop${drop_rate_tag}_pfc${pfc}_irn${irn}"
+    local case_suffix=""
+    if [[ "${irn}" == "1" && "${has_win}" == "1" && "${self_define_win}" == "1" ]]; then
+        case_suffix="_irnwin${self_win_bytes}"
+    fi
+    echo "${base_config_id}_${topo_tag}_${flow_tag}_dropm${switch_drop_mode}_drop${drop_rate_tag}_pfc${pfc}_irn${irn}${case_suffix}"
 }
 
 build_output_dir_from_params() {
@@ -50,12 +63,15 @@ build_output_dir_from_params() {
     local omnidma="$5"
     local flow_name="$6"
     local switch_drop_mode="${7:-lossrate}"
+    local has_win="${8:-${CASE_HAS_WIN:-${IRN_HAS_WIN:-0}}}"
+    local self_define_win="${9:-${CASE_SELF_DEFINE_WIN:-${IRN_SELF_DEFINE_WIN:-0}}}"
+    local self_win_bytes="${10:-${CASE_SELF_WIN_BYTES:-${IRN_SELF_WIN_BYTES:-0}}}"
 
     local drop_rate
     drop_rate="$(percent_to_drop_rate "${drop_rate_pct}")"
 
     local config_id
-    config_id="$(build_config_id "${topology}" "${flow_name}" "${drop_rate}" "${pfc}" "${irn}" "${omnidma}" "${switch_drop_mode}")"
+    config_id="$(build_config_id "${topology}" "${flow_name}" "${drop_rate}" "${pfc}" "${irn}" "${omnidma}" "${switch_drop_mode}" "${has_win}" "${self_define_win}" "${self_win_bytes}")"
     echo "mix/output/${config_id}"
 }
 
@@ -84,9 +100,12 @@ run_case_impl() {
     local drop_rate
     drop_rate="$(percent_to_drop_rate "${drop_rate_pct}")"
     local switch_drop_mode="${SWITCH_DROP_MODE:-lossrate}"
+    local case_has_win="${CASE_HAS_WIN:-}"
+    local case_self_define_win="${CASE_SELF_DEFINE_WIN:-}"
+    local case_self_win_bytes="${CASE_SELF_WIN_BYTES:-}"
 
     local config_id
-    config_id="$(build_config_id "${topology}" "${FLOW_NAME}" "${drop_rate}" "${pfc}" "${irn}" "${omnidma}" "${switch_drop_mode}")"
+    config_id="$(build_config_id "${topology}" "${FLOW_NAME}" "${drop_rate}" "${pfc}" "${irn}" "${omnidma}" "${switch_drop_mode}" "${case_has_win}" "${case_self_define_win}" "${case_self_win_bytes}")"
     local output_dir="mix/output/${config_id}"
 
     cecho "GREEN" "Run: topo=${topology}, drop_rate=${drop_rate_pct}% (ratio=${drop_rate}), pfc=${pfc}, irn=${irn}, omnidma=${omnidma}"
@@ -201,12 +220,18 @@ plot_output_dir_impl() {
 run_case() {
     local topology="${1:-${DEFAULT_TOPOLOGY}}"
     local drop_rate_pct="${2:-${DEFAULT_DROP_RATE_PCT}}"
+    local CASE_HAS_WIN="${CASE_HAS_WIN:-0}"
+    local CASE_SELF_DEFINE_WIN="${CASE_SELF_DEFINE_WIN:-0}"
+    local CASE_SELF_WIN_BYTES="${CASE_SELF_WIN_BYTES:-0}"
     run_case_impl "${topology}" "${drop_rate_pct}" "${PFC}" "${IRN}" "${OMNIDMA}"
 }
 
 run_irn_case() {
     local topology="${1:-${DEFAULT_TOPOLOGY}}"
     local drop_rate_pct="${2:-${DEFAULT_DROP_RATE_PCT}}"
+    local CASE_HAS_WIN="${IRN_HAS_WIN}"
+    local CASE_SELF_DEFINE_WIN="${IRN_SELF_DEFINE_WIN}"
+    local CASE_SELF_WIN_BYTES="${IRN_SELF_WIN_BYTES}"
     run_case_impl "${topology}" "${drop_rate_pct}" "0" "1" "0" \
         --has_win "${IRN_HAS_WIN}" \
         --self_define_win "${IRN_SELF_DEFINE_WIN}" \
@@ -233,6 +258,9 @@ run_omnidma_case() {
     local switch_drop_mode="${OMNICASE_SWITCH_DROP_MODE}"
     local switch_drop_seqnum_config="${OMNICASE_SWITCH_DROP_SEQNUM_CONFIG}"
     local switch_drop_timestep_config="${OMNICASE_SWITCH_DROP_TIMESTEP_CONFIG}"
+    local CASE_HAS_WIN="${has_win}"
+    local CASE_SELF_DEFINE_WIN="${self_define_win}"
+    local CASE_SELF_WIN_BYTES="${self_win_bytes}"
 
     # Dynamic scoping in bash lets run_case_impl read these locals instead of globals.
     local RATE_BOUND="${rate_bound}"
@@ -269,6 +297,138 @@ run_sweep() {
             "${runner}" "${TOPOLOGY}" "${DROP_RATE_PCT}"
         done
     done
+}
+
+run_requested_matrix_experiments() {
+    local flow_name="omniDMA_flow"
+    local switch_drop_mode="amazon"
+    local omnidma_bitmap_size="16"
+    local total_runs=$((4 * ${#TOPOLOGIES[@]} * ${#DROP_RATE_PCTS[@]}))
+    local run_idx=0
+
+    local modes=(
+        "omnidma_bm16"
+        "gbn_pfc0"
+        "irn_win500000"
+        "irn_win5000000"
+    )
+
+    for mode in "${modes[@]}"; do
+        local pfc="0"
+        local irn="0"
+        local omnidma="0"
+        local case_has_win="0"
+        local case_self_define_win="0"
+        local case_self_win_bytes="0"
+        local -a extra_args=()
+        case "${mode}" in
+            omnidma_bm16)
+                pfc="0"; irn="0"; omnidma="1"
+                extra_args+=(--omnidma_bitmap_size "${omnidma_bitmap_size}")
+                ;;
+            gbn_pfc0)
+                pfc="0"; irn="0"; omnidma="0"
+                ;;
+            irn_win500000)
+                pfc="0"; irn="1"; omnidma="0"
+                case_has_win="1"; case_self_define_win="1"; case_self_win_bytes="500000"
+                extra_args+=(--has_win "${case_has_win}" --self_define_win "${case_self_define_win}" --self_win_bytes "${case_self_win_bytes}")
+                ;;
+            irn_win5000000)
+                pfc="0"; irn="1"; omnidma="0"
+                case_has_win="1"; case_self_define_win="1"; case_self_win_bytes="5000000"
+                extra_args+=(--has_win "${case_has_win}" --self_define_win "${case_self_define_win}" --self_win_bytes "${case_self_win_bytes}")
+                ;;
+            *)
+                cecho "RED" "Unknown matrix mode: ${mode}"
+                return 1
+                ;;
+        esac
+
+        for TOPOLOGY in "${TOPOLOGIES[@]}"; do
+            for DROP_RATE_PCT in "${DROP_RATE_PCTS[@]}"; do
+                run_idx=$((run_idx + 1))
+                cecho "YELLOW" "[${run_idx}/${total_runs}] mode=${mode}, topo=${TOPOLOGY}, drop_rate_pct=${DROP_RATE_PCT}"
+
+                local FLOW_NAME="${flow_name}"
+                local SWITCH_DROP_MODE="${switch_drop_mode}"
+                local CASE_HAS_WIN="${case_has_win}"
+                local CASE_SELF_DEFINE_WIN="${case_self_define_win}"
+                local CASE_SELF_WIN_BYTES="${case_self_win_bytes}"
+                run_case_impl "${TOPOLOGY}" "${DROP_RATE_PCT}" "${pfc}" "${irn}" "${omnidma}" "${extra_args[@]}" || return $?
+            done
+        done
+    done
+}
+
+collect_requested_matrix_fct_csv() {
+    local flow_name="omniDMA_flow"
+    local switch_drop_mode="amazon"
+    local outdir="mix/output/fct_merged"
+    mkdir -p "${outdir}"
+
+    local ts
+    ts="$(date +%Y%m%d_%H%M%S)"
+    local outfile="${outdir}/requested_matrix_fct_${ts}.txt"
+    printf 'mode,topology,drop_rate_pct,config_id,src_id,dst_id,src_port,dst_port,flow_bytes,start_time,fct,standalone_fct,status\n' > "${outfile}"
+
+    local found_count=0
+    local missing_count=0
+    local modes=(
+        "omnidma_bm16"
+        "gbn_pfc0"
+        "irn_win500000"
+        "irn_win5000000"
+    )
+
+    for mode in "${modes[@]}"; do
+        local pfc="0"
+        local irn="0"
+        local omnidma="0"
+        local case_has_win="0"
+        local case_self_define_win="0"
+        local case_self_win_bytes="0"
+        case "${mode}" in
+            omnidma_bm16)
+                pfc="0"; irn="0"; omnidma="1"
+                ;;
+            gbn_pfc0)
+                pfc="0"; irn="0"; omnidma="0"
+                ;;
+            irn_win500000)
+                pfc="0"; irn="1"; omnidma="0"
+                case_has_win="1"; case_self_define_win="1"; case_self_win_bytes="500000"
+                ;;
+            irn_win5000000)
+                pfc="0"; irn="1"; omnidma="0"
+                case_has_win="1"; case_self_define_win="1"; case_self_win_bytes="5000000"
+                ;;
+        esac
+
+        for TOPOLOGY in "${TOPOLOGIES[@]}"; do
+            for DROP_RATE_PCT in "${DROP_RATE_PCTS[@]}"; do
+                local drop_rate
+                drop_rate="$(percent_to_drop_rate "${DROP_RATE_PCT}")"
+                local config_id
+                config_id="$(build_config_id "${TOPOLOGY}" "${flow_name}" "${drop_rate}" "${pfc}" "${irn}" "${omnidma}" "${switch_drop_mode}" "${case_has_win}" "${case_self_define_win}" "${case_self_win_bytes}")"
+                local output_dir="mix/output/${config_id}"
+                local fct_file
+                fct_file="$(resolve_output_file "${output_dir}" "${config_id}" "out_fct")"
+
+                if [[ -f "${fct_file}" ]]; then
+                    awk -v mode="${mode}" -v topo="${TOPOLOGY}" -v drop_pct="${DROP_RATE_PCT}" -v cfg="${config_id}" \
+                        'BEGIN{OFS=","} NF>=8 {print mode,topo,drop_pct,cfg,$1,$2,$3,$4,$5,$6,$7,$8,"ok"}' \
+                        "${fct_file}" >> "${outfile}"
+                    found_count=$((found_count + 1))
+                else
+                    printf '%s,%s,%s,%s,,,,,,,,missing\n' "${mode}" "${TOPOLOGY}" "${DROP_RATE_PCT}" "${config_id}" >> "${outfile}"
+                    missing_count=$((missing_count + 1))
+                fi
+            done
+        done
+    done
+
+    cecho "YELLOW" "Merged matrix out_fct csv -> ${outfile} (found=${found_count}, missing=${missing_count})"
 }
 
 merge_sweep_out_fct() {
@@ -332,6 +492,7 @@ load_omnidma_case_profile() {
     local flow_name_arg="${3:-omniDMA_flow}"
     local switch_drop_mode_arg="${4:-timestep}"
     local omnidma_cubic_arg="${5:-1}"
+    switch_drop_mode_arg="$(normalize_switch_drop_mode "${switch_drop_mode_arg}")"
 
     # Manual OmniDMA experiment config (intentionally not using env vars).
     OMNICASE_TOPOLOGY="${topology_arg}"
@@ -348,7 +509,7 @@ load_omnidma_case_profile() {
     OMNICASE_RUNTIME="600"
     OMNICASE_NETLOAD="50"
     OMNICASE_FLOW_NAME="${flow_name_arg}"
-    OMNICASE_SWITCH_DROP_MODE="${switch_drop_mode_arg}"  # none / lossrate / seqnum / timestep
+    OMNICASE_SWITCH_DROP_MODE="${switch_drop_mode_arg}"  # none / amazon / google / Microsoft / random / lossrate / seqnum / timestep
     OMNICASE_SWITCH_DROP_SEQNUM_CONFIG="config/config_drop_by_seqnum.txt"
     OMNICASE_SWITCH_DROP_TIMESTEP_CONFIG="config/config_drop_by_timestep.txt"
     # Plot x-axis range (relative to first send packet, us). Empty means auto.
@@ -403,7 +564,7 @@ TOPO_ARG="${2:-topo_dumbbell_incast100_OS2_500us}"
 DROP_ARG="${3:-0.1}"
 # FLOW_ARG="${4:-omniDMA_flow}"
 FLOW_ARG="${4:-flow_omni_1flows_dumbbell_avg1ms_var1ms}"
-SWITCH_DROP_MODE_ARG="${5:-seqnum}"  # none / lossrate / seqnum / timestep
+SWITCH_DROP_MODE_ARG="${5:-seqnum}"  # none / amazon / google / Microsoft / random / lossrate / seqnum / timestep
 OMNIDMA_CUBIC_ARG="${6:-0}"          # 0/1
 
 
@@ -448,6 +609,7 @@ Usage:
 skip_flag (string flags, can combine):
   contains '1' -> run simulation
   contains '2' -> plot
+  equals 'matrix' -> run requested 4-mode matrix and merge FCT csv
   examples: 1 / 2 / 12
 
 Defaults:
@@ -455,6 +617,7 @@ Defaults:
   drop_rate_pct = 0.1
   flow_name     = omniDMA_flow
   switch_drop_mode = seqnum
+                     choices: none/amazon/google/Microsoft/random/lossrate/seqnum/timestep
   omnidma_cubic = 1
 
 Optional env vars for plotting:
@@ -468,8 +631,16 @@ EOF
 
 
 
+if [[ "${SKIP_FLAG}" == "matrix" ]]; then
+    cecho "YELLOW" "Running requested matrix experiments (flow=omniDMA_flow, drop_mode=amazon)"
+    run_requested_matrix_experiments || exit $?
+    collect_requested_matrix_fct_csv || exit $?
+    cecho "GREEN" "Requested matrix run finished"
+    exit 0
+fi
+
 if [[ "${SKIP_FLAG}" != *1* && "${SKIP_FLAG}" != *2* ]]; then
-    cecho "RED" "Invalid skip_flag: ${SKIP_FLAG} (must contain '1' and/or '2')"
+    cecho "RED" "Invalid skip_flag: ${SKIP_FLAG} (must contain '1' and/or '2', or be 'matrix')"
     usage
     exit 1
 fi

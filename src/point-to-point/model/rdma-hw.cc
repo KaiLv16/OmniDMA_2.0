@@ -1215,13 +1215,15 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch) {
             QpComplete(qp);
         }
     } else {
-        printf("When applying OmniDMA, should not gets here !!!!\n");
+        if (m_omnidma) {
+            printf("When applying OmniDMA, should not gets here !!!!\n");
+        }
         if (!m_backto0) {
-            printf("aaaa\n");
+            // printf("aaaa\n");
             qp->Acknowledge(seq);   // 修改 qp->snd_una
         } else {
             uint32_t goback_seq = seq / m_chunk * m_chunk;   // 默认是 4000
-            printf("bbbb\n");
+            // printf("bbbb\n");
             qp->Acknowledge(goback_seq);    // 修改 qp->snd_una
         }
         if (qp->irn.m_enabled) {
@@ -1294,7 +1296,7 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch) {
         Time qp_mtu = qp->GetRto(m_mtu);
         qp->m_retransmit = Simulator::Schedule(qp_mtu, &RdmaHw::HandleTimeout, this, qp, qp_mtu);
 
-        printf("branch 1.  ");
+        // printf("branch 1.  ");
     }
 
     if (m_irn) {
@@ -1317,7 +1319,7 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch) {
             printf("==========================\n");
             RecoverQueue(qp);
         }
-        printf("branch 2.  ");
+        // printf("branch 2.  ");
     }
     if (UseOmniDmaCubic(qp)) {
         HandleAckOmniCubic(qp, ch, oldSndUna, priorInFlight);
@@ -1334,7 +1336,7 @@ int RdmaHw::ReceiveAck(Ptr<Packet> p, CustomHeader &ch) {
             // printf("m_cc_mode = %d", m_cc_mode);
             cnp_received_mlx(qp);
         }
-        printf("branch 3.");
+        // printf("branch 3.");
     }
 
     if (m_cc_mode == 3) {

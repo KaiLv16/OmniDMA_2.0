@@ -54,7 +54,7 @@ public:
   void PrintStatus () const;
   /**
    * @brief 设置丢包分布策略
-   * @param distribution 分布策略字符串，例如 "amazon", "google", "microsoft"
+   * @param distribution 分布策略字符串，例如 "amazon", "google", "microsoft", "random"
    */
   void setDropDistribution (const std::string &distribution);
   double GetDropRate () const;
@@ -128,16 +128,18 @@ private:
   // 各种丢包类型的占比：random, multi, outage
   // std::array<double, 3> event_percentage;
 
-    /**
+  /**
    * @brief 根据 dropDistribution 的值初始化相关设置
    *
    * 为了使用 switch-case，本函数先将字符串转换为整型标识：
    *  0：amazon
    *  1：google
    *  2：microsoft
+   *  3：random
    *  -1：未知
    */
   void InitDistribution ();
+  void RecomputeLossrateEventParams ();
 
   // Shared deterministic state across all ports/devices in one simulation run.
   static std::string s_seqnumConfigLoadedPath;

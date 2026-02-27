@@ -198,8 +198,10 @@ def main():
     parser.add_argument('--my_switch_total_drop_rate', dest='my_switch_total_drop_rate', action='store',
                         type=float, default=0.0, help="total drop rate of our switch (default: 0.0)")
     parser.add_argument('--switch_drop_mode', dest='switch_drop_mode', action='store',
-                        choices=['none', 'lossrate', 'seqnum', 'timestep'], default='lossrate',
-                        help="switch drop mechanism: none/lossrate/seqnum/timestep (default: lossrate)")
+                        type=lambda s: s.strip().lower(),
+                        choices=['none', 'lossrate', 'amazon', 'google', 'microsoft', 'random', 'seqnum', 'timestep'],
+                        default='lossrate',
+                        help="switch drop mechanism: none/lossrate/amazon/google/microsoft/random/seqnum/timestep (default: lossrate)")
     parser.add_argument('--switch_drop_seqnum_config', dest='switch_drop_seqnum_config', action='store',
                         default='config/config_drop_by_seqnum.txt',
                         help="config file for seqnum-based switch drops")
@@ -275,8 +277,11 @@ def main():
         else:
             break
     if not oversub_str:
-        raise ValueError(f"Cannot parse oversubscription ratio from topology name: {topo}")
-    oversub = int(oversub_str)
+        print(f"WARNING - Cannot parse oversubscription ratio from topology name: {topo}; "
+              "fallback to oversub=1.", flush=True)
+        oversub = 1
+    else:
+        oversub = int(oversub_str)
     assert (int(args.netload) % oversub == 0)
     hostload = int(args.netload) / oversub
     assert (hostload > 0)
@@ -295,8 +300,8 @@ def main():
         raise Exception(
             "CONFIG ERROR : If IRN is turn-on, then you should turn off PFC (for better perforamnce).")
     if enabled_irn == 0 and enabled_pfc == 0 and enabled_omnidma == 0:
-        raise Exception(
-            "CONFIG ERROR : When OmniDMA is not used, Either IRN or PFC should be true (at least one).")
+        print("WARNING : Running GBN with PFC disabled (IRN=0, OmniDMA=0, PFC=0). "
+              "This is allowed for loss experiments.", flush=True)
     if float(args.simul_time) < 0.005:
         raise Exception("CONFIG ERROR : Runtime must be larger than 5ms (= warmup interval).")
 
@@ -318,7 +323,11 @@ def main():
     topo_tag = topo.replace("/", "-")
     flow_tag = flow.replace("/", "-")
     drop_rate_tag = str(my_switch_total_drop_rate)
-    config_ID = f"{base_config_id}_{topo_tag}_{flow_tag}_dropm{switch_drop_mode}_drop{drop_rate_tag}_pfc{enabled_pfc}_irn{enabled_irn}"
+    case_suffix = ""
+    if enabled_irn == 1 and int(has_win) == 1 and int(self_define_win) == 1:
+        case_suffix = f"_irnwin{int(self_win_bytes)}"
+    config_ID = (f"{base_config_id}_{topo_tag}_{flow_tag}_dropm{switch_drop_mode}_drop{drop_rate_tag}"
+                 f"_pfc{enabled_pfc}_irn{enabled_irn}{case_suffix}")
 
     if switch_drop_mode == "seqnum" and not exists(switch_drop_seqnum_config_file):
         raise Exception(f"CONFIG ERROR : seqnum drop config not found: {switch_drop_seqnum_config_file}")
@@ -418,12 +427,8 @@ def main():
                 break
     bdp = None
     if topo_bdp_key not in topo2bdp:
-        if enabled_omnidma == 1:
-            print("WARNING - topology is not registered in run.py topo2bdp; "
-                  "continue for OmniDMA and skip 1BDP-based FCT analysis.", flush=True)
-        else:
-            print("ERROR - topology is not registered in run.py!!", flush=True)
-            return
+        print("WARNING - topology is not registered in run.py topo2bdp; "
+              "skip 1BDP-based FCT analysis for this run.", flush=True)
     else:
         bdp = int(topo2bdp[topo_bdp_key])
         print("1BDP = {}".format(bdp))

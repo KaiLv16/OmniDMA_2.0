@@ -27,6 +27,12 @@ ParseScalar (const std::string &token, T *out)
   return !ss.fail ();
 }
 
+bool
+IsLossrateDistributionName (const std::string &name)
+{
+  return name == "amazon" || name == "google" || name == "microsoft" || name == "random";
+}
+
 }  // namespace
 
 NS_LOG_COMPONENT_DEFINE ("PacketDropper");
@@ -88,13 +94,7 @@ PacketDropper::PacketDropper ()
   dropDistribution = "amazon";
 
   InitDistribution ();
-  double avg_burst = static_cast<double> (burst_n);
-  double avg_highfreq = (high_freq_min + high_freq_max) / 2.0;
-  double avg_random = 1.0;
-  average_drop_per_event = event_ratio_burst * avg_burst +
-                           event_ratio_highfreq * avg_highfreq +
-                           event_ratio_random * avg_random;
-  event_probability = (average_drop_per_event > 0.0) ? (overall_drop_rate / average_drop_per_event) : 0.0;
+  RecomputeLossrateEventParams ();
 }
 
 PacketDropper::PacketDropper (double overall_drop_rate,
@@ -119,13 +119,7 @@ PacketDropper::PacketDropper (double overall_drop_rate,
   rng.seed (44);
   dropDistribution = distribution;
   InitDistribution ();
-  double avg_burst = static_cast<double> (burst_n);
-  double avg_highfreq = (high_freq_min + high_freq_max) / 2.0;
-  double avg_random = 1.0;
-  average_drop_per_event = event_ratio_burst * avg_burst +
-                           event_ratio_highfreq * avg_highfreq +
-                           event_ratio_random * avg_random;
-  event_probability = (average_drop_per_event > 0.0) ? (overall_drop_rate / average_drop_per_event) : 0.0;
+  RecomputeLossrateEventParams ();
 }
 
 void
@@ -134,7 +128,6 @@ PacketDropper::setParam (double overall_drop_rate_in,
                          int high_freq_m_in, int high_freq_min_in, int high_freq_max_in,
                          unsigned int seed)
 {
-  InitDistribution ();
   overall_drop_rate = overall_drop_rate_in;
   burst_n = burst_n_in;
   burst_offset = burst_offset_in;
@@ -145,6 +138,13 @@ PacketDropper::setParam (double overall_drop_rate_in,
   high_freq_index = 0;
 
   rng.seed (seed);
+  InitDistribution ();
+  RecomputeLossrateEventParams ();
+}
+
+void
+PacketDropper::RecomputeLossrateEventParams ()
+{
   double avg_burst = static_cast<double> (burst_n);
   double avg_highfreq = (high_freq_min + high_freq_max) / 2.0;
   double avg_random = 1.0;
@@ -157,8 +157,15 @@ PacketDropper::setParam (double overall_drop_rate_in,
 void
 PacketDropper::setDropDistribution (const std::string &distribution)
 {
-  dropDistribution = distribution;
+  std::string normalized = ToLower (Trim (distribution));
+  if (!IsLossrateDistributionName (normalized))
+    {
+      NS_LOG_WARN ("Unknown drop distribution '" << distribution << "', fallback to amazon");
+      normalized = "amazon";
+    }
+  dropDistribution = normalized;
   InitDistribution ();
+  RecomputeLossrateEventParams ();
 }
 
 void
@@ -175,6 +182,13 @@ PacketDropper::SetDropMode (const std::string &mode)
   if (normalized.empty () || normalized == "lossrate" || normalized == "by_lossrate" ||
       normalized == "lossrate_distribution" || normalized == "by_lossrate_and_distribution")
     {
+      m_dropMode = DROP_MODE_LOSSRATE;
+      m_dropModeName = "lossrate";
+      return;
+    }
+  if (IsLossrateDistributionName (normalized))
+    {
+      setDropDistribution (normalized);
       m_dropMode = DROP_MODE_LOSSRATE;
       m_dropModeName = "lossrate";
       return;
@@ -626,28 +640,40 @@ PacketDropper::ToLower (const std::string &s)
 void
 PacketDropper::InitDistribution ()
 {
-  if (dropDistribution == "amazon")
+  std::string normalized = ToLower (Trim (dropDistribution));
+  if (normalized == "amazon")
     {
       event_ratio_random = 0.53;
       event_ratio_highfreq = 0.12;
       event_ratio_burst = 0.35;
     }
-  else if (dropDistribution == "google")
+  else if (normalized == "google")
     {
       event_ratio_random = 0.37;
       event_ratio_highfreq = 0.51;
       event_ratio_burst = 0.12;
     }
-  else if (dropDistribution == "microsoft")
+  else if (normalized == "microsoft")
     {
       event_ratio_random = 0.68;
       event_ratio_highfreq = 0.19;
       event_ratio_burst = 0.13;
     }
+  else if (normalized == "random")
+    {
+      event_ratio_random = 1.00;
+      event_ratio_highfreq = 0.00;
+      event_ratio_burst = 0.00;
+    }
   else
     {
-      NS_LOG_ERROR ("Unknown drop distribution: " << dropDistribution);
+      NS_LOG_WARN ("Unknown drop distribution '" << dropDistribution << "', fallback to amazon");
+      event_ratio_random = 0.53;
+      event_ratio_highfreq = 0.12;
+      event_ratio_burst = 0.35;
+      normalized = "amazon";
     }
+  dropDistribution = normalized;
 }
 
 bool
