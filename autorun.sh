@@ -299,6 +299,10 @@ run_sweep() {
     done
 }
 
+
+
+# 第一个大实验：针对用户请求的4种模式（omnidma_bm16, gbn_pfc0, irn_win500000, irn_win5000000），
+# 在所有拓扑和丢包率下运行，并收集FCT结果到一个csv文件。
 run_requested_matrix_experiments() {
     local flow_name="omniDMA_flow"
     local switch_drop_mode="amazon"
@@ -360,6 +364,8 @@ run_requested_matrix_experiments() {
         done
     done
 }
+
+
 
 collect_requested_matrix_fct_csv() {
     local flow_name="omniDMA_flow"
@@ -546,7 +552,7 @@ IRN_SELF_WIN_BYTES="50000000"
 OMNIDMA_HAS_WIN="0"
 OMNIDMA_SELF_DEFINE_WIN="0"
 OMNIDMA_SELF_WIN_BYTES="1000000000"
-OMNIDMA_CUBIC="${OMNIDMA_CUBIC:-1}"
+OMNIDMA_CUBIC="${OMNIDMA_CUBIC:-0}"
 PLOT_BUCKET="${PLOT_BUCKET:-10}"
 PLOT_FLOWIDS="${PLOT_FLOWIDS:-}"
 PLOT_OUTPUT_SUBDIR="${PLOT_OUTPUT_SUBDIR:-flow_rate_plots}"

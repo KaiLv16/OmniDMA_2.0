@@ -5814,3 +5814,935 @@
 ./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
 ./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
 
+02/27/26,GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/27/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/27/26,GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,500000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin500000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn1_irnwin5000000/config.txt'
+
+02/27/26,irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000,1,0,1000,4,16,64,400,0,1,1,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,1,5000000
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/irn_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn1_irnwin5000000/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_50us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_50us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_500us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_500us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_5000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_5000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.0005_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.001_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.005_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.01_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.02_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.03_pfc0_irn0/config.txt'
+
+02/28/26,omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_15000us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/omnidma_topo_simple_dumbbell_OS2_15000us_omniDMA_flow_dropmamazon_drop0.05_pfc0_irn0/config.txt'
+
+02/28/26,GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0_pfc0_irn0/config.txt'
+
+02/28/26,GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0,1,0,1000,4,16,64,400,0,0,0,0,topo_simple_dumbbell_OS2_1us,100,AliStorage2019,50,600,0,0
+./waf --run 'scratch/network-load-balance /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt' > /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.log 2>&1
+./waf --run 'scratch/network-load-balance' --command-template='gdb --args %s /home/sp/ns-allinone-3.19/ns-3.19-OmniDMA/mix/output/GBN_topo_simple_dumbbell_OS2_1us_omniDMA_flow_dropmamazon_drop0.0001_pfc0_irn0/config.txt'
+
