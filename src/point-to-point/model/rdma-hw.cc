@@ -573,7 +573,18 @@ int RdmaHw::ReceiveUdp(Ptr<Packet> p, CustomHeader &ch) {
     bool cnp_check = false;
     int x = ReceiverCheckSeq(ch.udp.seq, rxQp, payload_size, cnp_check);
     if (m_omnidma) {
-        rxQp->omni_cumulative_ack_seq = rxQp->ReceiverNextExpectedSeq;
+        UpdateOmniCumulativeAckSeq(rxQp, ch.udp.seq, payload_size);
+        uint64_t packetTailSeq = static_cast<uint64_t>(ch.udp.seq) + payload_size;
+        if (packetTailSeq > rxQp->m_maxAcceptedSeq) {
+            rxQp->m_maxAcceptedSeq = packetTailSeq;
+        }
+        uint64_t minUnreceivedSeq = rxQp->omni_cumulative_ack_seq;
+        uint64_t currSeqDistance = (rxQp->m_maxAcceptedSeq > minUnreceivedSeq)
+                                       ? (rxQp->m_maxAcceptedSeq - minUnreceivedSeq)
+                                       : 0;
+        if (currSeqDistance > rxQp->m_maxObservedSeqDistance) {
+            rxQp->m_maxObservedSeqDistance = currSeqDistance;
+        }
     }
     assert(ch.udp.seq / m_mtu* m_mtu == ch.udp.seq && "Currently we only support m_mtu aligned seq number");
     
@@ -1364,6 +1375,31 @@ size_t RdmaHw::getIrnBufferOverhead() {
         overhead += it->second->m_irn_sack_.getSackBufferOverhead();
     }
     return overhead;
+}
+
+void RdmaHw::UpdateOmniCumulativeAckSeq(Ptr<RdmaRxQueuePair> q, uint32_t seq, uint32_t size) {
+    if (q == NULL || size == 0 || !q->m_omnidma_enabled) {
+        return;
+    }
+    // Reuse the IRN-style out-of-order merge logic to maintain the strict minimum
+    // unreceived byte sequence across all packets received by OmniDMA.
+    q->m_omni_sack_.sack(seq, size);
+    q->m_omni_sack_.discardUpTo(q->omni_cumulative_ack_seq);
+
+    while (true) {
+        uint32_t sack_seq = 0;
+        uint32_t sack_len = 0;
+        if (!q->m_omni_sack_.peekFrontBlock(&sack_seq, &sack_len)) {
+            break;
+        }
+        if (sack_seq > q->omni_cumulative_ack_seq) {
+            break;
+        }
+        NS_ASSERT(q->omni_cumulative_ack_seq >= sack_seq);
+        NS_ASSERT(q->omni_cumulative_ack_seq - sack_seq <= sack_len);
+        q->omni_cumulative_ack_seq += (sack_len - (q->omni_cumulative_ack_seq - sack_seq));
+        q->m_omni_sack_.discardUpTo(q->omni_cumulative_ack_seq);
+    }
 }
 
 int RdmaHw::Receive(Ptr<Packet> p, CustomHeader &ch) {

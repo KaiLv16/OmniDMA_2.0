@@ -157,6 +157,7 @@ class RdmaHw : public Object {
 
     void CheckandSendQCN(Ptr<RdmaRxQueuePair> q);
     int ReceiverCheckSeq(uint32_t seq, Ptr<RdmaRxQueuePair> q, uint32_t size, bool &cnp);
+    void UpdateOmniCumulativeAckSeq(Ptr<RdmaRxQueuePair> q, uint32_t seq, uint32_t size);
     void AddHeader(Ptr<Packet> p, uint16_t protocolNumber);
     static uint16_t EtherToPpp(uint16_t protocol);
 

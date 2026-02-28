@@ -110,6 +110,7 @@ MY_SWITCH_TOTAL_DROP_RATE {my_switch_total_drop_rate}
 SWITCH_DROP_MODE {switch_drop_mode}
 SWITCH_DROP_SEQNUM_CONFIG_FILE {switch_drop_seqnum_config_file}
 SWITCH_DROP_TIMESTEP_CONFIG_FILE {switch_drop_timestep_config_file}
+SWITCH_DROP_SWITCH_CONFIG_FILE {switch_drop_switch_config_file}
 OMNIDMA_TX_EXPIRY_TIME 1000]
 OMNIDMA_REPLY_TIMEOUT_EXTRA 4
 """
@@ -208,6 +209,9 @@ def main():
     parser.add_argument('--switch_drop_timestep_config', dest='switch_drop_timestep_config', action='store',
                         default='config/config_drop_by_timestep.txt',
                         help="config file for timestep-based switch drops")
+    parser.add_argument('--switch_drop_switch_config', dest='switch_drop_switch_config', action='store',
+                        default='config/config_drop_switches.txt',
+                        help="config file listing switch IDs that enable proactive dropping")
     parser.add_argument('--rnic_dma_bw', dest='rnic_dma_bw', action='store',
                         default='64Gb/s',
                         help="RNIC DMA bandwidth, e.g., 64Gb/s or 4Gb/s (default: 64Gb/s)")
@@ -256,6 +260,7 @@ def main():
     switch_drop_mode = args.switch_drop_mode
     switch_drop_seqnum_config_file = args.switch_drop_seqnum_config
     switch_drop_timestep_config_file = args.switch_drop_timestep_config
+    switch_drop_switch_config_file = args.switch_drop_switch_config
     rnic_dma_bw = args.rnic_dma_bw
     rnic_dma_fixed_latency_ns = args.rnic_dma_fixed_latency_ns
     rnic_dma_tlp_payload_bytes = args.rnic_dma_tlp_payload_bytes
@@ -472,6 +477,7 @@ def main():
                                         switch_drop_mode=switch_drop_mode,
                                         switch_drop_seqnum_config_file=switch_drop_seqnum_config_file,
                                         switch_drop_timestep_config_file=switch_drop_timestep_config_file,
+                                        switch_drop_switch_config_file=switch_drop_switch_config_file,
                                         rnic_dma_bw=rnic_dma_bw,
                                         rnic_dma_fixed_latency_ns=rnic_dma_fixed_latency_ns,
                                         rnic_dma_tlp_payload_bytes=rnic_dma_tlp_payload_bytes,

@@ -213,6 +213,8 @@ RdmaRxQueuePair::RdmaRxQueuePair() {
     m_omnidma_bitmap_size = kDefaultOmniDmaBitmapSize;
     omni_last_packet = false;
     omni_cumulative_ack_seq = 0;
+    m_maxAcceptedSeq = 0;
+    m_maxObservedSeqDistance = 0;
     adamap_receiver = CreateObject<ReceiverAdamap>();
     adamap_receiver->m_RxQp = this;
 }

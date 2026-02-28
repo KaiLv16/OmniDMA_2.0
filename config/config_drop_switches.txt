@@ -1,0 +1,11 @@
+# Switch proactive drop config: switchId [ports]
+# Format examples:
+#   0 [all]
+#   3 [1,2,3,5-8]
+# Notes:
+#   - ports are switch device indices (valid range is [1, N-1])
+#   - invalid/non-existent ports will be warned and skipped at runtime
+#   - '#' starts a comment
+
+# Example for topo_simple_dumbbell_OS2_* (single switch node):
+200 [all]

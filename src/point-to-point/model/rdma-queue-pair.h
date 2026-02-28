@@ -365,12 +365,15 @@ class RdmaRxQueuePair : public Object {  // Rx side queue pair
     uint32_t m_lastNACK;
     EventId QcnTimerEvent;  // if destroy this rxQp, remember to cancel this timer
     IrnSackManager m_irn_sack_;
+    IrnSackManager m_omni_sack_;
     int32_t m_flow_id;
 
     bool m_omnidma_enabled;
     uint16_t m_omnidma_bitmap_size;
     bool omni_last_packet;
     uint32_t omni_cumulative_ack_seq;
+    uint64_t m_maxAcceptedSeq;
+    uint64_t m_maxObservedSeqDistance;
     Ptr<ReceiverAdamap> adamap_receiver;
 
     static TypeId GetTypeId(void);

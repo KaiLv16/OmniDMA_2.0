@@ -29,7 +29,10 @@
 
 #include <fstream>
 #include <iostream>
+#include <cctype>
+#include <sstream>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "ns3/applications-module.h"
 #include "ns3/broadcom-node.h"
@@ -176,6 +179,13 @@ double my_switch_total_drop_rate = 0.0;
 std::string switch_drop_mode = "lossrate";
 std::string switch_drop_seqnum_config_file = "config/config_drop_by_seqnum.txt";
 std::string switch_drop_timestep_config_file = "config/config_drop_by_timestep.txt";
+std::string switch_drop_switch_config_file = "config/config_drop_switches.txt";
+struct SwitchDropPortSpec {
+    bool allPorts;
+    std::unordered_set<uint32_t> ports;
+    SwitchDropPortSpec() : allPorts(false), ports() {}
+};
+std::unordered_map<uint32_t, SwitchDropPortSpec> switch_drop_port_specs;
 std::string rnic_dma_bw = "64Gb/s";
 uint64_t rnic_dma_fixed_latency_ns = 200;
 uint32_t rnic_dma_tlp_payload_bytes = 256;
@@ -209,6 +219,123 @@ std::map<uint32_t, std::vector<uint32_t>> torId2DownlinkIf;
 std::ifstream topof, flowf;
 NodeContainer n;                         // node container
 std::vector<Ipv4Address> serverAddress;  // server address
+
+static std::string TrimString(const std::string &s) {
+    size_t begin = s.find_first_not_of(" \t\r\n");
+    if (begin == std::string::npos) {
+        return "";
+    }
+    size_t end = s.find_last_not_of(" \t\r\n");
+    return s.substr(begin, end - begin + 1);
+}
+
+static std::string ToLowerString(const std::string &s) {
+    std::string out = s;
+    for (size_t i = 0; i < out.size(); ++i) {
+        out[i] = static_cast<char>(std::tolower(static_cast<unsigned char>(out[i])));
+    }
+    return out;
+}
+
+void LoadSwitchDropEnabledSwitches(
+    const std::string &path,
+    std::unordered_map<uint32_t, SwitchDropPortSpec> *out) {
+    out->clear();
+    std::ifstream fin(path.c_str());
+    if (!fin.is_open()) {
+        std::cerr << "WARNING: cannot open SWITCH_DROP_SWITCH_CONFIG_FILE: " << path
+                  << " (no switch will enable proactive drop)\n";
+        return;
+    }
+
+    std::string raw;
+    while (std::getline(fin, raw)) {
+        std::string raw_backup = raw;
+        size_t comment_pos = raw.find('#');
+        if (comment_pos != std::string::npos) {
+            raw = raw.substr(0, comment_pos);
+        }
+        std::string line = TrimString(raw);
+        if (line.empty()) {
+            continue;
+        }
+
+        size_t lbracket = line.find('[');
+        size_t rbracket = line.rfind(']');
+        if (lbracket == std::string::npos || rbracket == std::string::npos || rbracket <= lbracket) {
+            std::cerr << "WARNING: malformed switch drop config line (expect: switchId [ports]): "
+                      << raw_backup << "\n";
+            continue;
+        }
+
+        std::string switchToken = TrimString(line.substr(0, lbracket));
+        std::string portToken = TrimString(line.substr(lbracket + 1, rbracket - lbracket - 1));
+        if (switchToken.empty() || portToken.empty()) {
+            std::cerr << "WARNING: malformed switch drop config line (missing switchId or ports): "
+                      << raw_backup << "\n";
+            continue;
+        }
+
+        std::stringstream swss(switchToken);
+        uint32_t switch_id = 0;
+        std::string trailing;
+        if (!(swss >> switch_id) || (swss >> trailing)) {
+            std::cerr << "WARNING: invalid switch id field in line: " << raw_backup << "\n";
+            continue;
+        }
+
+        SwitchDropPortSpec &spec = (*out)[switch_id];
+        std::string portTokenLower = ToLowerString(portToken);
+        if (portTokenLower == "all") {
+            spec.allPorts = true;
+            spec.ports.clear();
+            continue;
+        }
+        if (spec.allPorts) {
+            // "all" dominates; no need to parse additional explicit ports.
+            continue;
+        }
+
+        std::stringstream pss(portToken);
+        std::string item;
+        while (std::getline(pss, item, ',')) {
+            item = TrimString(item);
+            if (item.empty()) {
+                continue;
+            }
+            size_t dash = item.find('-');
+            if (dash != std::string::npos) {
+                std::string leftToken = TrimString(item.substr(0, dash));
+                std::string rightToken = TrimString(item.substr(dash + 1));
+                uint32_t left = 0, right = 0;
+                std::stringstream lss(leftToken), rss(rightToken);
+                if (!(lss >> left) || !(rss >> right)) {
+                    std::cerr << "WARNING: invalid port range '" << item << "' in line: " << raw_backup
+                              << "\n";
+                    continue;
+                }
+                if (left > right) {
+                    std::swap(left, right);
+                }
+                for (uint32_t p = left; p <= right; ++p) {
+                    spec.ports.insert(p);
+                    if (p == right) {
+                        break;  // prevent uint32 overflow when right == UINT32_MAX
+                    }
+                }
+                continue;
+            }
+
+            uint32_t port_id = 0;
+            std::stringstream iss(item);
+            if (!(iss >> port_id)) {
+                std::cerr << "WARNING: invalid port id '" << item << "' in line: " << raw_backup << "\n";
+                continue;
+            }
+            spec.ports.insert(port_id);
+        }
+    }
+}
 
 // flow generator
 std::unordered_map<uint32_t, uint32_t> flows_per_host;
@@ -578,11 +705,12 @@ void qp_finish(FILE *fout, Ptr<RdmaQueuePair> q) {
     // XXX: remove rxQP from the receiver
     Ptr<Node> dstNode = n.Get(did);
     Ptr<RdmaDriver> rdma = dstNode->GetObject<RdmaDriver>();
+    Ptr<RdmaRxQueuePair> rxQp = rdma->m_rdma->GetRxQp(q->dip.Get(), q->sip.Get(), q->dport,
+                                                      q->sport, q->m_pg, false);
+    uint64_t max_recv_seq_distance = (rxQp != NULL) ? rxQp->m_maxObservedSeqDistance : 0;
 
     if (hit_rate_output != NULL) {
         // Receiver-side Adamap cache statistics live in RxQP (RNIC state).
-        Ptr<RdmaRxQueuePair> rxQp = rdma->m_rdma->GetRxQp(q->dip.Get(), q->sip.Get(), q->dport,
-                                                          q->sport, q->m_pg, false);
         uint64_t ll_access = 0, ll_hit = 0, table_access = 0, table_hit = 0;
         if (rxQp != NULL) {
             ll_access = rxQp->adamap_receiver->GetLinkedListAccessCount();
@@ -590,8 +718,8 @@ void qp_finish(FILE *fout, Ptr<RdmaQueuePair> q) {
             table_access = rxQp->adamap_receiver->GetLookupTableAccessCount();
             table_hit = rxQp->adamap_receiver->GetLookupTableCacheHitCount();
         }
-        // sender_id receiver_id flowid list_access list_hit table_access table_hit
-        fprintf(hit_rate_output, "%u %u %d %lu %lu %lu %lu\n", sid, did, q->m_flow_id, ll_access,
+        // sender_id, receiver_id, flowid, list_access, list_hit, table_access, table_hit
+        fprintf(hit_rate_output, "%u, %u, %d, %lu, %lu, %lu, %lu\n", sid, did, q->m_flow_id, ll_access,
                 ll_hit, table_access, table_hit);
         fflush(hit_rate_output);
     }
@@ -599,16 +727,17 @@ void qp_finish(FILE *fout, Ptr<RdmaQueuePair> q) {
     rdma->m_rdma->DeleteRxQp(q->sip.Get(), q->sport, q->dport, q->m_pg);
 
     // fprintf(fout, "%lu QP complete\n", Simulator::Now().GetTimeStep());
-    fprintf(fout, "%u %u %u %u %lu %lu %lu %lu\n", Settings::ip_to_node_id(q->sip),
+    fprintf(fout, "%u %u %u %u %lu %lu %lu %lu %lu\n", Settings::ip_to_node_id(q->sip),
             Settings::ip_to_node_id(q->dip), q->sport, q->dport, q->m_size,
             q->startTime.GetTimeStep(), (Simulator::Now() - q->startTime).GetTimeStep(),
-            standalone_fct);
+            standalone_fct, max_recv_seq_distance);
 
     // for debugging
-    NS_LOG_DEBUG("%u %u %u %u %lu %lu %lu %lu\n" %
+    NS_LOG_DEBUG("%u %u %u %u %lu %lu %lu %lu %lu\n" %
                  (Settings::ip_to_node_id(q->sip), Settings::ip_to_node_id(q->dip), q->sport,
                   q->dport, q->m_size, q->startTime.GetTimeStep(),
-                  (Simulator::Now() - q->startTime).GetTimeStep(), standalone_fct));
+                  (Simulator::Now() - q->startTime).GetTimeStep(), standalone_fct,
+                  max_recv_seq_distance));
    
     Settings::cnt_finished_flows++;
     fflush(fout);
@@ -1507,11 +1636,19 @@ int main(int argc, char *argv[]) {
             } else if (key.compare("SWITCH_DROP_TIMESTEP_CONFIG_FILE") == 0) {
                 conf >> switch_drop_timestep_config_file;
                 std::cerr << "SWITCH_DROP_TIMESTEP_CONFIG_FILE\t" << switch_drop_timestep_config_file << "\n";
+            } else if (key.compare("SWITCH_DROP_SWITCH_CONFIG_FILE") == 0) {
+                conf >> switch_drop_switch_config_file;
+                std::cerr << "SWITCH_DROP_SWITCH_CONFIG_FILE\t" << switch_drop_switch_config_file
+                          << "\n";
             }
 
             fflush(stdout);
         }
         conf.close();
+        LoadSwitchDropEnabledSwitches(switch_drop_switch_config_file,
+                                      &switch_drop_port_specs);
+        std::cerr << "SWITCH_DROP_SWITCH_ENTRIES\t\t" << switch_drop_port_specs.size()
+                  << " loaded from " << switch_drop_switch_config_file << "\n";
 
     } else {
         std::cerr << "Error: require a config file\n";
@@ -1738,6 +1875,35 @@ int main(int argc, char *argv[]) {
     for (uint32_t i = 0; i < node_num; i++) {
         if (n.Get(i)->GetNodeType() == 1) {  // is switch
             Ptr<SwitchNode> sw = DynamicCast<SwitchNode>(n.Get(i));
+            std::unordered_map<uint32_t, SwitchDropPortSpec>::const_iterator specIt =
+                switch_drop_port_specs.find(sw->GetId());
+            bool has_switch_spec = (specIt != switch_drop_port_specs.end());
+            bool enable_all_ports = false;
+            std::unordered_set<uint32_t> enabled_ports_for_switch;
+            if (has_switch_spec) {
+                const SwitchDropPortSpec &spec = specIt->second;
+                if (spec.allPorts) {
+                    enable_all_ports = true;
+                } else {
+                    for (std::unordered_set<uint32_t>::const_iterator it = spec.ports.begin();
+                         it != spec.ports.end(); ++it) {
+                        uint32_t configured_port = *it;
+                        if (configured_port >= 1 && configured_port < sw->GetNDevices()) {
+                            enabled_ports_for_switch.insert(configured_port);
+                        } else {
+                            std::cerr << "WARNING: switch " << sw->GetId()
+                                      << " configured drop port " << configured_port
+                                      << " does not exist; skip.\n";
+                        }
+                    }
+                }
+            }
+            bool has_any_enabled_port = enable_all_ports || !enabled_ports_for_switch.empty();
+            std::cout << "Switch " << sw->GetId()
+                      << (has_any_enabled_port ? " enable proactive drop on configured ports"
+                                               : " disable proactive drop")
+                      << " (mode=" << switch_drop_mode
+                      << ", drop_rate=" << my_switch_total_drop_rate << ")" << std::endl;
             uint32_t shift = 3;  // by default 1/8
             for (uint32_t j = 1; j < sw->GetNDevices(); j++) {
                 Ptr<QbbNetDevice> dev = DynamicCast<QbbNetDevice>(sw->GetDevice(j));
@@ -1762,14 +1928,24 @@ int main(int argc, char *argv[]) {
                 // 新增
                 DynamicCast<QbbNetDevice>(dev)->TraceConnectWithoutContext(
                 "SwitchDropRecord", MakeBoundCallback(&record_switch_drop, switch_drop_output, DynamicCast<QbbNetDevice>(dev)));
-                dev->m_dropper->ConfigurePolicy(
-                    switch_drop_mode,
-                    switch_drop_seqnum_config_file,
-                    switch_drop_timestep_config_file);
-                if (j == 1) {
+                bool enable_drop_this_port =
+                    has_any_enabled_port && (enable_all_ports ||
+                                             (enabled_ports_for_switch.find(j) !=
+                                              enabled_ports_for_switch.end()));
+                if (enable_drop_this_port) {
+                    dev->m_dropper->ConfigurePolicy(
+                        switch_drop_mode,
+                        switch_drop_seqnum_config_file,
+                        switch_drop_timestep_config_file);
                     dev->m_dropper->SetAttribute("DropRate", DoubleValue(my_switch_total_drop_rate));
-
-                    printf("Loss rate of switch Port 1 is set to %f\n", my_switch_total_drop_rate);
+                    printf("Switch %u port %u drop is enabled, DropRate=%f\n",
+                           sw->GetId(), j, my_switch_total_drop_rate);
+                } else {
+                    dev->m_dropper->ConfigurePolicy(
+                        "none",
+                        switch_drop_seqnum_config_file,
+                        switch_drop_timestep_config_file);
+                    dev->m_dropper->SetAttribute("DropRate", DoubleValue(0.0));
                 }
                 dev->m_dropper->PrintStatus();
 

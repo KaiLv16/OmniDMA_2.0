@@ -312,9 +312,9 @@ run_requested_matrix_experiments() {
 
     local modes=(
         "omnidma_bm16"
-        "gbn_pfc0"
-        "irn_win500000"
-        "irn_win5000000"
+        # "gbn_pfc0"
+        # "irn_win500000"
+        # "irn_win5000000"
     )
 
     for mode in "${modes[@]}"; do
@@ -376,15 +376,15 @@ collect_requested_matrix_fct_csv() {
     local ts
     ts="$(date +%Y%m%d_%H%M%S)"
     local outfile="${outdir}/requested_matrix_fct_${ts}.txt"
-    printf 'mode,topology,drop_rate_pct,config_id,src_id,dst_id,src_port,dst_port,flow_bytes,start_time,fct,standalone_fct,status\n' > "${outfile}"
+    printf 'mode,topology,drop_rate_pct,config_id,src_id,dst_id,src_port,dst_port,flow_bytes,start_time,fct,standalone_fct,max_seq_distance,status\n' > "${outfile}"
 
     local found_count=0
     local missing_count=0
     local modes=(
         "omnidma_bm16"
-        "gbn_pfc0"
-        "irn_win500000"
-        "irn_win5000000"
+        # "gbn_pfc0"
+        # "irn_win500000"
+        # "irn_win5000000"
     )
 
     for mode in "${modes[@]}"; do
@@ -422,12 +422,12 @@ collect_requested_matrix_fct_csv() {
                 fct_file="$(resolve_output_file "${output_dir}" "${config_id}" "out_fct")"
 
                 if [[ -f "${fct_file}" ]]; then
-                    awk -v mode="${mode}" -v topo="${TOPOLOGY}" -v drop_pct="${DROP_RATE_PCT}" -v cfg="${config_id}" \
-                        'BEGIN{OFS=","} NF>=8 {print mode,topo,drop_pct,cfg,$1,$2,$3,$4,$5,$6,$7,$8,"ok"}' \
+                    awk -v mode="${mode}" -v topo="${TOPOLOGY}" -v drop_pct="${DROP_RATE_PCT}" -v cfg="${config_id}" -v omnidma="${omnidma}" \
+                        'BEGIN{OFS=","} NF>=8 {max_seq_distance=(omnidma=="1" && NF>=9)?$9:0; print mode,topo,drop_pct,cfg,$1,$2,$3,$4,$5,$6,$7,$8,max_seq_distance,"ok"}' \
                         "${fct_file}" >> "${outfile}"
                     found_count=$((found_count + 1))
                 else
-                    printf '%s,%s,%s,%s,,,,,,,,missing\n' "${mode}" "${TOPOLOGY}" "${DROP_RATE_PCT}" "${config_id}" >> "${outfile}"
+                    printf '%s,%s,%s,%s,,,,,,,,,missing\n' "${mode}" "${TOPOLOGY}" "${DROP_RATE_PCT}" "${config_id}" >> "${outfile}"
                     missing_count=$((missing_count + 1))
                 fi
             done
@@ -639,7 +639,7 @@ EOF
 
 if [[ "${SKIP_FLAG}" == "matrix" ]]; then
     cecho "YELLOW" "Running requested matrix experiments (flow=omniDMA_flow, drop_mode=amazon)"
-    run_requested_matrix_experiments || exit $?
+    # run_requested_matrix_experiments || exit $?
     collect_requested_matrix_fct_csv || exit $?
     cecho "GREEN" "Requested matrix run finished"
     exit 0
