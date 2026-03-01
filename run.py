@@ -92,7 +92,9 @@ MULTI_RATE 0
 SAMPLE_FEEDBACK 0
 
 ENABLE_QCN 1
-USE_DYNAMIC_PFC_THRESHOLD 1
+USE_DYNAMIC_PFC_THRESHOLD {use_dynamic_pfc_threshold}
+SWITCH_INGRESS_ALPHA {switch_ingress_alpha}
+SWITCH_EGRESS_ALPHA {switch_egress_alpha}
 PACKET_PAYLOAD_SIZE 1000
 
 
@@ -178,6 +180,15 @@ def main():
                         default='0.1', help="traffic time to simulate (up to 3 seconds) (default: 0.1)")
     parser.add_argument('--buffer', dest="buffer", action='store',
                         default='9', help="the switch buffer size (MB) (default: 9)")
+    parser.add_argument('--use_dynamic_pfc_threshold', dest='use_dynamic_pfc_threshold', action='store',
+                        type=int, choices=[0, 1], default=1,
+                        help="enable switch dynamic threshold (0/1, default: 1)")
+    parser.add_argument('--switch_ingress_alpha', dest='switch_ingress_alpha', action='store',
+                        type=float, default=0.0625,
+                        help="switch MMU ingress alpha for dynamic threshold (default: 0.0625)")
+    parser.add_argument('--switch_egress_alpha', dest='switch_egress_alpha', action='store',
+                        type=float, default=1.0,
+                        help="switch MMU egress alpha for dynamic threshold (default: 1.0)")
     parser.add_argument('--netload', dest='netload', action='store', type=int,
                         default=40, help="Network load at NIC to generate traffic (default: 40.0)")
     parser.add_argument('--bw', dest="bw", action='store',
@@ -258,6 +269,9 @@ def main():
     omnidma_lookup_table_lru_size = int(args.omnidma_lookup_table_lru_size)
     bw = int(args.bw)
     buffer = args.buffer
+    use_dynamic_pfc_threshold = int(args.use_dynamic_pfc_threshold)
+    switch_ingress_alpha = float(args.switch_ingress_alpha)
+    switch_egress_alpha = float(args.switch_egress_alpha)
     topo = args.topo
     rate_bound = args.rate_bound
     has_win = args.has_win
@@ -328,6 +342,10 @@ def main():
         raise Exception("CONFIG ERROR : --omnidma_first_n must be >= 0.")
     if omnidma_lookup_table_lru_size <= 0:
         raise Exception("CONFIG ERROR : --omnidma_lookup_table_lru_size must be > 0.")
+    if switch_ingress_alpha <= 0:
+        raise Exception("CONFIG ERROR : --switch_ingress_alpha must be > 0.")
+    if switch_egress_alpha <= 0:
+        raise Exception("CONFIG ERROR : --switch_egress_alpha must be > 0.")
     
     # sniff number of servers
     with open("config/{topo}.txt".format(topo=args.topo), 'r') as f_topo:
@@ -497,6 +515,9 @@ def main():
                                         rnic_dma_tlp_payload_bytes=rnic_dma_tlp_payload_bytes,
                                         self_win_bytes=self_win_bytes, self_define_win=self_define_win,
                                         rate_bound=rate_bound,
+                                        use_dynamic_pfc_threshold=use_dynamic_pfc_threshold,
+                                        switch_ingress_alpha=switch_ingress_alpha,
+                                        switch_egress_alpha=switch_egress_alpha,
                                         fast_react=fast_react, mi=mi, int_multi=int_multi, ewma_gain=ewma_gain,
                                         kmax_map=kmax_map, kmin_map=kmin_map, pmax_map=pmax_map)
     else:

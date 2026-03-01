@@ -121,6 +121,8 @@ run_case_impl() {
         cmd+=(--switch_drop_timestep_config "${SWITCH_DROP_TIMESTEP_CONFIG}")
     fi
     cmd+=(--my_switch_total_drop_rate "${drop_rate}" --rate_bound "${RATE_BOUND}" --simul_time "${RUNTIME}" --netload "${NETLOAD}" --topo "${topology}" --flow "${FLOW_NAME}")
+    cmd+=(--buffer "${SWITCH_BUFFER_MB}" --use_dynamic_pfc_threshold "${USE_DYNAMIC_PFC_THRESHOLD}")
+    cmd+=(--switch_ingress_alpha "${SWITCH_INGRESS_ALPHA}" --switch_egress_alpha "${SWITCH_EGRESS_ALPHA}")
     if [[ -n "${RNIC_DMA_BW:-}" ]]; then
         cmd+=(--rnic_dma_bw "${RNIC_DMA_BW}")
     fi
@@ -615,6 +617,10 @@ PLOT_X_MAX_US="${PLOT_X_MAX_US:-}"
 RNIC_DMA_BW="${RNIC_DMA_BW:-128Gb/s}"
 RNIC_DMA_FIXED_LATENCY_NS="${RNIC_DMA_FIXED_LATENCY_NS:-250}"
 RNIC_DMA_TLP_PAYLOAD_BYTES="${RNIC_DMA_TLP_PAYLOAD_BYTES:-256}"
+SWITCH_BUFFER_MB="${SWITCH_BUFFER_MB:-9}"
+USE_DYNAMIC_PFC_THRESHOLD="${USE_DYNAMIC_PFC_THRESHOLD:-1}"
+SWITCH_INGRESS_ALPHA="${SWITCH_INGRESS_ALPHA:-0.0625}"
+SWITCH_EGRESS_ALPHA="${SWITCH_EGRESS_ALPHA:-1.0}"
 
 # 在这里配置要运行的实验和绘图逻辑
 SKIP_FLAG="${1:-12}"
@@ -656,6 +662,7 @@ cecho "YELLOW" "DROP-RATE count: ${#DROP_RATE_PCTS[@]} (percent list)"
 cecho "YELLOW" "PFC=${PFC}, IRN=${IRN}, OMNIDMA=${OMNIDMA}"
 cecho "YELLOW" "OMNIDMA_CUBIC_ARG=${OMNIDMA_CUBIC_ARG}"
 cecho "YELLOW" "RNIC_DMA_BW=${RNIC_DMA_BW}, RNIC_DMA_FIXED_LATENCY_NS=${RNIC_DMA_FIXED_LATENCY_NS}, RNIC_DMA_TLP_PAYLOAD_BYTES=${RNIC_DMA_TLP_PAYLOAD_BYTES}"
+cecho "YELLOW" "SWITCH_BUFFER_MB=${SWITCH_BUFFER_MB}, USE_DYNAMIC_PFC_THRESHOLD=${USE_DYNAMIC_PFC_THRESHOLD}, SWITCH_INGRESS_ALPHA=${SWITCH_INGRESS_ALPHA}, SWITCH_EGRESS_ALPHA=${SWITCH_EGRESS_ALPHA}"
 cecho "YELLOW" "PLOT_BUCKET=${PLOT_BUCKET}, PLOT_FLOWIDS=${PLOT_FLOWIDS:-ALL}, PLOT_OUTPUT_SUBDIR=${PLOT_OUTPUT_SUBDIR}"
 cecho "YELLOW" "PLOT_X_MIN_US=${PLOT_X_MIN_US:-AUTO}, PLOT_X_MAX_US=${PLOT_X_MAX_US:-AUTO}"
 cecho "YELLOW" "----------------------------------\n"
@@ -686,6 +693,12 @@ Optional env vars for plotting:
   PLOT_OUTPUT_SUBDIR=flow_rate_plots
   PLOT_X_MIN_US=0
   PLOT_X_MAX_US=5000
+
+Optional env vars for switch buffer/threshold:
+  SWITCH_BUFFER_MB=9
+  USE_DYNAMIC_PFC_THRESHOLD=1
+  SWITCH_INGRESS_ALPHA=0.0625
+  SWITCH_EGRESS_ALPHA=1.0
 EOF
 }
 

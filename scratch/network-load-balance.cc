@@ -167,6 +167,8 @@ unordered_map<uint32_t, Ptr<SwitchNode>> idxNodeToR;  // Id -> Ptr
 uint64_t link_down_time = 0;
 uint32_t link_down_A = 0, link_down_B = 0;
 uint32_t buffer_size = 0;  // 0 to set buffer size automatically
+double switch_ingress_alpha = 0.0625;
+double switch_egress_alpha = 1.0;
 
 // Added from Here
 double load = 10.0;
@@ -1309,6 +1311,16 @@ int main(int argc, char *argv[]) {
                     std::cerr << "USE_DYNAMIC_PFC_THRESHOLD\t"
                               << "No"
                               << "\n";
+            } else if (key.compare("SWITCH_INGRESS_ALPHA") == 0) {
+                double v;
+                conf >> v;
+                switch_ingress_alpha = v;
+                std::cerr << "SWITCH_INGRESS_ALPHA\t\t" << switch_ingress_alpha << "\n";
+            } else if (key.compare("SWITCH_EGRESS_ALPHA") == 0) {
+                double v;
+                conf >> v;
+                switch_egress_alpha = v;
+                std::cerr << "SWITCH_EGRESS_ALPHA\t\t" << switch_egress_alpha << "\n";
             } else if (key.compare("CLAMP_TARGET_RATE") == 0) {
                 uint32_t v;
                 conf >> v;
@@ -1663,6 +1675,12 @@ int main(int argc, char *argv[]) {
             fflush(stdout);
         }
         conf.close();
+        if (switch_ingress_alpha <= 0 || switch_egress_alpha <= 0) {
+            std::cerr << "Error: SWITCH_INGRESS_ALPHA and SWITCH_EGRESS_ALPHA must be > 0. "
+                      << "Got ingress=" << switch_ingress_alpha
+                      << ", egress=" << switch_egress_alpha << "\n";
+            return 1;
+        }
         LoadSwitchDropEnabledSwitches(switch_drop_switch_config_file,
                                       &switch_drop_port_specs);
         std::cerr << "SWITCH_DROP_SWITCH_ENTRIES\t\t" << switch_drop_port_specs.size()
@@ -1696,6 +1714,9 @@ int main(int argc, char *argv[]) {
     Config::SetDefault("ns3::QbbNetDevice::QcnEnabled", BooleanValue(enable_qcn));
     Config::SetDefault("ns3::QbbNetDevice::DynamicThreshold", BooleanValue(dynamicth));
     Config::SetDefault("ns3::QbbNetDevice::QbbEnabled", BooleanValue(enable_pfc));
+    Config::SetDefault("ns3::SwitchMmu::DynamicThreshold", BooleanValue(dynamicth));
+    Config::SetDefault("ns3::SwitchMmu::IngressAlpha", DoubleValue(switch_ingress_alpha));
+    Config::SetDefault("ns3::SwitchMmu::EgressAlpha", DoubleValue(switch_egress_alpha));
     Config::SetDefault("ns3::ReceiverAdamap::BitmapSize", UintegerValue(omnidma_bitmap_size));
     Config::SetDefault("ns3::ReceiverAdamap::FirstN", UintegerValue(omnidma_first_n));
     Config::SetDefault("ns3::ReceiverAdamap::LookupTableLruSize",
