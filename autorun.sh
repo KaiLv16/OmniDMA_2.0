@@ -591,6 +591,63 @@ load_omnidma_case_profile() {
     )"
 }
 
+run_incast_omnidma_cubic_suite() {
+    local topology="topo_dumbbell_incast100_OS2_500us"
+    local drop_rate_pct="${INCAST_DROP_RATE_PCT:-0}"  # switch proactive drop disabled anyway
+    local pfc="0"
+    local irn="0"
+    local omnidma="1"
+    local omnidma_cubic="1"
+    local switch_drop_mode="none"
+    local has_win="0"
+    local self_define_win="0"
+    local self_win_bytes="1000000000"
+    local switch_buffer_mb="32"
+    local use_dynamic_pfc_threshold="1"
+    local switch_ingress_alpha="0.125"
+    local switch_egress_alpha="1.0"
+    local repeat="${INCAST_REPEAT:-1}"
+    local -a flow_counts=(1 2 4 8 16 32 64)
+
+    if ! [[ "${repeat}" =~ ^[1-9][0-9]*$ ]]; then
+        cecho "RED" "Invalid INCAST_REPEAT=${repeat} (must be positive integer)"
+        return 1
+    fi
+
+    cecho "YELLOW" "Run incast OmniDMA+CUBIC suite: topo=${topology}, drop_mode=${switch_drop_mode}, drop_rate_pct=${drop_rate_pct}, buffer=${switch_buffer_mb}MB, ingress_alpha=${switch_ingress_alpha}, repeat=${repeat}"
+
+    local r=1
+    while [[ "${r}" -le "${repeat}" ]]; do
+        for x in "${flow_counts[@]}"; do
+            local flow_name="flow_omni_${x}flows_dumbbell_avg1ms_var1ms"
+            if [[ ! -f "config/${flow_name}.txt" ]]; then
+                cecho "RED" "Missing flow config: config/${flow_name}.txt"
+                return 1
+            fi
+
+            cecho "YELLOW" "[repeat ${r}/${repeat}] flow=${flow_name}"
+
+            # Dynamic scoping: run_case_impl will consume these locals.
+            local FLOW_NAME="${flow_name}"
+            local SWITCH_DROP_MODE="${switch_drop_mode}"
+            local CASE_HAS_WIN="${has_win}"
+            local CASE_SELF_DEFINE_WIN="${self_define_win}"
+            local CASE_SELF_WIN_BYTES="${self_win_bytes}"
+            local SWITCH_BUFFER_MB="${switch_buffer_mb}"
+            local USE_DYNAMIC_PFC_THRESHOLD="${use_dynamic_pfc_threshold}"
+            local SWITCH_INGRESS_ALPHA="${switch_ingress_alpha}"
+            local SWITCH_EGRESS_ALPHA="${switch_egress_alpha}"
+
+            run_case_impl "${topology}" "${drop_rate_pct}" "${pfc}" "${irn}" "${omnidma}" \
+                --omnidma_cubic "${omnidma_cubic}" \
+                --has_win "${has_win}" \
+                --self_define_win "${self_define_win}" \
+                --self_win_bytes "${self_win_bytes}" || return $?
+        done
+        r=$((r + 1))
+    done
+}
+
 
 NETLOAD="50"   # network load 50%
 RUNTIME="600"  # simulation time (seconds)
@@ -677,6 +734,7 @@ skip_flag (string flags, can combine):
   contains '2' -> plot
   equals 'matrix' -> run requested 4-mode matrix and merge FCT csv
   equals 'matrix_hitrate_sweep' -> run matrix sweep over FirstN={1,2,3}, LookupTableLruSize={1,2,3}, and dump 9 hit-rate csv files
+  equals 'incast_omnidma_cubic' -> run fixed incast suite on 7 flow files (x=1,2,4,8,16,32,64)
   examples: 1 / 2 / 12
 
 Defaults:
@@ -699,6 +757,10 @@ Optional env vars for switch buffer/threshold:
   USE_DYNAMIC_PFC_THRESHOLD=1
   SWITCH_INGRESS_ALPHA=0.0625
   SWITCH_EGRESS_ALPHA=1.0
+
+Optional env vars for incast_omnidma_cubic:
+  INCAST_REPEAT=1
+  INCAST_DROP_RATE_PCT=0
 EOF
 }
 
@@ -719,8 +781,15 @@ if [[ "${SKIP_FLAG}" == "matrix_hitrate_sweep" ]]; then
     exit 0
 fi
 
+if [[ "${SKIP_FLAG}" == "incast_omnidma_cubic" ]]; then
+    cecho "YELLOW" "Running fixed incast OmniDMA+CUBIC suite (topo_dumbbell_incast100_OS2_500us, x=1/2/4/8/16/32/64)"
+    run_incast_omnidma_cubic_suite || exit $?
+    cecho "GREEN" "Incast OmniDMA+CUBIC suite finished"
+    exit 0
+fi
+
 if [[ "${SKIP_FLAG}" != *1* && "${SKIP_FLAG}" != *2* ]]; then
-    cecho "RED" "Invalid skip_flag: ${SKIP_FLAG} (must contain '1' and/or '2', or be 'matrix'/'matrix_hitrate_sweep')"
+    cecho "RED" "Invalid skip_flag: ${SKIP_FLAG} (must contain '1' and/or '2', or be 'matrix'/'matrix_hitrate_sweep'/'incast_omnidma_cubic')"
     usage
     exit 1
 fi
