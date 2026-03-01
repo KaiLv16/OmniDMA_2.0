@@ -174,6 +174,8 @@ int enable_irn = 0;
 int enable_omnidma = 0;
 int enable_omnidma_cubic = 0;
 uint16_t omnidma_bitmap_size = ns3::kDefaultOmniDmaBitmapSize;
+uint32_t omnidma_first_n = 3;
+uint32_t omnidma_lookup_table_lru_size = 2;
 int random_seed = 1;  // change this randomly if you want random expt
 double my_switch_total_drop_rate = 0.0;
 std::string switch_drop_mode = "lossrate";
@@ -1622,6 +1624,22 @@ int main(int argc, char *argv[]) {
                 }
                 omnidma_bitmap_size = static_cast<uint16_t>(v);
                 std::cerr << "OMNIDMA_BITMAP_SIZE\t\t" << omnidma_bitmap_size << "\n";
+            } else if (key.compare("OMNIDMA_FIRST_N") == 0) {
+                uint32_t v;
+                conf >> v;
+                omnidma_first_n = v;
+                std::cerr << "OMNIDMA_FIRST_N\t\t" << omnidma_first_n << "\n";
+            } else if (key.compare("OMNIDMA_LOOKUP_TABLE_LRU_SIZE") == 0) {
+                uint32_t v;
+                conf >> v;
+                if (v == 0) {
+                    std::cerr << "OMNIDMA_LOOKUP_TABLE_LRU_SIZE invalid (must be >=1): " << v
+                              << "\n";
+                    return 1;
+                }
+                omnidma_lookup_table_lru_size = v;
+                std::cerr << "OMNIDMA_LOOKUP_TABLE_LRU_SIZE\t" << omnidma_lookup_table_lru_size
+                          << "\n";
             } else if (key.compare("MY_SWITCH_TOTAL_DROP_RATE") == 0) {
                 double v;
                 conf >> v;
@@ -1679,6 +1697,9 @@ int main(int argc, char *argv[]) {
     Config::SetDefault("ns3::QbbNetDevice::DynamicThreshold", BooleanValue(dynamicth));
     Config::SetDefault("ns3::QbbNetDevice::QbbEnabled", BooleanValue(enable_pfc));
     Config::SetDefault("ns3::ReceiverAdamap::BitmapSize", UintegerValue(omnidma_bitmap_size));
+    Config::SetDefault("ns3::ReceiverAdamap::FirstN", UintegerValue(omnidma_first_n));
+    Config::SetDefault("ns3::ReceiverAdamap::LookupTableLruSize",
+                       UintegerValue(omnidma_lookup_table_lru_size));
 
     if (cc_mode != 1 && lb_mode == 9) {
         std::cout << "Currently, ConWeave supports only DCQCN congestion control for RDMA. \nIf "

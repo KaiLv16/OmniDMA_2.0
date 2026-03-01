@@ -9,3 +9,4 @@
 
 # Example for topo_simple_dumbbell_OS2_* (single switch node):
 200 [all]
+0 [all]

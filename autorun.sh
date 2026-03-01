@@ -304,11 +304,11 @@ run_sweep() {
 # 第一个大实验：针对用户请求的4种模式（omnidma_bm16, gbn_pfc0, irn_win500000, irn_win5000000），
 # 在所有拓扑和丢包率下运行，并收集FCT结果到一个csv文件。
 run_requested_matrix_experiments() {
+    local omnidma_first_n="${1:-3}"
+    local omnidma_lookup_table_lru_size="${2:-2}"
     local flow_name="omniDMA_flow"
     local switch_drop_mode="amazon"
     local omnidma_bitmap_size="16"
-    local total_runs=$((4 * ${#TOPOLOGIES[@]} * ${#DROP_RATE_PCTS[@]}))
-    local run_idx=0
 
     local modes=(
         "omnidma_bm16"
@@ -316,6 +316,18 @@ run_requested_matrix_experiments() {
         # "irn_win500000"
         # "irn_win5000000"
     )
+    local total_runs=$((${#modes[@]} * ${#TOPOLOGIES[@]} * ${#DROP_RATE_PCTS[@]}))
+    local run_idx=0
+
+    if ! [[ "${omnidma_first_n}" =~ ^[0-9]+$ ]]; then
+        cecho "RED" "Invalid omnidma_first_n=${omnidma_first_n} (must be non-negative integer)"
+        return 1
+    fi
+    if ! [[ "${omnidma_lookup_table_lru_size}" =~ ^[0-9]+$ ]] || [[ "${omnidma_lookup_table_lru_size}" -lt 1 ]]; then
+        cecho "RED" "Invalid omnidma_lookup_table_lru_size=${omnidma_lookup_table_lru_size} (must be positive integer)"
+        return 1
+    fi
+    cecho "YELLOW" "run_requested_matrix_experiments: FirstN=${omnidma_first_n}, LookupTableLruSize=${omnidma_lookup_table_lru_size}"
 
     for mode in "${modes[@]}"; do
         local pfc="0"
@@ -329,6 +341,8 @@ run_requested_matrix_experiments() {
             omnidma_bm16)
                 pfc="0"; irn="0"; omnidma="1"
                 extra_args+=(--omnidma_bitmap_size "${omnidma_bitmap_size}")
+                extra_args+=(--omnidma_first_n "${omnidma_first_n}")
+                extra_args+=(--omnidma_lookup_table_lru_size "${omnidma_lookup_table_lru_size}")
                 ;;
             gbn_pfc0)
                 pfc="0"; irn="0"; omnidma="0"
@@ -349,8 +363,10 @@ run_requested_matrix_experiments() {
                 ;;
         esac
 
-        for TOPOLOGY in "${TOPOLOGIES[@]}"; do
-            for DROP_RATE_PCT in "${DROP_RATE_PCTS[@]}"; do
+        for DROP_RATE_PCT in "${DROP_RATE_PCTS[@]}"; do
+            local -a pids=()
+            local failed=0
+            for TOPOLOGY in "${TOPOLOGIES[@]}"; do
                 run_idx=$((run_idx + 1))
                 cecho "YELLOW" "[${run_idx}/${total_runs}] mode=${mode}, topo=${TOPOLOGY}, drop_rate_pct=${DROP_RATE_PCT}"
 
@@ -359,10 +375,47 @@ run_requested_matrix_experiments() {
                 local CASE_HAS_WIN="${case_has_win}"
                 local CASE_SELF_DEFINE_WIN="${case_self_define_win}"
                 local CASE_SELF_WIN_BYTES="${case_self_win_bytes}"
-                run_case_impl "${TOPOLOGY}" "${DROP_RATE_PCT}" "${pfc}" "${irn}" "${omnidma}" "${extra_args[@]}" || return $?
+                run_case_impl "${TOPOLOGY}" "${DROP_RATE_PCT}" "${pfc}" "${irn}" "${omnidma}" "${extra_args[@]}" &
+                pids+=("$!")
+                sleep 10
             done
+            for pid in "${pids[@]}"; do
+                wait "${pid}" || failed=1
+            done
+            if [[ "${failed}" -ne 0 ]]; then
+                cecho "RED" "One or more runs failed for drop_rate_pct=${DROP_RATE_PCT}"
+                return 1
+            fi
         done
     done
+}
+
+collect_omnidma_hit_rate_summary_for_case() {
+    local omnidma_first_n="$1"
+    local omnidma_lookup_table_lru_size="$2"
+    local output_csv="mix/output/omnidma_hit_rate_summary_firstn${omnidma_first_n}_table${omnidma_lookup_table_lru_size}.csv"
+    cecho "YELLOW" "Collect OmniDMA hit-rate summary -> ${output_csv}"
+    python3 analysis/collect_omnidma_hit_rate.py \
+        --input-root "mix/output" \
+        --output "${output_csv}"
+}
+
+run_requested_matrix_experiments_firstn_lru_sweep() {
+    local first_n_values=(1 2 3)
+    local lru_values=(1 2 3)
+    local total_cases=$((${#first_n_values[@]} * ${#lru_values[@]}))
+    local case_idx=0
+
+    for first_n in "${first_n_values[@]}"; do
+        for lru_size in "${lru_values[@]}"; do
+            case_idx=$((case_idx + 1))
+            cecho "YELLOW" "==== [${case_idx}/${total_cases}] matrix run with FirstN=${first_n}, LookupTableLruSize=${lru_size} ===="
+            run_requested_matrix_experiments "${first_n}" "${lru_size}" || return $?
+            collect_omnidma_hit_rate_summary_for_case "${first_n}" "${lru_size}" || return $?
+        done
+    done
+
+    cecho "GREEN" "FirstN/LookupTableLruSize sweep completed (${total_cases} cases)"
 }
 
 
@@ -584,8 +637,8 @@ TOPOLOGIES=(
 
 # User-requested percent values; run.py receives the ratio value (pct / 100).
 DROP_RATE_PCTS=(
-    "0"
-    "0.01"
+    # "0"
+    # "0.01"
     "0.05"
     "0.1"
     "0.5"
@@ -616,6 +669,7 @@ skip_flag (string flags, can combine):
   contains '1' -> run simulation
   contains '2' -> plot
   equals 'matrix' -> run requested 4-mode matrix and merge FCT csv
+  equals 'matrix_hitrate_sweep' -> run matrix sweep over FirstN={1,2,3}, LookupTableLruSize={1,2,3}, and dump 9 hit-rate csv files
   examples: 1 / 2 / 12
 
 Defaults:
@@ -645,8 +699,15 @@ if [[ "${SKIP_FLAG}" == "matrix" ]]; then
     exit 0
 fi
 
+if [[ "${SKIP_FLAG}" == "matrix_hitrate_sweep" ]]; then
+    cecho "YELLOW" "Running requested matrix sweep with FirstN={1,2,3}, LookupTableLruSize={1,2,3}"
+    run_requested_matrix_experiments_firstn_lru_sweep || exit $?
+    cecho "GREEN" "Requested matrix hit-rate sweep finished"
+    exit 0
+fi
+
 if [[ "${SKIP_FLAG}" != *1* && "${SKIP_FLAG}" != *2* ]]; then
-    cecho "RED" "Invalid skip_flag: ${SKIP_FLAG} (must contain '1' and/or '2', or be 'matrix')"
+    cecho "RED" "Invalid skip_flag: ${SKIP_FLAG} (must contain '1' and/or '2', or be 'matrix'/'matrix_hitrate_sweep')"
     usage
     exit 1
 fi

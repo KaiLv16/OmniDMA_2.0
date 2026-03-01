@@ -106,6 +106,8 @@ RANDOM_SEED 1
 ENABLE_OMNIDMA {enabled_omnidma}
 ENABLE_OMNIDMA_CUBIC {enabled_omnidma_cubic}
 OMNIDMA_BITMAP_SIZE {omnidma_bitmap_size}
+OMNIDMA_FIRST_N {omnidma_first_n}
+OMNIDMA_LOOKUP_TABLE_LRU_SIZE {omnidma_lookup_table_lru_size}
 MY_SWITCH_TOTAL_DROP_RATE {my_switch_total_drop_rate}
 SWITCH_DROP_MODE {switch_drop_mode}
 SWITCH_DROP_SEQNUM_CONFIG_FILE {switch_drop_seqnum_config_file}
@@ -168,6 +170,10 @@ def main():
                         type=int, default=0, help="enable OmniDMA CUBIC sender window control (default: 0)")
     parser.add_argument('--omnidma_bitmap_size', dest='omnidma_bitmap_size', action='store',
                         type=int, default=16, help="OmniDMA Adamap bitmap size (1..256, default: 16)")
+    parser.add_argument('--omnidma_first_n', dest='omnidma_first_n', action='store',
+                        type=int, default=3, help="ReceiverAdamap FirstN (default: 3)")
+    parser.add_argument('--omnidma_lookup_table_lru_size', dest='omnidma_lookup_table_lru_size', action='store',
+                        type=int, default=2, help="ReceiverAdamap LookupTableLruSize (default: 2)")
     parser.add_argument('--simul_time', dest='simul_time', action='store',
                         default='0.1', help="traffic time to simulate (up to 3 seconds) (default: 0.1)")
     parser.add_argument('--buffer', dest="buffer", action='store',
@@ -248,6 +254,8 @@ def main():
     enabled_omnidma = int(args.omnidma)
     enabled_omnidma_cubic = int(args.omnidma_cubic)
     omnidma_bitmap_size = int(args.omnidma_bitmap_size)
+    omnidma_first_n = int(args.omnidma_first_n)
+    omnidma_lookup_table_lru_size = int(args.omnidma_lookup_table_lru_size)
     bw = int(args.bw)
     buffer = args.buffer
     topo = args.topo
@@ -316,6 +324,10 @@ def main():
         raise Exception("CONFIG ERROR : OmniDMA CUBIC requires --omnidma 1.")
     if omnidma_bitmap_size <= 0 or omnidma_bitmap_size > 256:
         raise Exception("CONFIG ERROR : --omnidma_bitmap_size must be in [1, 256] (header encodes bitmap in 4x uint64).")
+    if omnidma_first_n < 0:
+        raise Exception("CONFIG ERROR : --omnidma_first_n must be >= 0.")
+    if omnidma_lookup_table_lru_size <= 0:
+        raise Exception("CONFIG ERROR : --omnidma_lookup_table_lru_size must be > 0.")
     
     # sniff number of servers
     with open("config/{topo}.txt".format(topo=args.topo), 'r') as f_topo:
@@ -473,6 +485,8 @@ def main():
                                         enabled_omnidma=enabled_omnidma,
                                         enabled_omnidma_cubic=enabled_omnidma_cubic,
                                         omnidma_bitmap_size=omnidma_bitmap_size,
+                                        omnidma_first_n=omnidma_first_n,
+                                        omnidma_lookup_table_lru_size=omnidma_lookup_table_lru_size,
                                         my_switch_total_drop_rate=my_switch_total_drop_rate,
                                         switch_drop_mode=switch_drop_mode,
                                         switch_drop_seqnum_config_file=switch_drop_seqnum_config_file,
