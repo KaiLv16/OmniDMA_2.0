@@ -2369,6 +2369,8 @@ void RdmaHw::HandleAckOmniCubic(Ptr<RdmaQueuePair> qp,
     uint32_t cubicCwnd = qp->m_omniCubic->GetCwndBytes();
     uint32_t cubicSsThresh = qp->m_omniCubic->GetSsThreshBytes();
     bool isCwndLimited = priorInFlight + m_mtu >= cubicCwnd;
+    
+    /*
     std::cout << Simulator::Now().GetTimeStep()
               << " [OmniCubicAck]"
               << " flow_id=" << qp->m_flow_id
@@ -2384,6 +2386,7 @@ void RdmaHw::HandleAckOmniCubic(Ptr<RdmaQueuePair> qp,
               << " lossSignal=" << lossSignal
               << " rtt_us=" << rtt.GetMicroSeconds()
               << std::endl;
+    */
 
     qp->m_omniCubic->OnAck(qp, ackedBytes, qp->snd_una, priorInFlight, rtt, lossSignal);
 }

@@ -135,7 +135,7 @@ run_case_impl() {
     if [[ $# -gt 0 ]]; then
         cmd+=("$@")
     fi
-    "${cmd[@]}"
+    "${cmd[@]}" || return $?
 
     local snd_rcv_file
     snd_rcv_file="$(resolve_output_file "${output_dir}" "${config_id}" "snd_rcv_record_file")"
@@ -607,7 +607,7 @@ run_incast_omnidma_cubic_suite() {
     local switch_ingress_alpha="0.125"
     local switch_egress_alpha="1.0"
     local repeat="${INCAST_REPEAT:-1}"
-    local -a flow_counts=(1 2 4 8 16 32 64)
+    local -a flow_counts=(64)     # 1 64 32 16 8 4 2
 
     if ! [[ "${repeat}" =~ ^[1-9][0-9]*$ ]]; then
         cecho "RED" "Invalid INCAST_REPEAT=${repeat} (must be positive integer)"

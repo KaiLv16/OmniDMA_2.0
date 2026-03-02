@@ -17,6 +17,8 @@
 
 NS_LOG_COMPONENT_DEFINE("SwitchMmu");
 namespace ns3 {
+NS_OBJECT_ENSURE_REGISTERED(SwitchMmu);
+
 TypeId SwitchMmu::GetTypeId(void) {
     static TypeId tid =
         TypeId("ns3::SwitchMmu")

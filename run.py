@@ -540,7 +540,11 @@ def main():
         history.write("\n")
 
     print(run_command)
-    os.system("./waf --run 'scratch/network-load-balance {config_name}'  > {output_log} ".format(config_name=config_name, output_log=output_log))
+    sim_ret = os.system("./waf --run 'scratch/network-load-balance {config_name}'  > {output_log} ".format(
+        config_name=config_name, output_log=output_log))
+    if sim_ret != 0:
+        raise Exception("SIMULATION ERROR : network-load-balance failed (status={}). Check log: {}".format(
+            sim_ret, output_log))
     
     # os.system("./waf --run 'scratch/network-load-balance {config_name}'".format(config_name=config_name))
 
